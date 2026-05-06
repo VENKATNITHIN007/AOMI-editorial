@@ -14,8 +14,8 @@ import { useLoginMutation, getAuthRedirect, getSafeRedirectPath } from "@/featur
 import { AuthShell } from "./AuthShell";
 
 /**
- * Isolated Login Form component.
- * Handles layout, validation, state, and mutations independently.
+ * Login form with redirect-after-login support.
+ * Uses `getSafeRedirectPath` to prevent open-redirect attacks.
  */
 export function LoginForm() {
   const router = useRouter();
@@ -49,17 +49,15 @@ export function LoginForm() {
   return (
     <AuthShell
       title="Welcome back"
-      description="Enter your credentials to access your photographer studio"
+      description="Sign in to your account"
       footer={
         <p>
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-semibold text-primary hover:underline underline-offset-4">
-            Create an account
-          </Link>
+          <Link href="/register">Create one</Link>
         </p>
       }
     >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Form.Input
           control={form.control}
           name="email"
@@ -69,28 +67,30 @@ export function LoginForm() {
           disabled={loginMutation.isPending}
         />
         
-        <Form.Password
-          control={form.control}
-          name="password"
-          label="Password"
-          placeholder="••••••••"
-          disabled={loginMutation.isPending}
-        />
-        <div className="flex justify-end -mt-3">
-          <Link 
-            href="/forgot-password" 
-            className="text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-black transition-colors"
-          >
-            Forgot password?
-          </Link>
+        <div className="space-y-2">
+          <Form.Password
+            control={form.control}
+            name="password"
+            label="Password"
+            placeholder="••••••••"
+            disabled={loginMutation.isPending}
+          />
+          <div className="flex justify-end">
+            <Link 
+              href="/forgot-password" 
+              className="text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-black transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
         </div>
 
         <Button 
           type="submit" 
-          className="w-full h-11 text-base font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]" 
+          className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50" 
           disabled={loginMutation.isPending}
         >
-          {loginMutation.isPending ? "Signing in..." : "Sign in"}
+          {loginMutation.isPending ? "Signing in..." : "Sign In"}
         </Button>
       </form>
     </AuthShell>

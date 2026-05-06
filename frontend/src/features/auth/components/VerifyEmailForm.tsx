@@ -9,7 +9,8 @@ import { AuthShell } from "./AuthShell";
 import { Button } from "@/components/ui/button";
 
 /**
- * Component to handle the email verification link logic.
+ * Handles the email verification callback.
+ * Automatically verifies the token from the URL and shows the result.
  */
 export function VerifyEmailForm() {
   const searchParams = useSearchParams();
@@ -44,9 +45,9 @@ export function VerifyEmailForm() {
 
   if (status === "loading") {
     return (
-      <AuthShell title="Verifying email" description="Please wait while we verify your account" icon={Loader2}>
-        <div className="py-4 text-center text-sm text-muted-foreground">
-          Establishing secure connection...
+      <AuthShell title="Verifying" description="Please wait while we verify your account" icon={Loader2}>
+        <div className="flex justify-center py-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-black"></div>
         </div>
       </AuthShell>
     );
@@ -54,9 +55,14 @@ export function VerifyEmailForm() {
 
   if (status === "invalid" || status === "error") {
     return (
-      <AuthShell title="Verification Failed" description={message} icon={AlertCircle}>
-        <Button asChild className="w-full h-11 font-semibold">
-          <Link href="/login">Back to Login</Link>
+      <AuthShell 
+        title="Verification Failed" 
+        description={message} 
+        icon={AlertCircle}
+        footer={<Link href="/login">Back to sign in</Link>}
+      >
+        <Button asChild className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold">
+          <Link href="/login">Back to Sign In</Link>
         </Button>
       </AuthShell>
     );
@@ -64,17 +70,16 @@ export function VerifyEmailForm() {
 
   return (
     <AuthShell 
-      title="Email Verified!" 
+      title="Verified" 
       description={message} 
       icon={CheckCircle}
-      footer={
-        <Button asChild variant="outline" className="w-full h-11 font-semibold">
-          <Link href="/profile">Go to Profile</Link>
-        </Button>
-      }
+      footer={<Link href="/profile">Go to profile</Link>}
     >
-      <div className="text-center py-4 text-sm text-muted-foreground">
-        Redirecting you to your studio now...
+      <div className="flex flex-col items-center gap-4 py-4">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-black"></div>
+        <p className="text-sm text-gray-400 font-light tracking-wider">
+          Redirecting...
+        </p>
       </div>
     </AuthShell>
   );

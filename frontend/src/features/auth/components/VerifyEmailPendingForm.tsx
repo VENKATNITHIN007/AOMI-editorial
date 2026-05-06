@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { AuthShell } from "./AuthShell";
 
 /**
- * Component for the 'Verification Sent' screen.
+ * Verification pending screen.
+ * Shows the user's email and provides resend + manual check options.
  */
 export function VerifyEmailPendingForm() {
   const router = useRouter();
@@ -59,9 +60,9 @@ export function VerifyEmailPendingForm() {
 
   if (loading || !user) {
     return (
-      <AuthShell title="Loading..." icon={RefreshCw}>
-        <div className="flex justify-center py-6">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-muted-foreground"></div>
+      <AuthShell title="Loading" icon={RefreshCw}>
+        <div className="flex justify-center py-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-black"></div>
         </div>
       </AuthShell>
     );
@@ -69,32 +70,32 @@ export function VerifyEmailPendingForm() {
 
   return (
     <AuthShell
-      title="Verify email"
+      title="Verify Email"
       description={`We sent a verification link to ${user.email}`}
       icon={Mail}
-      footer={
-        <Link href="/login" className="text-sm font-semibold text-primary hover:underline underline-offset-4">
-          Back to login
-        </Link>
-      }
+      footer={<Link href="/login">Back to sign in</Link>}
     >
       <div className="space-y-6">
-        <p className="text-center text-sm text-muted-foreground">
-          You must verify your email before accessing your studio and premium features.
+        <p className="text-center text-sm text-gray-400 font-light tracking-wider">
+          You must verify your email before accessing your studio.
         </p>
         
         <div className="space-y-3">
-          <Button className="w-full h-11 font-semibold" onClick={handleResend} disabled={resendMutation.isPending}>
-            {resendMutation.isPending ? "Sending..." : "Resend verification email"}
+          <Button 
+            className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold disabled:opacity-50" 
+            onClick={handleResend} 
+            disabled={resendMutation.isPending}
+          >
+            {resendMutation.isPending ? "Sending..." : "Resend Verification Email"}
           </Button>
           <Button
             variant="outline"
-            className="w-full h-11 font-semibold"
+            className="w-full h-12 rounded-none text-[10px] uppercase tracking-[0.2em] font-bold border-gray-200 disabled:opacity-50"
             onClick={handleCheckAgain}
             disabled={checking || isFetching}
           >
-            <RefreshCw className={`mr-2 size-4 ${checking || isFetching ? "animate-spin" : ""}`} />
-            I have verified my email
+            <RefreshCw className={`mr-2 size-3 ${checking || isFetching ? "animate-spin" : ""}`} />
+            I Have Verified My Email
           </Button>
         </div>
       </div>

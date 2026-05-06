@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { NAV_PATHS } from "@/lib/constants/nav";
 import { Page } from "@/components/Page";
 import { cn } from "@/lib/utils";
@@ -14,7 +15,8 @@ interface AuthShellProps {
 
 /**
  * Reusable shell for all Authentication pages.
- * Handles centering, card styling, and semantic headers.
+ * Provides a centered card layout with branding, navigation back to home,
+ * and consistent editorial styling across all auth flows.
  */
 export function AuthShell({
   title,
@@ -25,45 +27,50 @@ export function AuthShell({
   className,
 }: AuthShellProps) {
   return (
-    <Page className="items-center justify-center bg-white">
-      <div className="absolute top-8 left-0 right-0 flex justify-center md:left-10 md:right-auto md:justify-start">
-        <Link href={NAV_PATHS.HOME} className="group transition-all hover:opacity-70">
+    <Page className="items-center justify-center bg-white relative">
+      {/* Back to Home — Always visible, responsive positioning */}
+      <div className="absolute top-6 left-6 sm:top-10 sm:left-10">
+        <Link
+          href={NAV_PATHS.HOME}
+          className="group flex items-center gap-3 transition-all hover:opacity-70"
+        >
+          <ArrowLeft className="size-4 text-gray-400 transition-transform group-hover:-translate-x-1" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
             Photophile
           </span>
         </Link>
       </div>
 
-      <Page.Body className={cn("max-w-[480px] w-full py-20 px-6", className)}>
-        <div className="space-y-12">
+      <Page.Body className={cn("max-w-[480px] w-full py-24 sm:py-20 px-6", className)}>
+        <div className="space-y-10">
           {/* Header Section */}
-          <header className="space-y-6 text-center">
+          <header className="space-y-5 text-center">
             {Icon && (
-              <div className="mx-auto flex h-16 w-16 items-center justify-center border border-black rounded-none">
-                <Icon className="h-8 w-8 text-black" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center border border-black">
+                <Icon className="h-6 w-6 text-black" />
               </div>
             )}
             <div className="space-y-3">
-              <h1 className="text-4xl font-light uppercase tracking-widest text-black">
+              <h1 className="text-3xl sm:text-4xl font-light uppercase tracking-widest text-black">
                 {title}
               </h1>
               {description && (
-                <p className="text-sm uppercase tracking-wider text-gray-500 max-w-[320px] mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm uppercase tracking-wider text-gray-400 max-w-[320px] mx-auto leading-relaxed">
                   {description}
                 </p>
               )}
             </div>
           </header>
-          
+
           {/* Main Content Area */}
-          <div className="border-t border-black pt-12">
+          <div className="border-t border-gray-200 pt-10">
             {children}
           </div>
 
           {/* Footer Section */}
           {footer && (
-            <footer className="pt-12 text-center">
-              <div className="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-black transition-colors duration-300">
+            <footer className="pt-6 text-center">
+              <div className="text-xs uppercase tracking-[0.15em] text-gray-400 [&_a]:text-black [&_a]:font-bold [&_a]:underline [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:text-gray-600">
                 {footer}
               </div>
             </footer>

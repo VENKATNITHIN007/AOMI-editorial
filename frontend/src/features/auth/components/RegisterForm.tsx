@@ -15,7 +15,8 @@ import { AuthShell } from "./AuthShell";
 import Link from "next/link";
 
 /**
- * Isolated Register Form component.
+ * Registration form.
+ * Creates a new user account and redirects to email verification.
  */
 export function RegisterForm() {
   const router = useRouter();
@@ -55,14 +56,12 @@ export function RegisterForm() {
 
   return (
     <AuthShell
-      title="Create an account"
-      description="Join Photophile and start showcasing your creative portfolio"
+      title="Create account"
+      description="Join Photophile and showcase your portfolio"
       footer={
         <p>
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline underline-offset-4">
-            Sign in here
-          </Link>
+          <Link href="/login">Sign in</Link>
         </p>
       }
     >
@@ -98,10 +97,10 @@ export function RegisterForm() {
         />
         <Button 
           type="submit" 
-          className="w-full h-11 text-base font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]" 
+          className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50" 
           disabled={registerMutation.isPending}
         >
-          {registerMutation.isPending ? "Creating account..." : "Register"}
+          {registerMutation.isPending ? "Creating account..." : "Create Account"}
         </Button>
       </form>
     </AuthShell>

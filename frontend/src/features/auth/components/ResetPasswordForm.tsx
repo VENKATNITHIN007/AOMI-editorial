@@ -9,13 +9,13 @@ import { resetPasswordSchema, ResetPasswordInput } from "@/lib/validations/auth"
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { KeyRound, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
+import { KeyRound, CheckCircle, AlertCircle } from "lucide-react";
 import { useResetPasswordMutation } from "@/features/auth";
 import { AuthShell } from "./AuthShell";
 
 /**
- * Isolated Reset Password Form component.
- * Manages token validation, complex state transitions, and styling.
+ * Reset password form with token validation and multi-state UI.
+ * Handles: invalid token, form input, and success confirmation.
  */
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -58,68 +58,50 @@ export function ResetPasswordForm() {
     }
   };
 
-  // ❌ State: No Token
+  // State: No Token
   if (!token) {
     return (
       <AuthShell
         title="Invalid Link"
-        description="This password reset link is invalid or has expired. Please request a new one."
+        description="This reset link is invalid or has expired."
         icon={AlertCircle}
         footer={
-          <Link
-            href="/forgot-password"
-            className="flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Request new reset link
-          </Link>
+          <Link href="/forgot-password">Request a new link</Link>
         }
       >
-        <div className="bg-red-50 p-4 rounded-lg border border-red-100 text-red-600 text-sm">
-          Security policy: Password reset links are for one-time use only and expire after 1 hour.
+        <div className="bg-gray-50 p-4 border border-gray-100 text-sm text-gray-500 font-light tracking-wider">
+          Password reset links are one-time use and expire after 1 hour.
         </div>
       </AuthShell>
     );
   }
 
-  // ✅ State: Success
+  // State: Success
   if (submitted) {
     return (
       <AuthShell
-        title="Password Reset!"
-        description="Your password has been reset successfully. Redirecting you to login..."
+        title="Password Reset"
+        description="Your password has been updated. Redirecting to login..."
         icon={CheckCircle}
         footer={
-          <Link
-            href="/login"
-            className="flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Go to login now
-          </Link>
+          <Link href="/login">Go to sign in</Link>
         }
       >
         <div className="flex justify-center py-6">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary/20 border-t-primary"></div>
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-black"></div>
         </div>
       </AuthShell>
     );
   }
 
-  // 📝 State: Standard Form
+  // State: Form
   return (
     <AuthShell
       title="New Password"
-      description="Enter your new password below. Make sure it's strong and secure."
+      description="Choose a strong password for your account"
       icon={KeyRound}
       footer={
-        <Link
-          href="/login"
-          className="flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to login
-        </Link>
+        <Link href="/login">Back to sign in</Link>
       }
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -134,7 +116,7 @@ export function ResetPasswordForm() {
         />
         
         <div className="bg-gray-50 p-4 border border-gray-100">
-          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Security Requirements</p>
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Requirements</p>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-[9px] text-gray-500 uppercase tracking-widest">
             <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> 8+ Characters</li>
             <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> Uppercase</li>
@@ -153,10 +135,10 @@ export function ResetPasswordForm() {
 
         <Button 
           type="submit" 
-          className="w-full h-11 text-base font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]" 
+          className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50" 
           disabled={resetPasswordMutation.isPending}
         >
-          {resetPasswordMutation.isPending ? "Resetting..." : "Reset password"}
+          {resetPasswordMutation.isPending ? "Resetting..." : "Reset Password"}
         </Button>
       </form>
     </AuthShell>

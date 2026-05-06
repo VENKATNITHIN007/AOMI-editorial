@@ -9,11 +9,12 @@ import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useForgotPasswordMutation } from "@/features/auth";
-import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, CheckCircle } from "lucide-react";
 import { AuthShell } from "./AuthShell";
 
 /**
- * Isolated Forgot Password Form component with its own success state.
+ * Forgot password form with success state.
+ * Shows a generic success message to prevent email enumeration attacks.
  */
 export function ForgotPasswordForm() {
   const { success } = useToast();
@@ -45,21 +46,15 @@ export function ForgotPasswordForm() {
     return (
       <AuthShell
         title="Check your email"
-        description="If an account exists with this email, you will receive password reset instructions shortly."
+        description="If an account exists with this email, you will receive reset instructions shortly."
         icon={CheckCircle}
         footer={
-          <Link
-            href="/login"
-            className="flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to login
-          </Link>
+          <Link href="/login">Back to sign in</Link>
         }
       >
-        <div className="text-center py-4 text-sm text-muted-foreground">
+        <p className="text-center text-sm text-gray-400 font-light tracking-wider">
           Still don&apos;t see it? Check your spam folder or try another email.
-        </div>
+        </p>
       </AuthShell>
     );
   }
@@ -67,19 +62,13 @@ export function ForgotPasswordForm() {
   return (
     <AuthShell
       title="Reset Password"
-      description="Enter your email address and we'll send you instructions to reset your password"
+      description="Enter your email and we'll send you instructions"
       icon={Mail}
       footer={
-        <Link
-          href="/login"
-          className="flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to login
-        </Link>
+        <Link href="/login">Back to sign in</Link>
       }
     >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Form.Input
           control={form.control}
           name="email"
@@ -90,10 +79,10 @@ export function ForgotPasswordForm() {
         />
         <Button 
           type="submit" 
-          className="w-full h-11 text-base font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]" 
+          className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50" 
           disabled={forgotPasswordMutation.isPending}
         >
-          {forgotPasswordMutation.isPending ? "Sending..." : "Send reset instructions"}
+          {forgotPasswordMutation.isPending ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
     </AuthShell>
