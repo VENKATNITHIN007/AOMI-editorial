@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, LogOut, ChevronRight } from "lucide-react";
+import { Menu, LogOut, User, Camera, ArrowRight } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { Button } from "@/components/ui/button";
 import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
@@ -20,27 +20,47 @@ import {
 
 /**
  * Mobile Navigation Sheet.
- * Features an editorial-style vertical navigation with smart CTA integration.
+ * Full-screen editorial navigation with clear visual hierarchy.
  */
 export function MobileNav() {
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
   const { label: ctaLabel, path: ctaPath } = usePrimaryCta();
 
+  const initials = user?.name
+    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "U";
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+        <Button variant="ghost" size="icon" className="md:hidden size-10" aria-label="Open menu">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full p-0 flex flex-col border-none shadow-2xl">
-        <SheetHeader className="p-10 pb-6 text-left">
-          <SheetTitle className="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-300">Menu</SheetTitle>
+
+      <SheetContent 
+        side="right" 
+        showCloseButton={false}
+        className="w-full sm:max-w-md p-0 flex flex-col border-none bg-white"
+      >
+        {/* Top Bar — Branding + Close */}
+        <SheetHeader className="flex-row items-center justify-between px-6 py-5 border-b border-gray-100">
+          <SheetTitle className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+            Photophile
+          </SheetTitle>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="size-9" aria-label="Close menu">
+              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </Button>
+          </SheetClose>
         </SheetHeader>
-        
-        <div className="flex flex-col flex-1 p-10 pt-4">
-          <nav className="space-y-6">
+
+        {/* Navigation Links */}
+        <nav className="flex-1 flex flex-col px-6 py-8">
+          <div className="space-y-1">
             {MAIN_NAV_ITEMS.map((item) => {
               const isActive = pathname === item.path;
               return (
@@ -48,72 +68,94 @@ export function MobileNav() {
                   <Link
                     href={item.path}
                     className={cn(
-                      "flex items-center justify-between text-3xl font-light tracking-tighter transition-all",
-                      isActive ? "text-black pl-2" : "text-gray-400 [@media(hover:hover)]:hover:text-black active:text-black"
+                      "flex items-center justify-between py-4 text-lg font-light tracking-wide transition-colors",
+                      isActive 
+                        ? "text-black font-medium" 
+                        : "text-gray-400 active:text-black"
                     )}
                   >
                     <span>{item.label}</span>
-                    <ChevronRight className={cn("size-6 transition-all", isActive ? "opacity-100 translate-x-0" : "opacity-30")} />
+                    {isActive && <div className="size-1.5 bg-black rounded-full" />}
                   </Link>
                 </SheetClose>
               );
             })}
-            
+          </div>
+
+          {/* Primary CTA */}
+          <div className="mt-8 pt-8 border-t border-gray-100">
             <SheetClose asChild>
-              <Link
-                href={ctaPath}
-                className="flex items-center justify-between text-3xl font-bold tracking-tighter text-black border-t border-gray-100 pt-8"
-              >
-                <span>{ctaLabel}</span>
-                <ChevronRight className="size-6 opacity-30" />
+              <Link href={ctaPath}>
+                <Button className="w-full h-14 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.25em] font-bold flex items-center justify-center gap-3">
+                  <Camera className="size-4" />
+                  {ctaLabel}
+                  <ArrowRight className="size-3 ml-auto" />
+                </Button>
               </Link>
             </SheetClose>
-          </nav>
+          </div>
 
-          <div className="mt-auto pt-10 border-t border-gray-100 space-y-8">
+          {/* Bottom Section — Auth */}
+          <div className="mt-auto pt-8 border-t border-gray-100">
             {loading ? (
-              <div className="h-10 w-full animate-pulse bg-gray-50" />
+              <div className="space-y-3">
+                <div className="h-12 w-full animate-pulse bg-gray-50" />
+              </div>
             ) : user ? (
-              <div className="space-y-8">
+              <div className="space-y-6">
+                {/* User Info */}
                 <div className="flex items-center gap-4">
-                   <div className="size-12 border border-black flex items-center justify-center text-[10px] font-bold bg-gray-50 uppercase tracking-tighter">
-                      {user.name?.[0].toUpperCase() || "U"}
-                   </div>
-                   <div className="overflow-hidden">
-                     <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black truncate">{user.name}</p>
-                     <p className="text-[10px] text-gray-400 truncate">{user.email}</p>
-                   </div>
+                  <div className="size-11 border border-black flex items-center justify-center text-[10px] font-bold bg-gray-50 uppercase">
+                    {initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-black truncate">{user.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                  </div>
                 </div>
-                
-                <div className="space-y-4">
+
+                {/* User Links */}
+                <div className="flex flex-col gap-1">
                   <SheetClose asChild>
-                    <Link href={NAV_PATHS.PROFILE} className="block text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">
-                      Profile Settings
+                    <Link 
+                      href={NAV_PATHS.PROFILE} 
+                      className="flex items-center gap-3 py-3 text-sm text-gray-500 hover:text-black transition-colors"
+                    >
+                      <User className="size-4" />
+                      Account Settings
                     </Link>
                   </SheetClose>
-                  <button 
-                    onClick={() => logout()}
-                    className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] font-bold text-red-500"
-                  >
-                    <LogOut className="size-3" />
-                    Sign Out
-                  </button>
+                  <SheetClose asChild>
+                    <button 
+                      onClick={() => logout()}
+                      className="flex items-center gap-3 py-3 text-sm text-red-500 hover:text-red-600 transition-colors"
+                    >
+                      <LogOut className="size-4" />
+                      Sign Out
+                    </button>
+                  </SheetClose>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-3">
                 <SheetClose asChild>
                   <Link href={NAV_PATHS.LOGIN}>
-                    <Button variant="default" className="w-full rounded-none h-14 bg-black text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+                    <Button className="w-full h-12 rounded-none bg-black text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-gray-900">
                       Sign In
+                    </Button>
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link href={NAV_PATHS.REGISTER}>
+                    <Button variant="outline" className="w-full h-12 rounded-none border-gray-200 text-[10px] uppercase tracking-[0.2em] font-bold">
+                      Create Account
                     </Button>
                   </Link>
                 </SheetClose>
               </div>
             )}
           </div>
-        </div>
-
+        </nav>
       </SheetContent>
     </Sheet>
   );
