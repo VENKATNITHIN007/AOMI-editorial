@@ -26,7 +26,7 @@ export function VerifyEmailPendingForm() {
       return;
     }
     if (!loading && user && isEmailVerified) {
-      router.push("/dashboard");
+      router.push("/profile");
     }
   }, [loading, user, isEmailVerified, router]);
 
@@ -46,7 +46,7 @@ export function VerifyEmailPendingForm() {
       const result = await refetch();
       if (result.data?.isEmailVerified) {
         success("Email verified!");
-        router.push("/dashboard");
+        router.push("/profile");
         return;
       }
       showError("Still unverified. Please click the link in your email.");

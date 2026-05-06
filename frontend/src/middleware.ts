@@ -5,7 +5,7 @@ import { getSafeRedirectPath } from "@/features/auth/utils/auth-navigation";
 
 // Paths that require authentication
 const PROTECTED_PATHS = [
-  "/dashboard",
+  "/profile",
   "/photographer/dashboard",
   "/photographer/onboard",
 ];
@@ -52,8 +52,8 @@ export async function middleware(request: NextRequest) {
   // Handle auth routes - redirect authenticated users AWAY from login/register
   if (isAuthPath(pathname) && isAuthenticated) {
     const redirectPath = getSafeRedirectPath(request.nextUrl.searchParams.get("redirect"));
-    // Default to dashboard if no safe redirect path is found
-    return NextResponse.redirect(new URL(redirectPath || "/dashboard", request.url));
+    // Default to profile if no safe redirect path is found
+    return NextResponse.redirect(new URL(redirectPath || "/profile", request.url));
   }
 
   return NextResponse.next();

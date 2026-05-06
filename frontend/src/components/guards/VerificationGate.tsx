@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth, getAuthRedirect } from "@/features/auth";
 
 const GUARDED_PATH_PREFIXES = [
-  "/dashboard",
+  "/profile",
   "/photographer/dashboard",
   "/photographer/onboard",
 ];
@@ -33,7 +33,7 @@ export function VerificationGate({ children }: { children: ReactNode }) {
     }
 
     const target = getAuthRedirect(user);
-    const isExempt = pathname === "/photographer/onboard" || pathname.startsWith("/photographers/");
+    const isExempt = (user.isEmailVerified && pathname === "/photographer/onboard") || pathname.startsWith("/photographers/");
     
     if (target !== pathname && !pathname.startsWith(target) && !isExempt) {
       router.replace(target);
@@ -42,7 +42,7 @@ export function VerificationGate({ children }: { children: ReactNode }) {
   }, [loading, user, pathname, router]);
 
   const isAuthorized = user && (getAuthRedirect(user) === pathname 
-    || pathname === "/photographer/onboard" 
+    || (user.isEmailVerified && pathname === "/photographer/onboard") 
     || pathname.startsWith("/photographers/"));
 
   if (!loading && isGuardedPath(pathname) && !isAuthorized) {

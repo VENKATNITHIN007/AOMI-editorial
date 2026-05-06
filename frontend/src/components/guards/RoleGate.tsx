@@ -10,7 +10,7 @@ interface RoleGateProps {
   redirectTo?: string;
 }
 
-export function RoleGate({ children, allowedRoles, redirectTo = "/dashboard" }: RoleGateProps) {
+export function RoleGate({ children, allowedRoles, redirectTo = "/profile" }: RoleGateProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
 

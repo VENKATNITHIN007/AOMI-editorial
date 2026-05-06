@@ -32,7 +32,7 @@ export function VerifyEmailForm() {
         await mutateAsync(token);
         setStatus("success");
         setMessage("Your email has been verified successfully!");
-        setTimeout(() => router.push("/dashboard"), 2000);
+        setTimeout(() => router.push("/profile"), 2000);
       } catch (err: unknown) {
         setStatus("error");
         setMessage((err as Error).message || "Failed to verify email.");
@@ -69,7 +69,7 @@ export function VerifyEmailForm() {
       icon={CheckCircle}
       footer={
         <Button asChild variant="outline" className="w-full h-11 font-semibold">
-          <Link href="/dashboard">Go to Dashboard</Link>
+          <Link href="/profile">Go to Profile</Link>
         </Button>
       }
     >
