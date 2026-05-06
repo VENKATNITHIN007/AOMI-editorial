@@ -1,6 +1,5 @@
-import React from "react";
-import { Page } from "@/components/Page";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { NAV_PATHS } from "@/lib/constants/nav";
 
 interface AuthShellProps {
   title: string;
@@ -25,6 +24,14 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <Page className="items-center justify-center bg-white">
+      <div className="absolute top-8 left-0 right-0 flex justify-center md:left-10 md:right-auto md:justify-start">
+        <Link href={NAV_PATHS.HOME} className="group transition-all hover:opacity-70">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+            Photophile
+          </span>
+        </Link>
+      </div>
+
       <Page.Body className={cn("max-w-[480px] w-full py-20 px-6", className)}>
         <div className="space-y-12">
           {/* Header Section */}
