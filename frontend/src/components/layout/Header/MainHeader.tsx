@@ -3,7 +3,7 @@ import Link from "next/link";
 import { NavLinks } from "./NavLinks";
 import { HeaderActions } from "./HeaderActions";
 import { MobileNav } from "./MobileNav";
-import { ROUTES } from "@/lib/constants/routes";
+import { NAV_PATHS } from "@/lib/constants/nav";
 
 /**
  * Main Header (Server Component Shell).
@@ -11,28 +11,35 @@ import { ROUTES } from "@/lib/constants/routes";
  */
 export function MainHeader() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 group transition-opacity hover:opacity-70">
-          <span className="text-lg font-bold text-gray-900">
-            Photophile
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
+      <div className="mx-auto flex h-20 max-w-7xl items-center px-6 sm:px-8">
+        
+        {/* Column 1: Logo (Left) */}
+        <div className="flex-1 flex items-center">
+          <Link href={NAV_PATHS.HOME} className="group transition-all hover:opacity-70">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+              Photophile
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation (Hidden on Mobile) */}
-        <NavLinks className="hidden md:flex" />
+        {/* Column 2: Navigation (Center - Desktop) */}
+        <div className="hidden md:flex flex-1 justify-center">
+          <NavLinks />
+        </div>
 
-        {/* Desktop Auth Actions (Hidden on Mobile) */}
-        <div className="hidden md:flex">
+        {/* Column 3: Actions (Right - Desktop) */}
+        <div className="hidden md:flex flex-1 justify-end">
           <HeaderActions />
         </div>
 
-        {/* Mobile Menu (Visible on Mobile Only) */}
-        <div className="md:hidden">
+        {/* Mobile Trigger (Right - Mobile) */}
+        <div className="md:hidden flex flex-1 justify-end">
           <MobileNav />
         </div>
+
       </div>
     </header>
   );
 }
+

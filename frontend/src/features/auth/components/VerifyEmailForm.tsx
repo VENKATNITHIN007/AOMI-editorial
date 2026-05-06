@@ -33,9 +33,9 @@ export function VerifyEmailForm() {
         setStatus("success");
         setMessage("Your email has been verified successfully!");
         setTimeout(() => router.push("/dashboard"), 2000);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setStatus("error");
-        setMessage(err.message || "Failed to verify email.");
+        setMessage((err as Error).message || "Failed to verify email.");
       }
     };
 

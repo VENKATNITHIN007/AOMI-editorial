@@ -3,10 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, LogOut } from "lucide-react";
+import { Menu, LogOut, ChevronRight } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { Button } from "@/components/ui/button";
-import { ROUTES } from "@/lib/constants/routes";
+import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
+import { MAIN_NAV_ITEMS, NAV_PATHS } from "@/lib/constants/nav";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -17,22 +18,14 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
-const NAV_ITEMS = [
-  { label: "Explore Photographers", href: ROUTES.DISCOVERY },
-  { label: "Become a Photographer", href: ROUTES.BECOME_PHOTOGRAPHER },
-];
-
 /**
  * Mobile Navigation Sheet.
- * Restores hamburger menu access on small screens with all nav links,
- * auth actions, and a logout button.
+ * Features an editorial-style vertical navigation with smart CTA integration.
  */
 export function MobileNav() {
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
-  const isAuthenticated = !!user;
-
-  const dashboardHref = user?.role === "photographer" ? ROUTES.STUDIO.MANAGE : ROUTES.STUDIO.PROFILE;
+  const { label: ctaLabel, path: ctaPath } = usePrimaryCta();
 
   return (
     <Sheet>
@@ -41,62 +34,86 @@ export function MobileNav() {
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full p-0 sm:max-w-sm">
-        <SheetHeader className="border-b p-6">
-          <SheetTitle>Navigation</SheetTitle>
+      <SheetContent side="right" className="w-full p-0 flex flex-col border-none shadow-2xl">
+        <SheetHeader className="p-10 pb-6 text-left">
+          <SheetTitle className="text-[10px] uppercase tracking-[0.4em] font-bold text-gray-300">Menu</SheetTitle>
         </SheetHeader>
-        <div className="flex h-[calc(100vh-84px)] flex-col justify-between p-6">
-          {/* Navigation Links */}
-          <nav className="space-y-2">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
+        
+        <div className="flex flex-col flex-1 p-10 pt-4">
+          <nav className="space-y-6">
+            {MAIN_NAV_ITEMS.map((item) => {
+              const isActive = pathname === item.path;
               return (
-                <SheetClose asChild key={item.href}>
+                <SheetClose asChild key={item.path}>
                   <Link
-                    href={item.href}
+                    href={item.path}
                     className={cn(
-                      "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-amber-50 text-amber-700"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      "flex items-center justify-between text-3xl font-light tracking-tighter transition-all",
+                      isActive ? "text-black pl-2" : "text-gray-400 [@media(hover:hover)]:hover:text-black active:text-black"
                     )}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <ChevronRight className={cn("size-6 transition-all", isActive ? "opacity-100 translate-x-0" : "opacity-30")} />
                   </Link>
                 </SheetClose>
               );
             })}
+            
+            <SheetClose asChild>
+              <Link
+                href={ctaPath}
+                className="flex items-center justify-between text-3xl font-bold tracking-tighter text-black border-t border-gray-100 pt-8"
+              >
+                <span>{ctaLabel}</span>
+                <ChevronRight className="size-6 opacity-30" />
+              </Link>
+            </SheetClose>
           </nav>
 
-          {/* Bottom Actions */}
-          <div className="space-y-2">
+          <div className="mt-auto pt-10 border-t border-gray-100 space-y-8">
             {loading ? (
-              <div className="h-10 w-full animate-pulse rounded bg-gray-100" />
-            ) : isAuthenticated ? (
-              <>
-                <SheetClose asChild>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href={dashboardHref}>
-                      {user?.role === "photographer" ? "Studio Dashboard" : "Profile Settings"}
+              <div className="h-10 w-full animate-pulse bg-gray-50" />
+            ) : user ? (
+              <div className="space-y-8">
+                <div className="flex items-center gap-4">
+                   <div className="size-12 border border-black flex items-center justify-center text-[10px] font-bold bg-gray-50 uppercase tracking-tighter">
+                      {user.name?.[0].toUpperCase() || "U"}
+                   </div>
+                   <div className="overflow-hidden">
+                     <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black truncate">{user.name}</p>
+                     <p className="text-[10px] text-gray-400 truncate">{user.email}</p>
+                   </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <SheetClose asChild>
+                    <Link href={NAV_PATHS.PROFILE} className="block text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">
+                      Profile Settings
                     </Link>
-                  </Button>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Button variant="ghost" className="w-full justify-start border-t border-gray-100" onClick={logout}>
-                    <LogOut className="mr-2 size-3" />
-                    Logout
-                  </Button>
-                </SheetClose>
-              </>
+                  </SheetClose>
+                  <button 
+                    onClick={() => logout()}
+                    className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] font-bold text-red-500"
+                  >
+                    <LogOut className="size-3" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
             ) : (
-              <SheetClose asChild>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href={ROUTES.AUTH.LOGIN}>Sign In</Link>
-                </Button>
-              </SheetClose>
+              <div className="space-y-4">
+                <SheetClose asChild>
+                  <Link href={NAV_PATHS.LOGIN}>
+                    <Button variant="default" className="w-full rounded-none h-14 bg-black text-white text-[10px] uppercase tracking-[0.3em] font-bold">
+                      Sign In
+                    </Button>
+                  </Link>
+                </SheetClose>
+              </div>
             )}
           </div>
         </div>
+
       </SheetContent>
     </Sheet>
   );

@@ -1,6 +1,5 @@
 import React from "react";
 import { Page } from "@/components/Page";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface AuthShellProps {

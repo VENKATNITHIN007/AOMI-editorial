@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { loginSchema, LoginInput } from "@/lib/validations/auth";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
@@ -42,8 +41,8 @@ export function LoginForm() {
       const target = safeRedirect || getAuthRedirect(response.user);
 
       router.push(target);
-    } catch (err: any) {
-      showError(err.message || "Invalid email or password.");
+    } catch (err: unknown) {
+      showError((err as Error).message || "Invalid email or password.");
     }
   };
 

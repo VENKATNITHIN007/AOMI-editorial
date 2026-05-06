@@ -1,56 +1,62 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/Section";
-import { ROUTES } from "@/lib/constants/routes";
+import { NAV_PATHS } from "@/lib/constants/nav";
+import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
 import { ArrowRight } from "lucide-react";
 
-/**
- * Editorial Photography Hero.
- * Uses a large, immersive background image to immediately establish the "photography" context.
- */
 export function Hero() {
+  const { label: ctaLabel, path: ctaPath } = usePrimaryCta();
+
   return (
-    <Section 
-      spacing="none" 
-      className="min-h-[calc(100vh-5rem)] flex items-center justify-center relative overflow-hidden bg-black"
+    <Section
+      variant="default"
+      className="relative h-[90vh] flex items-center overflow-hidden bg-black text-white p-0"
     >
-      {/* Immersive Background Image */}
-      <Image
-        src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?q=80&w=2400&auto=format&fit=crop"
-        alt="Photographer holding camera"
-        fill
-        priority
-        className="object-cover opacity-60"
-      />
-      
-      {/* Subtle overlay gradient to ensure text readability */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-black/80" />
+      <div className="absolute inset-0 z-0 opacity-60">
+        <Image
+          src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80"
+          alt="Premium photography background"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      </div>
 
-      <div className="flex flex-col items-center text-center relative z-10 w-full max-w-5xl px-4">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mb-6 leading-tight">
-          Find the perfect <br />
-          <span className="italic font-light text-gray-300">photographer.</span>
-        </h1>
-        
-        <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mb-12 font-light">
-          Discover top talent for your next shoot, or build your own professional portfolio to get hired.
-        </p>
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8">
+        <div className="max-w-4xl space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div>
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.85] mix-blend-difference">
+              The Art of <br />
+              <span className="italic font-light opacity-80">Discovery.</span>
+            </h1>
+          </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-          <Button asChild size="lg" className="w-full sm:w-auto h-14 px-10 text-base font-semibold bg-white hover:bg-gray-200 text-black hover:text-black rounded-none">
-            <Link href={ROUTES.DISCOVERY}>
-              Explore Portfolios
+          <p className="max-w-xl text-base sm:text-lg md:text-xl font-light text-gray-300 leading-relaxed uppercase tracking-widest mix-blend-difference">
+            Connect with the world&apos;s most elite photographers. A curated platform for visual excellence.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 pt-6 items-start sm:items-center">
+            <Link href={NAV_PATHS.DISCOVERY}>
+              <Button size="lg" className="h-14 sm:h-16 px-10 sm:px-12 text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-black bg-white text-black hover:bg-gray-200 rounded-none shadow-2xl transition-all hover:scale-105">
+                Explore Gallery
+              </Button>
             </Link>
-          </Button>
-          
-          <Button asChild size="lg" className="w-full sm:w-auto h-14 px-10 text-base font-semibold bg-transparent border border-white text-white hover:bg-white/10 hover:text-white rounded-none backdrop-blur-sm">
-            <Link href={ROUTES.BECOME_PHOTOGRAPHER} className="flex items-center text-white hover:text-white">
-              Join as Photographer
-              <ArrowRight className="ml-2 size-4" />
+
+            <Link
+              href={ctaPath}
+              className="flex items-center gap-3 group text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-bold text-white hover:text-gray-300 transition-colors"
+            >
+              {ctaLabel}
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-2" />
             </Link>
-          </Button>
+          </div>
         </div>
       </div>
     </Section>

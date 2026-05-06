@@ -14,10 +14,11 @@ import { queryKeys } from "@/lib/query/keys";
 // ── Profile Queries & Mutations ────────────────────────────────────────────
 
 /** Fetch the current photographer's own profile (dashboard). */
-export function useMyProfileQuery() {
+export function useMyProfileQuery(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: queryKeys.myPhotographerProfile(),
     queryFn: getMyPhotographerProfile,
+    enabled: options?.enabled,
   });
 }
 

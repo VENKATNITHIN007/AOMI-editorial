@@ -35,8 +35,8 @@ export function VerifyEmailPendingForm() {
     try {
       await resendMutation.mutateAsync(user.email);
       success("Verification email sent!");
-    } catch (error: any) {
-      showError(error.message || "Failed to resend.");
+    } catch (error: unknown) {
+      showError((error as Error).message || "Failed to resend.");
     }
   };
 
@@ -50,8 +50,8 @@ export function VerifyEmailPendingForm() {
         return;
       }
       showError("Still unverified. Please click the link in your email.");
-    } catch (error: any) {
-      showError(error.message || "Failed to refresh.");
+    } catch (error: unknown) {
+      showError((error as Error).message || "Failed to refresh.");
     } finally {
       setChecking(false);
     }
