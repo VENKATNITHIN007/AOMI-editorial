@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { NAV_PATHS } from "@/lib/constants/nav";
+import { Page } from "@/components/Page";
+import { cn } from "@/lib/utils";
 
 interface AuthShellProps {
   title: string;
