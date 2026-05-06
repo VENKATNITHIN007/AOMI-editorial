@@ -125,31 +125,28 @@ export function ResetPasswordForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <input type="hidden" {...form.register("token")} />
 
-        <Form.Input
+        <Form.Password
           control={form.control}
           name="newPassword"
           label="New password"
-          type="password"
           placeholder="••••••••"
           disabled={resetPasswordMutation.isPending}
         />
         
-        <div className="bg-muted/50 p-3 rounded-lg border border-border/50">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Requirements</p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
-            <li className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-green-500" /> 8+ Characters</li>
-            <li className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-green-500" /> Uppercase</li>
-            <li className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-green-500" /> Lowercase</li>
-            <li className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-green-500" /> Number</li>
-            <li className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-green-500" /> Special Char</li>
+        <div className="bg-gray-50 p-4 border border-gray-100">
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Security Requirements</p>
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-[9px] text-gray-500 uppercase tracking-widest">
+            <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> 8+ Characters</li>
+            <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> Uppercase</li>
+            <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> Lowercase</li>
+            <li className="flex items-center gap-1.5"><div className="size-1 bg-black rounded-full" /> Number</li>
           </ul>
         </div>
 
-        <Form.Input
+        <Form.Password
           control={form.control}
           name="confirmPassword"
           label="Confirm password"
-          type="password"
           placeholder="••••••••"
           disabled={resetPasswordMutation.isPending}
         />

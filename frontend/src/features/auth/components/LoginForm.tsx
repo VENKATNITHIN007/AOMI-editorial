@@ -69,23 +69,20 @@ export function LoginForm() {
           disabled={loginMutation.isPending}
         />
         
-        <div className="space-y-1">
-          <Form.Input
-            control={form.control}
-            name="password"
-            label="Password"
-            type="password"
-            placeholder="••••••••"
-            disabled={loginMutation.isPending}
-          />
-          <div className="flex justify-end">
-            <Link 
-              href="/forgot-password" 
-              className="text-xs font-medium text-primary hover:underline underline-offset-4"
-            >
-              Forgot password?
-            </Link>
-          </div>
+        <Form.Password
+          control={form.control}
+          name="password"
+          label="Password"
+          placeholder="••••••••"
+          disabled={loginMutation.isPending}
+        />
+        <div className="flex justify-end -mt-3">
+          <Link 
+            href="/forgot-password" 
+            className="text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-black transition-colors"
+          >
+            Forgot password?
+          </Link>
         </div>
 
         <Button 

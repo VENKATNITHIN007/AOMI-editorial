@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuth, useUpdateProfileMutation } from "@/features/auth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,20 +22,20 @@ export function ProfileForm() {
   const updateProfileMutation = useUpdateProfileMutation();
   const { success, error: showError } = useToast();
 
-  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<ProfileInput>({
+  const form = useForm<ProfileInput>({
     resolver: zodResolver(profileSchema),
     defaultValues: { fullName: "", phoneNumber: "", avatar: "" },
   });
 
   useEffect(() => {
     if (user) {
-      reset({
+      form.reset({
         fullName: user.name || "",
         phoneNumber: user.phoneNumber || "",
         avatar: user.avatar || "",
       });
     }
-  }, [user, reset]);
+  }, [user, form]);
 
   const onSubmit = async (data: ProfileInput) => {
     try {
@@ -51,29 +50,55 @@ export function ProfileForm() {
     }
   };
 
+  const isPending = updateProfileMutation.isPending;
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <div className="space-y-5">
-        <div className="space-y-1.5">
-          <Label className="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Full Name</Label>
-          <Input {...register("fullName")} placeholder="Your name" disabled={isSubmitting} className="h-12 text-sm border-gray-200 bg-gray-50/50 focus:bg-white transition-colors" />
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+      <div className="space-y-8">
+        {/* Avatar Section */}
+        <Form.ImageUpload
+          control={form.control}
+          name="avatar"
+          label="Profile Picture"
+          description="JPG, PNG or GIF. Max 5MB."
+          disabled={isPending}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Form.Input
+            control={form.control}
+            name="fullName"
+            label="Full Name"
+            placeholder="Your name"
+            disabled={isPending}
+          />
+          
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">
+              Email Address
+            </label>
+            <div className="h-12 flex items-center px-4 bg-gray-100 text-gray-400 text-sm border border-transparent cursor-not-allowed">
+              {user?.email}
+            </div>
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Email</Label>
-          <Input value={user?.email || ""} disabled className="h-12 text-sm bg-gray-100 text-gray-400 cursor-not-allowed" />
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Phone Number</Label>
-          <Input {...register("phoneNumber")} placeholder="+1 (555) 000-0000" disabled={isSubmitting} className="h-12 text-sm border-gray-200 bg-gray-50/50 focus:bg-white transition-colors" />
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Avatar URL</Label>
-          <Input {...register("avatar")} placeholder="https://example.com/avatar.jpg" disabled={isSubmitting} className="h-12 text-sm border-gray-200 bg-gray-50/50 focus:bg-white transition-colors" />
-        </div>
+
+        <Form.Input
+          control={form.control}
+          name="phoneNumber"
+          label="Phone Number"
+          placeholder="+1 (555) 000-0000"
+          disabled={isPending}
+        />
       </div>
-      <div className="border-t border-gray-50 pt-6">
-        <Button type="submit" disabled={isSubmitting} className="w-full h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold disabled:opacity-50">
-          {isSubmitting ? "Saving..." : "Save Changes"}
+
+      <div className="border-t border-gray-50 pt-8">
+        <Button 
+          type="submit" 
+          disabled={isPending} 
+          className="w-full md:w-auto px-12 h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.2em] font-bold disabled:opacity-50 transition-all"
+        >
+          {isPending ? "Saving Changes..." : "Save Changes"}
         </Button>
       </div>
     </form>

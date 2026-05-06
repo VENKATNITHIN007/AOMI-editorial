@@ -82,19 +82,17 @@ export function RegisterForm() {
           placeholder="name@example.com"
           disabled={registerMutation.isPending}
         />
-        <Form.Input
+        <Form.Password
           control={form.control}
           name="password"
           label="Password"
-          type="password"
           placeholder="••••••••"
           disabled={registerMutation.isPending}
         />
-        <Form.Input
+        <Form.Password
           control={form.control}
           name="confirmPassword"
           label="Confirm Password"
-          type="password"
           placeholder="••••••••"
           disabled={registerMutation.isPending}
         />
