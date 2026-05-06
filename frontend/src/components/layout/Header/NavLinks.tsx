@@ -4,12 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ROUTES } from "@/lib/constants/routes";
+import { MAIN_NAV_ITEMS } from "@/lib/constants/nav";
 
-const NAV_ITEMS = [
-  { label: "Explore Photographers", href: ROUTES.DISCOVERY },
-  { label: "Become a Photographer", href: ROUTES.BECOME_PHOTOGRAPHER },
-];
 
 /**
  * Navigation Links for the Header.
@@ -19,17 +15,17 @@ export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
 
   return (
-    <nav className={cn("flex items-center gap-8", className)}>
-      {NAV_ITEMS.map((item) => {
-        const isActive = pathname === item.href;
+    <nav className={cn("flex items-center gap-10", className)}>
+      {MAIN_NAV_ITEMS.map((item) => {
+        const isActive = pathname === item.path;
         
         return (
           <Link
-            key={item.href}
-            href={item.href}
+            key={item.path}
+            href={item.path}
             className={cn(
-              "text-sm font-semibold transition-colors hover:text-amber-600",
-              isActive ? "text-amber-600" : "text-gray-600"
+              "text-[11px] uppercase tracking-[0.2em] font-medium transition-all hover:text-black",
+              isActive ? "text-black" : "text-gray-400"
             )}
           >
             {item.label}
@@ -37,5 +33,6 @@ export function NavLinks({ className }: { className?: string }) {
         );
       })}
     </nav>
+
   );
 }

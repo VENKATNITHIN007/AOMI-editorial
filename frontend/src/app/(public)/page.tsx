@@ -1,6 +1,6 @@
 import { Hero } from "@/features/landing/Hero";
 import { CategoryGrid } from "@/features/landing/CategoryGrid";
-import { OnboardingCTA } from "@/features/landing/OnboardingCTA";
+import { StudioCTA } from "@/features/landing/StudioCTA";
 
 /**
  * Premium Landing Page (Minimalist & High-Impact).
@@ -13,7 +13,7 @@ export default function LandingPage() {
     <>
       <Hero />
       <CategoryGrid />
-      <OnboardingCTA />
+      <StudioCTA />
     </>
   );
 }
