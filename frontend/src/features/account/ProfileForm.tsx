@@ -17,7 +17,11 @@ const profileSchema = z.object({
 
 type ProfileInput = z.infer<typeof profileSchema>;
 
-export function ProfileForm() {
+interface ProfileFormProps {
+  onSuccess?: () => void;
+}
+
+export function ProfileForm({ onSuccess }: ProfileFormProps) {
   const { user } = useAuth();
   const updateProfileMutation = useUpdateProfileMutation();
   const { success, error: showError } = useToast();
@@ -45,6 +49,7 @@ export function ProfileForm() {
         avatar: data.avatar || undefined,
       });
       success("Profile updated successfully");
+      if (onSuccess) onSuccess();
     } catch {
       showError("Failed to update profile");
     }
