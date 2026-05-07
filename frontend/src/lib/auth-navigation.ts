@@ -17,12 +17,8 @@ export function getAuthRedirect(user: User | null): string {
     return "/verify-email/pending";
   }
 
-  // 3. Role-based dashboards
-  if (user.role === "photographer") {
-    return "/photographer/dashboard";
-  }
-
-  // 4. Default for regular users (sent to their profile page)
+  // 3. Default redirect for all roles (sent to their profile page)
+  // Photographers can access their dashboard via the specialized menu/CTA.
   return "/profile";
 }
 

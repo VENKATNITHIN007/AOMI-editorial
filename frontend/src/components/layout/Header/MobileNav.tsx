@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, LogOut, User, Camera, ArrowRight } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { Button } from "@/components/ui/button";
-import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
+import { usePrimaryCta } from "@/hooks/usePrimaryCta";
 import { MAIN_NAV_ITEMS, NAV_PATHS } from "@/lib/constants/nav";
 import { cn } from "@/lib/utils";
 import {
@@ -122,7 +122,7 @@ export function MobileNav() {
                       className="flex items-center gap-3 py-3 text-sm text-gray-500 hover:text-black transition-colors"
                     >
                       <User className="size-4" />
-                      Account Settings
+                      Profile
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>

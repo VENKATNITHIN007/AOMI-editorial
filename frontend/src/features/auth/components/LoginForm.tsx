@@ -9,7 +9,8 @@ import { loginSchema, LoginInput } from "@/lib/validations/auth";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useLoginMutation, getAuthRedirect, getSafeRedirectPath } from "@/features/auth";
+import { useLoginMutation } from "@/features/auth";
+import { getAuthRedirect, getSafeRedirectPath } from "@/lib/auth-navigation";
 
 import { AuthShell } from "./AuthShell";
 

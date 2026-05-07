@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useAuth, useUpdateProfileMutation } from "@/features/auth";
+import { useUploadFileMutation } from "@/features/photographer-studio/studio.queries";
 import { useToast } from "@/hooks/use-toast";
 
 const profileSchema = z.object({
@@ -17,9 +18,14 @@ const profileSchema = z.object({
 
 type ProfileInput = z.infer<typeof profileSchema>;
 
-export function ProfileForm() {
+interface ProfileFormProps {
+  onSuccess?: () => void;
+}
+
+export function ProfileForm({ onSuccess }: ProfileFormProps) {
   const { user } = useAuth();
   const updateProfileMutation = useUpdateProfileMutation();
+  const uploadFileMutation = useUploadFileMutation();
   const { success, error: showError } = useToast();
 
   const form = useForm<ProfileInput>({
@@ -37,6 +43,15 @@ export function ProfileForm() {
     }
   }, [user, form]);
 
+  /**
+   * Upload avatar to Cloudinary via the backend.
+   * Returns the Cloudinary secure_url to store in the form field.
+   */
+  const handleAvatarUpload = useCallback(async (file: File): Promise<string> => {
+    const result = await uploadFileMutation.mutateAsync({ file, folder: "avatar" });
+    return result.url;
+  }, [uploadFileMutation]);
+
   const onSubmit = async (data: ProfileInput) => {
     try {
       await updateProfileMutation.mutateAsync({
@@ -45,6 +60,7 @@ export function ProfileForm() {
         avatar: data.avatar || undefined,
       });
       success("Profile updated successfully");
+      if (onSuccess) onSuccess();
     } catch {
       showError("Failed to update profile");
     }
@@ -60,8 +76,9 @@ export function ProfileForm() {
           control={form.control}
           name="avatar"
           label="Profile Picture"
-          description="JPG, PNG or GIF. Max 5MB."
+          description="JPG, PNG or WebP. Max 10MB."
           disabled={isPending}
+          onUpload={handleAvatarUpload}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

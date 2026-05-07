@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
-import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
+import { usePrimaryCta } from "@/hooks/usePrimaryCta";
 import { ArrowRight } from "lucide-react";
 
 export function StudioCTA() {

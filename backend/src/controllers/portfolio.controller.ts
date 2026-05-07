@@ -5,27 +5,48 @@ import ApiError from "../utils/core/ApiError";
 import { Photographer } from "../models/photographer.model";
 import { ERRORS } from "../constants/error";
 import { Portfolio, IPortfolio } from "../models/portfolio.model";
+import {
+  deleteFromCloudinary,
+  deleteMultipleFromCloudinary,
+} from "../services/cloudinary.service";
+
+// ── Helpers ────────────────────────────────────────────────────────────────
 
 /**
- * Add single portfolio item
+ * Resolve the authenticated user's Photographer document.
+ * Throws if the user is not authenticated or not a photographer.
+ */
+async function resolvePhotographer(req: Request) {
+  if (!req.user) {
+    throw new ApiError(401, ERRORS.AUTH.REQUIRED);
+  }
+
+  const photographer = await Photographer.findOne({ userId: req.user._id });
+
+  if (!photographer) {
+    throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
+  }
+
+  return photographer;
+}
+
+// ── Controllers ────────────────────────────────────────────────────────────
+
+/**
+ * Add single portfolio item.
  */
 export const addPortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, ERRORS.AUTH.REQUIRED);
-    }
-    const userId = req.user._id;
+    const photographer = await resolvePhotographer(req);
     const { mediaUrl, mediaType, category } = req.body;
-    const photographer = await Photographer.findOne({ userId });
-    if (!photographer) {
-      throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
-    }
+
     const portfolioItem = await Portfolio.create({
       photographerId: photographer._id,
       mediaUrl,
       mediaType,
       category,
     });
+
     return res
       .status(201)
       .json(
@@ -35,26 +56,22 @@ export const addPortfolioItem = asyncHandler(
 );
 
 /**
- * Add multiple portfolio items (batch upload)
+ * Add multiple portfolio items (batch upload).
  */
 export const addMultiplePortfolioItems = asyncHandler(
   async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, ERRORS.AUTH.REQUIRED);
-    }
-    const userId = req.user._id;
+    const photographer = await resolvePhotographer(req);
     const { items } = req.body;
-    const photographer = await Photographer.findOne({ userId });
-    if (!photographer) {
-      throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
-    }
+
     const portfolioItems = items.map((item: IPortfolio) => ({
       photographerId: photographer._id,
       mediaUrl: item.mediaUrl,
       mediaType: item.mediaType,
       category: item.category,
     }));
+
     const createdItems = await Portfolio.insertMany(portfolioItems);
+
     return res
       .status(201)
       .json(
@@ -67,21 +84,16 @@ export const addMultiplePortfolioItems = asyncHandler(
 );
 
 /**
- * Get own portfolio (authenticated photographer)
+ * Get own portfolio (authenticated photographer).
  */
 export const getMyPortfolio = asyncHandler(
   async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, ERRORS.AUTH.REQUIRED);
-    }
-    const userId = req.user._id;
-    const photographer = await Photographer.findOne({ userId });
-    if (!photographer) {
-      throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
-    }
+    const photographer = await resolvePhotographer(req);
+
     const portfolio = await Portfolio.find({
       photographerId: photographer._id,
     }).sort({ createdAt: -1 });
+
     return res
       .status(200)
       .json(new ApiResponse(portfolio, "Portfolio fetched successfully"));
@@ -89,20 +101,24 @@ export const getMyPortfolio = asyncHandler(
 );
 
 /**
- * Get portfolio by photographer username (public)
+ * Get portfolio by photographer username (public).
  */
 export const getPortfolioByUsername = asyncHandler(
   async (req: Request, res: Response) => {
     const { username } = req.params;
+
     const photographer = await Photographer.findOne({
       username: username.toLowerCase(),
     });
+
     if (!photographer) {
       throw new ApiError(404, ERRORS.PHOTOGRAPHER.NOT_FOUND);
     }
+
     const portfolio = await Portfolio.find({
       photographerId: photographer._id,
     }).sort({ createdAt: -1 });
+
     return res
       .status(200)
       .json(new ApiResponse(portfolio, "Portfolio fetched successfully"));
@@ -110,67 +126,55 @@ export const getPortfolioByUsername = asyncHandler(
 );
 
 /**
- * Update portfolio item
+ * Update portfolio item (category only).
  */
-export const updatePortfolioItem = asyncHandler(async (req: Request, res: Response) => {
+export const updatePortfolioItem = asyncHandler(
+  async (req: Request, res: Response) => {
+    const photographer = await resolvePhotographer(req);
+    const { itemId } = req.params;
+    const { category } = req.body;
 
-  if (!req.user) {
-    return res.status(401).json(new ApiError(401, ERRORS.AUTH.REQUIRED));
-  }
-
-  const userId = req.user._id;
-  const { itemId } = req.params;
-  const { category } = req.body;
-
-  const photographer = await Photographer.findOne({ userId });
-  if (!photographer) {
-    return res
-      .status(403)
-      .json(
-        new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY),
-      );
-  }
-
-  const portfolioItem = await Portfolio.findOneAndUpdate(
-    { _id: itemId, photographerId: photographer._id },
-    { category },
-    { new: true },
-  );
-
-  if (!portfolioItem) {
-    return res
-      .status(404)
-      .json(new ApiError(404, ERRORS.PORTFOLIO.ITEM_NOT_FOUND));
-  }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(portfolioItem, "Portfolio item updated successfully"),
+    const portfolioItem = await Portfolio.findOneAndUpdate(
+      { _id: itemId, photographerId: photographer._id },
+      { category },
+      { new: true },
     );
-})
+
+    if (!portfolioItem) {
+      throw new ApiError(404, ERRORS.PORTFOLIO.ITEM_NOT_FOUND);
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(portfolioItem, "Portfolio item updated successfully"),
+      );
+  },
+);
 
 /**
- * Delete single portfolio item
+ * Delete single portfolio item.
+ * Also removes the associated file from Cloudinary.
  */
 export const deletePortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, ERRORS.AUTH.REQUIRED);
-    }
-    const userId = req.user._id;
+    const photographer = await resolvePhotographer(req);
     const { itemId } = req.params;
-    const photographer = await Photographer.findOne({ userId });
-    if (!photographer) {
-      throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
-    }
+
     const portfolioItem = await Portfolio.findOneAndDelete({
       _id: itemId,
       photographerId: photographer._id,
     });
+
     if (!portfolioItem) {
       throw new ApiError(404, ERRORS.PORTFOLIO.ITEM_NOT_FOUND);
     }
+
+    // Fire-and-forget Cloudinary cleanup (don't block the response)
+    deleteFromCloudinary(portfolioItem.mediaUrl).catch((err) =>
+      console.error("[Portfolio] Cloudinary cleanup failed:", err),
+    );
+
     return res
       .status(200)
       .json(new ApiResponse({}, "Portfolio item deleted successfully"));
@@ -178,23 +182,33 @@ export const deletePortfolioItem = asyncHandler(
 );
 
 /**
- * Delete multiple portfolio items
+ * Delete multiple portfolio items.
+ * Also removes the associated files from Cloudinary.
  */
 export const deleteMultiplePortfolioItems = asyncHandler(
   async (req: Request, res: Response) => {
-    if (!req.user) {
-      throw new ApiError(401, ERRORS.AUTH.REQUIRED);
-    }
-    const userId = req.user._id;
+    const photographer = await resolvePhotographer(req);
     const { itemIds } = req.body;
-    const photographer = await Photographer.findOne({ userId });
-    if (!photographer) {
-      throw new ApiError(403, ERRORS.PHOTOGRAPHER.PORTFOLIO_ONLY);
-    }
+
+    // Fetch items first to get their media URLs for Cloudinary cleanup
+    const itemsToDelete = await Portfolio.find({
+      _id: { $in: itemIds },
+      photographerId: photographer._id,
+    });
+
     const result = await Portfolio.deleteMany({
       _id: { $in: itemIds },
       photographerId: photographer._id,
     });
+
+    // Fire-and-forget Cloudinary cleanup for all deleted items
+    const mediaUrls = itemsToDelete.map((item) => item.mediaUrl);
+    if (mediaUrls.length > 0) {
+      deleteMultipleFromCloudinary(mediaUrls).catch((err) =>
+        console.error("[Portfolio] Batch Cloudinary cleanup failed:", err),
+      );
+    }
+
     return res
       .status(200)
       .json(

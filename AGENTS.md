@@ -26,6 +26,9 @@ See [docs/master-plan.md](file:///home/nobita/projects/Photophile/docs/master-pl
 - Photographers can create/edit profile and manage portfolio
 - Each photographer has a public shareable URL: `/photographers/[username]`
 - Public profile should feel like a mini-website and act as the highlighted page
+- **Architecture Rule**: Strict separation between Identity and Business:
+    - `/profile` (Account Settings): Managed by both users and photographers for Identity (Name, Avatar, Phone).
+    - `/photographer/dashboard` (Studio Dashboard): Managed ONLY by photographers for Business (Portfolio, Pricing, Bio).
 - Visitors/customers can browse photographers without authentication
 - Visitor authentication is optional in MVP
 - Main conversion is direct contact with photographers (email/phone/WhatsApp/social)

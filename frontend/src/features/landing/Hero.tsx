@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/Section";
 import { NAV_PATHS } from "@/lib/constants/nav";
-import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
+import { usePrimaryCta } from "@/hooks/usePrimaryCta";
 import { ArrowRight } from "lucide-react";
 
 export function Hero() {

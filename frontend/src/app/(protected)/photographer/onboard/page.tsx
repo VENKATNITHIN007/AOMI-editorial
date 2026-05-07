@@ -1,12 +1,12 @@
 "use client";
 
 import { RoleGate } from "@/components/guards/RoleGate";
-import { OnboardPage } from "@/features/onboarding";
+import { Onboarding } from "@/features/onboarding/Onboarding";
 
 export default function PhotographerOnboardingPage() {
   return (
     <RoleGate allowedRoles={["user"]} redirectTo="/photographer/dashboard">
-      <OnboardPage />
+      <Onboarding />
     </RoleGate>
   );
 }

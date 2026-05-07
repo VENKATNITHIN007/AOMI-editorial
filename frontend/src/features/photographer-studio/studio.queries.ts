@@ -5,9 +5,12 @@ import {
   updatePhotographerProfile,
   getMyPortfolio,
   addPortfolioItem,
+  addMultiplePortfolioItems,
+  uploadFile,
   updatePortfolioItem,
   deletePortfolioItem,
   type UpdatePortfolioItemPayload,
+  type UploadFolder,
 } from "./studio.api";
 import { queryKeys } from "@/lib/query/keys";
 
@@ -64,6 +67,25 @@ export function useAddPortfolioItemMutation() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
     },
+  });
+}
+
+/** Add multiple items to the photographer's portfolio. */
+export function useAddMultiplePortfolioItemsMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: addMultiplePortfolioItems,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
+    },
+  });
+}
+
+/** Upload a file to Cloudinary via the backend. */
+export function useUploadFileMutation() {
+  return useMutation({
+    mutationFn: ({ file, folder = "portfolio" }: { file: File; folder?: UploadFolder }) =>
+      uploadFile(file, folder),
   });
 }
 
