@@ -1,9 +1,10 @@
 import { PublicProfilePage } from "@/features/public-profile/PublicProfilePage";
 
-export default function PhotographerPage({
+export default async function PhotographerPage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  return <PublicProfilePage username={params.username} />;
+  const { username } = await params;
+  return <PublicProfilePage username={username} />;
 }

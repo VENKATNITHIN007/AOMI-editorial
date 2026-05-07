@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyAuthToken } from "@/lib/jwt";
-import { getSafeRedirectPath } from "@/features/auth/utils/auth-navigation";
+import { getSafeRedirectPath } from "@/lib/auth-navigation";
 
 // Paths that require authentication
 const PROTECTED_PATHS = [

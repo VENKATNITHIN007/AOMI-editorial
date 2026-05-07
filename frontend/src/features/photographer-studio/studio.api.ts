@@ -85,11 +85,16 @@ export async function addMultiplePortfolioItems(payload: AddMultiplePortfolioIte
   return response.data.data;
 }
 
-export async function uploadFile(file: File): Promise<{ url: string }> {
+export type UploadFolder = "avatar" | "portfolio";
+
+export async function uploadFile(
+  file: File,
+  folder: UploadFolder = "portfolio",
+): Promise<{ url: string }> {
   const formData = new FormData();
   formData.append("file", file);
   
-  const response = await apiClient.post("/upload", formData, {
+  const response = await apiClient.post(`/upload?folder=${folder}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

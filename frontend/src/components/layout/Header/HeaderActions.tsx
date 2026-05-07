@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/features/auth";
 import { Button } from "@/components/ui/button";
-import { usePrimaryCta } from "@/features/auth/hooks/usePrimaryCta";
+import { usePrimaryCta } from "@/hooks/usePrimaryCta";
 import { ProfileMenu } from "./ProfileMenu";
 import { NAV_PATHS } from "@/lib/constants/nav";
 

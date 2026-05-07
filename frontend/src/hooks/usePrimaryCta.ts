@@ -1,4 +1,4 @@
-import { useAuth } from "../auth-context";
+import { useAuth } from "@/features/auth";
 import { NAV_PATHS, STUDIO_CTA } from "@/lib/constants/nav";
 
 /**

@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth, getAuthRedirect } from "@/features/auth";
+import { useAuth } from "@/features/auth";
+import { getAuthRedirect } from "@/lib/auth-navigation";
 
 const GUARDED_PATH_PREFIXES = [
   "/profile",
@@ -32,18 +33,33 @@ export function VerificationGate({ children }: { children: ReactNode }) {
       return;
     }
 
+    // For verified users, we only redirect if they are on a path they shouldn't be 
+    // (e.g. trying to onboard again when already a photographer).
+    // Otherwise, we let them navigate between their allowed guarded paths (Profile, Dashboard, etc.)
+    if (user.isEmailVerified) {
+      const isPhotographer = user.role === "photographer";
+      const isVisitingOnboard = pathname.startsWith("/photographer/onboard");
+      
+      // If already a photographer, don't let them go back to onboarding
+      if (isPhotographer && isVisitingOnboard) {
+        router.replace("/photographer/dashboard");
+      }
+      return;
+    }
+
+    // For unverified users, force them to the target (usually /verify-email/pending)
     const target = getAuthRedirect(user);
-    const isExempt = (user.isEmailVerified && pathname === "/photographer/onboard") || pathname.startsWith("/photographers/");
-    
-    if (target !== pathname && !pathname.startsWith(target) && !isExempt) {
+    if (target !== pathname && !pathname.startsWith(target)) {
       router.replace(target);
     }
 
   }, [loading, user, pathname, router]);
 
-  const isAuthorized = user && (getAuthRedirect(user) === pathname 
-    || (user.isEmailVerified && pathname === "/photographer/onboard") 
-    || pathname.startsWith("/photographers/"));
+  const isAuthorized = user && (
+    user.isEmailVerified || 
+    getAuthRedirect(user) === pathname || 
+    pathname.startsWith("/photographers/")
+  );
 
   if (!loading && isGuardedPath(pathname) && !isAuthorized) {
     return null;

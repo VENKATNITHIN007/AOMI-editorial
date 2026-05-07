@@ -10,6 +10,7 @@ import {
   updatePortfolioItem,
   deletePortfolioItem,
   type UpdatePortfolioItemPayload,
+  type UploadFolder,
 } from "./studio.api";
 import { queryKeys } from "@/lib/query/keys";
 
@@ -80,10 +81,11 @@ export function useAddMultiplePortfolioItemsMutation() {
   });
 }
 
-/** Upload a file. */
+/** Upload a file to Cloudinary via the backend. */
 export function useUploadFileMutation() {
   return useMutation({
-    mutationFn: uploadFile,
+    mutationFn: ({ file, folder = "portfolio" }: { file: File; folder?: UploadFolder }) =>
+      uploadFile(file, folder),
   });
 }
 

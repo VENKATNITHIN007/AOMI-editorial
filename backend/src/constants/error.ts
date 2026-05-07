@@ -65,4 +65,10 @@ export const ERRORS = {
   PORTFOLIO: {
     ITEM_NOT_FOUND: "Portfolio item not found",
   },
+  UPLOAD: {
+    NO_FILE: "No file provided",
+    INVALID_FOLDER: "Invalid upload folder. Allowed: avatar, portfolio",
+    FAILED: "Failed to upload file. Please try again",
+    DELETE_FAILED: "Failed to delete file from storage",
+  },
 } as const;

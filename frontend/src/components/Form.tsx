@@ -156,18 +156,18 @@ function Textarea<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
+          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
           <ShadcnTextarea
             id={fieldId}
             placeholder={placeholder}
             disabled={disabled}
             rows={rows}
-            className="resize-none"
+            className="resize-none border-gray-200 bg-gray-50/50 focus:bg-white transition-colors"
             aria-invalid={fieldState.invalid}
             {...field}
             value={field.value || ""}
           />
-          {description && <FieldDescription>{description}</FieldDescription>}
+          {description && <FieldDescription className="text-[9px] uppercase tracking-wider text-gray-400 mt-1.5">{description}</FieldDescription>}
           <FieldError errors={[fieldState.error]} />
         </Field>
       )}
@@ -209,14 +209,14 @@ function Select<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
+          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
           <ShadcnSelect
             disabled={disabled}
             onValueChange={field.onChange}
             defaultValue={field.value}
             value={field.value ?? ""}
           >
-            <SelectTrigger id={fieldId} aria-invalid={fieldState.invalid}>
+            <SelectTrigger id={fieldId} aria-invalid={fieldState.invalid} className="h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
@@ -227,7 +227,7 @@ function Select<T extends FieldValues>({
               ))}
             </SelectContent>
           </ShadcnSelect>
-          {description && <FieldDescription>{description}</FieldDescription>}
+          {description && <FieldDescription className="text-[9px] uppercase tracking-wider text-gray-400 mt-1.5">{description}</FieldDescription>}
           <FieldError errors={[fieldState.error]} />
         </Field>
       )}
@@ -320,6 +320,12 @@ interface FormImageUploadProps<T extends FieldValues> {
   label: string;
   description?: string;
   disabled?: boolean;
+  /**
+   * Async callback that receives the raw File object.
+   * Must return the uploaded file's URL string.
+   * If not provided, falls back to a local blob preview (dev only).
+   */
+  onUpload?: (file: File) => Promise<string>;
 }
 
 function ImageUpload<T extends FieldValues>({
@@ -328,18 +334,26 @@ function ImageUpload<T extends FieldValues>({
   label,
   description,
   disabled = false,
+  onUpload,
 }: FormImageUploadProps<T>) {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = async (file: File, onChange: (value: string) => void) => {
     setIsUploading(true);
     try {
-      // Simulate API call - In production this would hit Cloudinary/S3
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      const mockUrl = URL.createObjectURL(file); 
-      onChange(mockUrl);
+      let url: string;
+
+      if (onUpload) {
+        // Production: delegate to parent-provided upload function
+        url = await onUpload(file);
+      } else {
+        // Fallback: local blob preview (for dev/testing only)
+        url = URL.createObjectURL(file);
+      }
+
+      onChange(url);
     } catch (error) {
-      console.error("Upload failed", error);
+      console.error("[Form.ImageUpload] Upload failed:", error);
     } finally {
       setIsUploading(false);
     }
@@ -351,7 +365,7 @@ function ImageUpload<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-4">
+          <FieldLabel className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">
             {label}
           </FieldLabel>
           

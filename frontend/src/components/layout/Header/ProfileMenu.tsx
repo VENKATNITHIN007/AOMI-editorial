@@ -61,7 +61,7 @@ export function ProfileMenu() {
           },
         ]),
     {
-      label: "Account Settings",
+      label: "Profile",
       path: NAV_PATHS.PROFILE,
       icon: UserCircle,
     },

@@ -40,7 +40,7 @@ export function ProfilePage() {
     <div className="max-w-3xl mx-auto w-full space-y-8">
       <div>
         <h1 className="text-3xl sm:text-4xl font-light uppercase tracking-[0.1em] text-black">
-          Account Settings
+          Profile
         </h1>
         <p className="mt-2 text-sm text-gray-400 font-light tracking-wider">
           Manage your personal details and communication preferences.

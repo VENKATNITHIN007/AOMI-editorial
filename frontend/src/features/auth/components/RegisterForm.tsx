@@ -8,7 +8,8 @@ import { registerSchema, RegisterInput } from "@/lib/validations/auth";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useRegisterMutation, getAuthRedirect } from "@/features/auth";
+import { useRegisterMutation } from "@/features/auth";
+import { getAuthRedirect } from "@/lib/auth-navigation";
 import { AxiosError } from "axios";
 
 import { AuthShell } from "./AuthShell";
