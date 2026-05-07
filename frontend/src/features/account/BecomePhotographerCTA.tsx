@@ -7,15 +7,23 @@ import { NAV_PATHS, STUDIO_CTA } from "@/lib/constants/nav";
 
 export function BecomePhotographerCTA() {
   return (
-    <div className="border border-black/5 bg-gray-50/50 p-6 sm:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-        <div className="space-y-1">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-black">Want to showcase your work?</p>
-          <p className="text-xs text-gray-400 font-light tracking-wider">Join our community of professional photographers and start building your portfolio today.</p>
+    <div className="bg-black text-white p-8 sm:p-12 relative overflow-hidden group shadow-2xl">
+      {/* Abstract background element */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/5 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-150" />
+      
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+        <div className="space-y-4 max-w-lg">
+          <h3 className="text-2xl sm:text-3xl font-light uppercase tracking-widest text-white">
+            Own Your <span className="italic font-normal text-gray-300">Creative</span>
+          </h3>
+          <p className="text-xs sm:text-sm font-light tracking-widest text-gray-400 leading-relaxed uppercase">
+            Join Photophile's exclusive network. Showcase your portfolio to clients directly.
+          </p>
         </div>
-        <Link href={NAV_PATHS.ONBOARDING}>
-          <Button variant="outline" className="h-11 border-black text-black hover:bg-black hover:text-white text-[10px] uppercase tracking-[0.15em] font-bold px-6">
-            <Camera className="mr-2 h-3 w-3" />
+        
+        <Link href={NAV_PATHS.ONBOARDING} className="shrink-0">
+          <Button className="h-14 px-8 bg-white text-black hover:bg-gray-200 hover:scale-105 rounded-none text-[10px] uppercase tracking-[0.25em] font-bold transition-all flex items-center shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+            <Camera className="mr-3 h-4 w-4" />
             {STUDIO_CTA.LABEL}
           </Button>
         </Link>

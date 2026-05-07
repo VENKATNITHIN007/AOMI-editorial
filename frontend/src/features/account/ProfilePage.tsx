@@ -74,14 +74,17 @@ export function ProfilePage() {
         </div>
       )}
 
-      <div className="border border-gray-100 bg-white">
-        <div className="p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-50 gap-6">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">Profile Details</h2>
+      <div className="bg-white border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+        <div className="p-8 sm:p-12 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-black/5 gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 bg-black rounded-full" />
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-black">Profile Details</h2>
+          </div>
           
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="h-10 px-6 rounded-none text-[10px] uppercase tracking-[0.15em] font-bold border-gray-200 hover:bg-gray-50 w-full sm:w-auto">
-                <Edit2 className="mr-2 h-3 w-3" />
+              <Button variant="outline" className="h-10 px-8 rounded-none text-[9px] uppercase tracking-[0.25em] font-black border-black/20 hover:border-black hover:bg-black hover:text-white transition-all w-full sm:w-auto">
+                <Edit2 className="mr-3 h-3 w-3" />
                 Edit Profile
               </Button>
             </DialogTrigger>
@@ -98,29 +101,39 @@ export function ProfilePage() {
         </div>
 
         {/* Read Mode View */}
-        <div className="p-6 sm:p-10 space-y-10">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 text-center sm:text-left">
-            <div className="shrink-0 size-28 sm:size-32 border border-black bg-gray-50 flex items-center justify-center overflow-hidden">
-              {user?.avatar ? (
-                <img src={user.avatar} alt={user.name || "User avatar"} className="w-full h-full object-cover" />
-              ) : (
-                <User className="size-10 text-gray-300" strokeWidth={1} />
-              )}
+        <div className="p-8 sm:p-12 space-y-12">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-10 text-center sm:text-left">
+            <div className="relative shrink-0 size-32 sm:size-40 rounded-full border border-black/10 bg-gray-50 flex items-center justify-center overflow-hidden shadow-inner p-1">
+              <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center border border-black/5">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name || "User avatar"} className="w-full h-full object-cover" />
+                ) : (
+                  <User className="size-12 text-gray-300" strokeWidth={1} />
+                )}
+              </div>
             </div>
-            <div className="space-y-2 pt-2">
-              <h3 className="text-2xl sm:text-3xl font-light tracking-wide text-black">{user?.name || "No Name Set"}</h3>
-              <p className="text-sm text-gray-400">{user?.email}</p>
+            <div className="space-y-4 pt-4 sm:pt-6">
+              <h3 className="text-3xl sm:text-4xl font-light tracking-widest text-black uppercase">{user?.name || "No Name Set"}</h3>
+              <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase flex items-center justify-center sm:justify-start gap-2">
+                <Mail className="size-3" /> {user?.email}
+              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12 pt-10 border-t border-gray-50">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Phone Number</p>
-              <p className="text-sm sm:text-base font-light text-black tracking-wide">{user?.phoneNumber || "Not provided"}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-12 pt-10 border-t border-black/5">
+            <div className="space-y-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 flex items-center gap-2">
+                <span className="w-1 h-1 bg-gray-300 rounded-full" /> Phone Number
+              </p>
+              <p className="text-base sm:text-lg font-light text-black tracking-widest">{user?.phoneNumber || "Not provided"}</p>
             </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Account Role</p>
-              <p className="text-sm sm:text-base font-light text-black tracking-wide capitalize">{user?.role || "User"}</p>
+            <div className="space-y-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 flex items-center gap-2">
+                <span className="w-1 h-1 bg-gray-300 rounded-full" /> Account Role
+              </p>
+              <div className="inline-flex h-8 items-center px-4 border border-black bg-black text-white text-[9px] font-bold uppercase tracking-[0.2em]">
+                {user?.role || "User"}
+              </div>
             </div>
           </div>
         </div>
