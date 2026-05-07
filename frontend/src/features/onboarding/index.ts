@@ -1,2 +1,2 @@
 export * from "./OnboardPage";
-export * from "./components/OnboardForm";
+export * from "./components/OnboardWizard";
