@@ -5,6 +5,8 @@ import {
   updatePhotographerProfile,
   getMyPortfolio,
   addPortfolioItem,
+  addMultiplePortfolioItems,
+  uploadFile,
   updatePortfolioItem,
   deletePortfolioItem,
   type UpdatePortfolioItemPayload,
@@ -64,6 +66,24 @@ export function useAddPortfolioItemMutation() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
     },
+  });
+}
+
+/** Add multiple items to the photographer's portfolio. */
+export function useAddMultiplePortfolioItemsMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: addMultiplePortfolioItems,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
+    },
+  });
+}
+
+/** Upload a file. */
+export function useUploadFileMutation() {
+  return useMutation({
+    mutationFn: uploadFile,
   });
 }
 

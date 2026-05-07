@@ -16,6 +16,7 @@ import photographerRouter from "./routes/photographer.route";
 import portfolioRouter from "./routes/portfolio.route";
 import reviewRouter from "./routes/review.route";
 import bookingRouter from "./routes/booking.route";
+import uploadRouter from "./routes/upload.route";
 import helmet from "helmet";
 
 // Read allowed frontend origins from ORIGIN_HOSTS env variable.
@@ -73,6 +74,7 @@ app.use(createVersionRoute("photographers"), photographerRouter);
 app.use(createVersionRoute("portfolio"), portfolioRouter);
 app.use(createVersionRoute("reviews"), reviewRouter);
 app.use(createVersionRoute("bookings"), bookingRouter);
+app.use(createVersionRoute("upload"), uploadRouter);
 
 /**
  * 404 errors

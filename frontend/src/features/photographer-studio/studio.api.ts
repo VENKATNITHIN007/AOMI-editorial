@@ -69,6 +69,39 @@ export async function addPortfolioItem(payload: AddPortfolioItemPayload) {
   return response.data.data;
 }
 
+export interface AddMultiplePortfolioItemsPayload {
+  items: Array<{
+    mediaUrl: string;
+    mediaType: "image" | "video";
+    category?: string;
+  }>;
+}
+
+export async function addMultiplePortfolioItems(payload: AddMultiplePortfolioItemsPayload) {
+  const response = await apiClient.post("/portfolio/add-multiple", payload);
+  if (response.data?.success === false) {
+    throw new Error(response.data?.message || "Failed to add multiple portfolio items");
+  }
+  return response.data.data;
+}
+
+export async function uploadFile(file: File): Promise<{ url: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+  
+  const response = await apiClient.post("/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  
+  if (response.data?.success === false) {
+    throw new Error(response.data?.message || "Failed to upload file");
+  }
+  
+  return response.data.data;
+}
+
 export async function updatePortfolioItem(itemId: string, payload: UpdatePortfolioItemPayload) {
   const response = await apiClient.patch(`/portfolio/${itemId}`, payload);
   if (response.data?.success === false) {

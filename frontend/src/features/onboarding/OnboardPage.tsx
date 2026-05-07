@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { NAV_PATHS } from "@/lib/constants/nav";
-import { OnboardForm } from "./components/OnboardForm";
+import { OnboardWizard } from "./components/OnboardWizard";
 
 /**
  * Onboarding page shell.
- * Provides branding, navigation back to home, and the onboarding form.
+ * Provides branding, navigation back to home, and the onboarding wizard.
  */
 export function OnboardPage() {
   return (
@@ -25,7 +25,7 @@ export function OnboardPage() {
         </Link>
       </div>
 
-      <div className="w-full max-w-2xl mx-auto space-y-10">
+      <div className="w-full max-w-3xl mx-auto space-y-12">
         <div className="text-center space-y-3">
           <p className="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-300">
             Professional Program
@@ -33,13 +33,10 @@ export function OnboardPage() {
           <h1 className="text-3xl sm:text-4xl font-light uppercase tracking-[0.1em] text-black">
             Create Your <span className="font-bold italic">Studio</span>
           </h1>
-          <p className="text-xs sm:text-sm text-gray-400 font-light tracking-wider max-w-md mx-auto">
-            Set up your profile and start showcasing your work in minutes.
-          </p>
         </div>
 
-        <div className="border border-gray-100 bg-white">
-          <OnboardForm />
+        <div className="border border-gray-100 bg-white p-6 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <OnboardWizard />
         </div>
       </div>
     </div>
