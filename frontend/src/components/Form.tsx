@@ -41,6 +41,7 @@ interface FormInputProps<T extends FieldValues> {
   placeholder?: string;
   description?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 function Input<T extends FieldValues>({
@@ -51,6 +52,7 @@ function Input<T extends FieldValues>({
   placeholder,
   description,
   disabled = false,
+  className,
 }: FormInputProps<T>) {
   const fieldId = String(name).replace(/\./g, "-");
 
@@ -67,7 +69,7 @@ function Input<T extends FieldValues>({
             placeholder={placeholder}
             disabled={disabled}
             aria-invalid={fieldState.invalid}
-            className="h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors"
+            className={cn("h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors", className)}
             {...field}
             value={field.value || ""}
           />
@@ -137,6 +139,7 @@ interface FormTextareaProps<T extends FieldValues> {
   description?: string;
   disabled?: boolean;
   rows?: number;
+  className?: string;
 }
 
 function Textarea<T extends FieldValues>({
@@ -147,6 +150,7 @@ function Textarea<T extends FieldValues>({
   description,
   disabled = false,
   rows = 4,
+  className,
 }: FormTextareaProps<T>) {
   const fieldId = String(name).replace(/\./g, "-");
 
@@ -162,7 +166,7 @@ function Textarea<T extends FieldValues>({
             placeholder={placeholder}
             disabled={disabled}
             rows={rows}
-            className="resize-none border-gray-200 bg-gray-50/50 focus:bg-white transition-colors"
+            className={cn("resize-none border-gray-200 bg-gray-50/50 focus:bg-white transition-colors", className)}
             aria-invalid={fieldState.invalid}
             {...field}
             value={field.value || ""}

@@ -11,6 +11,7 @@ export interface CreatePhotographerProfilePayload {
 }
 
 export interface UpdatePhotographerProfilePayload {
+  username?: string;
   bio?: string;
   location?: string;
   specialties?: string[];

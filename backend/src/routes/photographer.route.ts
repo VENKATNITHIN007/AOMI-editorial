@@ -15,23 +15,31 @@ import {
 
 const photographerRouter = Router();
 
-// Public routes (no auth required)
+// Public routes
 photographerRouter.get("/browse", browsePhotographers); // Browse/search photographers
-photographerRouter.get("/:username", getPhotographerProfileByUsername); // Get single photographer profile
 
 // Protected routes (authentication required)
-photographerRouter
-  .use(authMiddleware)
-  .post(
-    "/create",
-    validateRequest(CreatePhotographerProfileSchema),
-    createPhotographerProfile,
-  )
-  .get("/profile", getPhotographerProfileByUserId)
-  .patch(
-    "/update",
-    validateRequest(UpdatePhotographerProfileSchema),
-    updatePhotographerProfile,
-  );
+photographerRouter.post(
+  "/create",
+  authMiddleware,
+  validateRequest(CreatePhotographerProfileSchema),
+  createPhotographerProfile,
+);
+
+photographerRouter.get(
+  "/profile",
+  authMiddleware,
+  getPhotographerProfileByUserId,
+);
+
+photographerRouter.patch(
+  "/update",
+  authMiddleware,
+  validateRequest(UpdatePhotographerProfileSchema),
+  updatePhotographerProfile,
+);
+
+// This MUST be last because /:username acts as a catch-all for this path level
+photographerRouter.get("/:username", getPhotographerProfileByUsername);
 
 export default photographerRouter;

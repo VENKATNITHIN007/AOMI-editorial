@@ -22,6 +22,7 @@ export function useMyProfileQuery(options?: { enabled?: boolean }) {
     queryKey: queryKeys.myPhotographerProfile(),
     queryFn: getMyPhotographerProfile,
     enabled: options?.enabled,
+    retry: false, // Don't retry if profile is missing
   });
 }
 
