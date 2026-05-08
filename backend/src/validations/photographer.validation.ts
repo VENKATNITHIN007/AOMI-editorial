@@ -22,6 +22,10 @@ export const CreatePhotographerProfileSchema = z.object({
     })
     .positive("Price must be positive")
     .optional(),
+  instagram: z.string().optional(),
+  heroTagline: z.string().optional(),
+  heroImageId: z.string().optional(),
+  aboutImageId: z.string().optional(),
 });
 
 export const UpdatePhotographerProfileSchema = z
@@ -35,6 +39,10 @@ export const UpdatePhotographerProfileSchema = z
       })
       .positive("Price must be positive")
       .optional(),
+    instagram: z.string().optional(),
+    heroTagline: z.string().optional(),
+    heroImageId: z.string().optional(),
+    aboutImageId: z.string().optional(),
   })
   .strict();
 

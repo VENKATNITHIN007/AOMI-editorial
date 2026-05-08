@@ -12,6 +12,7 @@ export const AddPortfolioItemSchema = z.object({
     invalid_type_error: "Media type must be 'image' or 'video'",
   }),
   category: z.string().optional(),
+  isFeatured: z.boolean().optional(),
 });
 
 export const AddMultiplePortfolioItemsSchema = z.object({
@@ -24,6 +25,7 @@ export const AddMultiplePortfolioItemsSchema = z.object({
 export const UpdatePortfolioItemSchema = z
   .object({
     category: z.string().optional(),
+    isFeatured: z.boolean().optional(),
   })
   .strict();
 
