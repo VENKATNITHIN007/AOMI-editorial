@@ -47,15 +47,15 @@ function FilterForm() {
       </Page.Stack>
 
       <Page.Stack className="gap-2">
-        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Price Range ($)</Label>
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Price Range (₹)</Label>
         <Page.Row className="gap-2">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">₹</span>
             <Input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="pl-6 bg-background" />
           </div>
           <span className="text-muted-foreground">–</span>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">₹</span>
             <Input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="pl-6 bg-background" />
           </div>
         </Page.Row>

@@ -17,8 +17,8 @@ export function ActiveFiltersSummary() {
   const filters = [];
   if (location !== "all") filters.push({ id: "loc", label: `Loc: ${location}`, onRemove: () => setLocation("all") });
   if (specialty !== "all") filters.push({ id: "spec", label: `Spec: ${specialty}`, onRemove: () => setSpecialty("all") });
-  if (minPrice) filters.push({ id: "min", label: `Min: $${minPrice}`, onRemove: () => setMinPrice("") });
-  if (maxPrice) filters.push({ id: "max", label: `Max: $${maxPrice}`, onRemove: () => setMaxPrice("") });
+  if (minPrice) filters.push({ id: "min", label: `Min: ₹${minPrice}`, onRemove: () => setMinPrice("") });
+  if (maxPrice) filters.push({ id: "max", label: `Max: ₹${maxPrice}`, onRemove: () => setMaxPrice("") });
 
   return (
     <div className="flex flex-wrap items-center gap-2 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
