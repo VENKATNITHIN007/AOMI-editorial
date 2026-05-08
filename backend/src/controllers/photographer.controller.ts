@@ -131,15 +131,27 @@ export const updatePhotographerProfile = asyncHandler(
       throw new ApiError(401, ERRORS.AUTH.REQUIRED);
     }
     const userId = req.user._id;
-    const { bio, location, specialties, priceFrom } = req.body;
+    const { username, bio, location, specialties, priceFrom } = req.body;
     const photographer = await Photographer.findOne({ userId });
+
     if (!photographer) {
       throw new ApiError(404, ERRORS.PHOTOGRAPHER.PROFILE_NOT_FOUND);
     }
-    photographer.bio = bio || photographer.bio;
+
+    if (username && username.toLowerCase() !== photographer.username) {
+      const usernameExists = await Photographer.findOne({
+        username: username.toLowerCase(),
+      });
+      if (usernameExists) {
+        throw new ApiError(409, ERRORS.PHOTOGRAPHER.USERNAME_TAKEN);
+      }
+      photographer.username = username.toLowerCase();
+    }
+
+    photographer.bio = bio !== undefined ? bio : photographer.bio;
     photographer.location = location || photographer.location;
     photographer.specialties = specialties || photographer.specialties;
-    photographer.priceFrom = priceFrom || photographer.priceFrom;
+    photographer.priceFrom = priceFrom !== undefined ? priceFrom : photographer.priceFrom;
     await photographer.save();
     return res
       .status(200)

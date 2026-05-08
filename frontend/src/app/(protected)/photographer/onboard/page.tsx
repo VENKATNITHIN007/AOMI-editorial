@@ -5,7 +5,7 @@ import { Onboarding } from "@/features/onboarding/Onboarding";
 
 export default function PhotographerOnboardingPage() {
   return (
-    <RoleGate allowedRoles={["user"]} redirectTo="/photographer/dashboard">
+    <RoleGate allowedRoles={["user", "photographer"]} redirectTo="/photographer/dashboard">
       <Onboarding />
     </RoleGate>
   );

@@ -86,8 +86,22 @@ apiClient.interceptors.request.use(async (config) => {
 });
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // ── Global Logging for Development ───────────────────────────
+    console.group(`📡 API Response: ${response.config.method?.toUpperCase()} ${response.config.url}`);
+    console.log("Status:", response.status);
+    console.log("Data:", response.data);
+    console.groupEnd();
+    
+    return response;
+  },
   async (error: AxiosError) => {
+    // ── Global Error Logging for Development ─────────────────────
+    console.group(`❌ API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`);
+    console.log("Status:", error.response?.status || "Network/Unknown");
+    console.log("Error Data:", error.response?.data);
+    console.groupEnd();
+
     const originalRequest = error.config as RetryableRequestConfig | undefined;
 
     if (!originalRequest || error.response?.status !== 401 || originalRequest._retry) {

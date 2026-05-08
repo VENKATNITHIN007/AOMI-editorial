@@ -2,7 +2,7 @@ import { apiClient } from "@/lib/api-client";
 import type { User } from "@/lib/types/auth";
 
 export interface UpdateProfilePayload {
-  fullName: string;
+  fullName?: string;
   phoneNumber?: string;
   avatar?: string;
 }
