@@ -35,6 +35,8 @@ export function useOnboarding() {
         location: data.location,
         specialties: data.specialties,
         priceFrom: data.priceFrom ? Number(data.priceFrom) : undefined,
+        bio: data.bio || undefined,
+        instagram: data.instagram || undefined,
       });
       handleNext();
     } catch (err: any) {

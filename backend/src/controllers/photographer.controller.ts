@@ -18,7 +18,17 @@ export const createPhotographerProfile = asyncHandler(
       throw new ApiError(401, ERRORS.AUTH.REQUIRED);
     }
 
-    const { username, bio, location, specialties, priceFrom } = req.body;
+    const { 
+      username, 
+      bio, 
+      location, 
+      specialties, 
+      priceFrom,
+      instagram,
+      heroTagline,
+      heroImageId,
+      aboutImageId
+    } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -49,6 +59,10 @@ export const createPhotographerProfile = asyncHandler(
       location,
       specialties,
       priceFrom,
+      instagram,
+      heroTagline,
+      heroImageId: heroImageId ? new mongoose.Types.ObjectId(heroImageId) : undefined,
+      aboutImageId: aboutImageId ? new mongoose.Types.ObjectId(aboutImageId) : undefined,
     };
 
     const photographer = await Photographer.create(photographerData);
@@ -131,7 +145,18 @@ export const updatePhotographerProfile = asyncHandler(
       throw new ApiError(401, ERRORS.AUTH.REQUIRED);
     }
     const userId = req.user._id;
-    const { username, bio, location, specialties, priceFrom } = req.body;
+    const { 
+      username, 
+      bio, 
+      location, 
+      specialties, 
+      priceFrom,
+      instagram,
+      heroTagline,
+      heroImageId,
+      aboutImageId
+    } = req.body;
+
     const photographer = await Photographer.findOne({ userId });
 
     if (!photographer) {
@@ -152,6 +177,17 @@ export const updatePhotographerProfile = asyncHandler(
     photographer.location = location || photographer.location;
     photographer.specialties = specialties || photographer.specialties;
     photographer.priceFrom = priceFrom !== undefined ? priceFrom : photographer.priceFrom;
+    photographer.instagram = instagram !== undefined ? instagram : photographer.instagram;
+    photographer.heroTagline = heroTagline !== undefined ? heroTagline : photographer.heroTagline;
+    
+    if (heroImageId) {
+      photographer.heroImageId = new mongoose.Types.ObjectId(heroImageId);
+    }
+    
+    if (aboutImageId) {
+      photographer.aboutImageId = new mongoose.Types.ObjectId(aboutImageId);
+    }
+
     await photographer.save();
     return res
       .status(200)

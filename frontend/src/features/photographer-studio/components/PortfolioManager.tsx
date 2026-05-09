@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { UploadCloud, Trash2, X, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Star, Trash2, X, UploadCloud } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from "../../../components/ui/alert-dialog";
 import { 
   useMyPortfolioQuery, 
   useAddMultiplePortfolioItemsMutation, 
   useUploadFileMutation, 
-  useDeletePortfolioItemMutation 
+  useDeletePortfolioItemMutation,
+
 } from "../studio.queries";
-import { cn } from "@/lib/utils";
 
 /**
  * Portfolio Manager Component.
@@ -24,6 +36,7 @@ export function PortfolioManager() {
   const { success: showSuccess, error: showError } = useToast();
   const addPortfolioMutation = useAddMultiplePortfolioItemsMutation();
   const uploadMutation = useUploadFileMutation();
+
   const deleteMutation = useDeletePortfolioItemMutation();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,13 +55,11 @@ export function PortfolioManager() {
     
     setIsUploading(true);
     try {
-      // 1. Upload to Cloudinary
       const uploadPromises = selectedFiles.map(file => 
         uploadMutation.mutateAsync({ file, folder: "portfolio" })
       );
       const results = await Promise.all(uploadPromises);
       
-      // 2. Save to DB
       const items = results.map(res => ({
         mediaUrl: res.url,
         mediaType: "image" as const,
@@ -66,7 +77,6 @@ export function PortfolioManager() {
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!confirm("Remove this item from your portfolio?")) return;
     try {
       await deleteMutation.mutateAsync(id);
       showSuccess("Success", "Item removed from portfolio");
@@ -75,82 +85,116 @@ export function PortfolioManager() {
     }
   };
 
+
   return (
-    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto py-2 px-6">
       {/* Upload Section */}
-      <div className="bg-gray-50 border border-gray-100 p-8 sm:p-12">
-        <div className="max-w-xl mx-auto space-y-8">
-          <div className="text-center space-y-2">
-            <h2 className="text-lg font-light uppercase tracking-widest text-black">Expand Your Showcase</h2>
-            <p className="text-xs text-gray-400 tracking-wider">Add up to 10 images at once. WebP or JPG recommended.</p>
-          </div>
+      <div className="flex flex-col md:flex-row items-center gap-6 bg-gray-50/50 p-6 border border-dashed border-gray-200 group hover:border-black transition-all">
+        <div className="flex-1 space-y-1">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-black">Expand Gallery</h2>
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Drag and drop high-resolution works to your portfolio.</p>
+        </div>
 
-          <div className="border-2 border-dashed border-gray-200 p-8 flex flex-col items-center justify-center bg-white hover:border-black transition-colors group">
-            <UploadCloud className="size-8 text-gray-300 mb-4 group-hover:text-black transition-colors" />
-            <label className="cursor-pointer">
-              <span className="h-12 px-8 inline-flex items-center justify-center border border-black text-[10px] font-bold uppercase tracking-widest text-black hover:bg-black hover:text-white transition-all">
-                Select Photos
-              </span>
-              <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileChange} />
-            </label>
-          </div>
+        <label className="cursor-pointer">
+          <Button variant="outline" className="rounded-none border-black hover:bg-black hover:text-white text-[10px] uppercase tracking-widest h-10 px-8" asChild>
+            <span>
+              <UploadCloud className="size-4 mr-2" />
+              Select Files
+            </span>
+          </Button>
+          <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileChange} />
+        </label>
+      </div>
 
-          {selectedFiles.length > 0 && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-5 gap-3">
-                {selectedFiles.map((file, idx) => (
-                  <div key={idx} className="relative aspect-square bg-gray-100 border border-gray-200 group overflow-hidden">
-                    <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
-                    <button 
-                      onClick={() => removeSelectedFile(idx)}
-                      className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="size-4 text-white" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+        {selectedFiles.length > 0 && (
+          <div className="space-y-6 animate-in zoom-in-95 duration-300">
+            <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
+              {selectedFiles.map((file, idx) => (
+                <div key={idx} className="relative aspect-square bg-gray-50 border border-gray-100 group overflow-hidden shadow-sm">
+                  <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                  <button 
+                    onClick={() => removeSelectedFile(idx)}
+                    className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="size-4 text-white" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end">
               <Button 
                 onClick={handleBatchUpload} 
                 disabled={isUploading}
-                className="w-full h-14 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.25em] font-bold"
+                className="px-8 h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[9px] uppercase tracking-[0.2em] font-bold shadow-xl"
               >
-                {isUploading ? "Uploading..." : `Upload ${selectedFiles.length} Photos`}
+                {isUploading ? "Syncing..." : `Confirm & Upload (${selectedFiles.length})`}
               </Button>
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
 
       {/* Portfolio Grid */}
-      <div className="space-y-8">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-black">
-            Current Showcase ({portfolio.length})
-          </h2>
+      <div className="space-y-12">
+        <div className="flex items-end justify-between border-b border-gray-100 pb-4">
+          <div className="space-y-1">
+            <h2 className="text-lg font-serif italic text-black">Curated Collection</h2>
+            <p className="text-[9px] text-gray-400 tracking-[0.1em] uppercase font-bold">{portfolio.length} Published Works</p>
+          </div>
         </div>
         
         {portfolio.length === 0 && !isLoading ? (
-          <div className="py-24 text-center border border-dashed border-gray-100 bg-gray-50/30">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-300 font-bold">Your portfolio is currently empty</p>
+          <div className="py-20 text-center border border-dashed border-gray-100 bg-gray-50/50">
+            <p className="text-[9px] uppercase tracking-[0.2em] text-gray-300 font-bold">No works added to your studio yet</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {portfolio.map((item) => (
-              <div key={item._id} className="relative aspect-[4/5] bg-gray-50 group overflow-hidden border border-gray-100 shadow-sm">
+              <div key={item._id} className="relative aspect-[4/5] bg-gray-50 group overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500">
                 <img 
                   src={item.mediaUrl} 
                   alt={item.category || "Portfolio work"} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 backdrop-blur-[2px]">
-                  <button 
-                    onClick={() => handleDeleteItem(item._id!)}
-                    className="size-12 bg-white flex items-center justify-center text-black hover:bg-red-500 hover:text-white transition-colors shadow-xl"
-                    title="Remove item"
-                  >
-                    <Trash2 className="size-5" />
-                  </button>
+                
+                {/* Featured Badge */}
+                {item.isFeatured && (
+                  <div className="absolute top-4 left-4 bg-black text-white p-2 shadow-lg">
+                    <Star className="size-3 fill-white" />
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-3 backdrop-blur-[2px]">
+                  <div className="flex gap-2">
+                    {/* Curation actions moved to Preview Editor */}
+                  </div>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button 
+                        className="size-10 bg-white/20 border border-white/20 flex items-center justify-center text-white hover:bg-red-500 hover:border-red-500 transition-all shadow-xl"
+                        title="Remove item"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="rounded-none border-none">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-xl font-serif">Remove from Portfolio?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm text-gray-500">
+                          This image will be permanently removed from your studio gallery. This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-none border-gray-200 text-[10px] uppercase tracking-widest font-bold">Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => handleDeleteItem(item._id!)}
+                          className="rounded-none bg-red-600 hover:bg-red-700 text-white text-[10px] uppercase tracking-widest font-bold"
+                        >
+                          Delete Item
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             ))}

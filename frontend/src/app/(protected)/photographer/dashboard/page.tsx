@@ -7,7 +7,8 @@ import { RoleGate } from "@/components/guards/RoleGate";
 import { useMyProfileQuery } from "@/features/photographer-studio/studio.queries";
 import { StudioHeader } from "@/features/photographer-studio/components/StudioHeader";
 import { PortfolioManager } from "@/features/photographer-studio/components/PortfolioManager";
-import { StudioDetailsForm } from "@/features/photographer-studio/components/StudioDetailsForm";
+import { StudioDetailsView } from "@/features/photographer-studio/components/StudioDetailsView";
+import { EditorialEditor } from "@/features/photographer-studio/components/EditorialEditor";
 
 /**
  * Photographer Studio Dashboard.
@@ -15,12 +16,25 @@ import { StudioDetailsForm } from "@/features/photographer-studio/components/Stu
  */
 export default function PhotographerDashboard() {
   const { data: profile, isLoading, error } = useMyProfileQuery();
-  const [activeTab, setActiveTab] = useState<"portfolio" | "settings">("portfolio");
+  const [activeTab, setActiveTab] = useState<"portfolio" | "settings" | "preview">("portfolio");
+
+  if (activeTab === "preview" && profile) {
+    return (
+      <RoleGate allowedRoles={["photographer"]}>
+        <div className="fixed inset-0 z-[100] bg-black overflow-y-auto">
+          <EditorialEditor 
+            profile={profile} 
+            onClose={() => setActiveTab("portfolio")} 
+          />
+        </div>
+      </RoleGate>
+    );
+  }
 
   return (
     <RoleGate allowedRoles={["photographer"]}>
       <Page>
-        <Page.Body className="max-w-6xl pt-10 sm:pt-16 pb-24">
+        <Page.Body className="max-w-6xl pt-0 pb-24">
           {isLoading ? (
             <DataState.Loading />
           ) : error || !profile ? (
@@ -53,7 +67,7 @@ export default function PhotographerDashboard() {
 
               <div className="min-h-[500px]">
                 {activeTab === "portfolio" && <PortfolioManager />}
-                {activeTab === "settings" && <StudioDetailsForm profile={profile} />}
+                {activeTab === "settings" && <StudioDetailsView profile={profile} />}
               </div>
             </div>
           )}

@@ -6,6 +6,7 @@ export interface IPortfolio {
   mediaUrl: string;
   mediaType: "image" | "video";
   category?: string;
+  isFeatured?: boolean;
   createdAt?: Date;
 }
 
@@ -25,6 +26,7 @@ const portfolioSchema = new Schema<IPortfolio>(
       index: true,
     },
     category: { type: String, index: true },
+    isFeatured: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

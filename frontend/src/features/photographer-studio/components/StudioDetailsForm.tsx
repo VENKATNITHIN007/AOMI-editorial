@@ -7,11 +7,12 @@ import * as z from "zod";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth, useUpdateProfileMutation as useUpdateUserMutation } from "@/features/auth";
-import { useUpdateProfileMutation, useUploadFileMutation } from "../studio.queries";
+import { useAuth } from "@/features/auth";
+import { useUpdateProfileMutation } from "../studio.queries";
 import { CITY_OPTIONS, SPECIALTY_OPTIONS } from "@/lib/constants/photographer";
 import type { PhotographerProfile } from "@/lib/types/photographer";
 import { useCallback } from "react";
+import { cn } from "@/lib/utils";
 
 const studioUpdateSchema = z.object({
   username: z
@@ -19,9 +20,8 @@ const studioUpdateSchema = z.object({
     .min(3, "Username must be at least 3 characters")
     .max(30, "Username cannot exceed 30 characters")
     .regex(/^[a-z0-9_]+$/, "Username can only contain lowercase letters, numbers, and underscores"),
-  avatar: z.string().optional(),
   location: z.string().min(1, "Please select a location"),
-  bio: z.string().max(1000, "Bio cannot exceed 1000 characters").optional(),
+  instagram: z.string().optional(),
   specialties: z
     .array(z.string())
     .min(1, "Please select at least one specialty")
@@ -33,32 +33,26 @@ type StudioUpdateInput = z.infer<typeof studioUpdateSchema>;
 
 interface StudioDetailsFormProps {
   profile: PhotographerProfile;
+  isDialog?: boolean;
 }
 
-export function StudioDetailsForm({ profile }: StudioDetailsFormProps) {
+export function StudioDetailsForm({ profile, isDialog = false }: StudioDetailsFormProps) {
   const { user } = useAuth();
   const { success: showSuccess, error: showError } = useToast();
   
   const updatePhotographerMutation = useUpdateProfileMutation();
-  const updateUserMutation = useUpdateUserMutation();
-  const uploadFileMutation = useUploadFileMutation();
 
   const form = useForm<StudioUpdateInput>({
     resolver: zodResolver(studioUpdateSchema) as any,
     defaultValues: {
       username: profile.username,
-      avatar: user?.avatar || "",
       location: profile.location || "",
-      bio: profile.bio || "",
+      instagram: profile.instagram || "",
       specialties: profile.specialties || [],
       priceFrom: profile.priceFrom || 0,
     },
   });
 
-  const handleImageUpload = useCallback(async (file: File) => {
-    const res = await uploadFileMutation.mutateAsync({ file, folder: "avatar" });
-    return res.url;
-  }, [uploadFileMutation]);
 
   const onSubmit = async (data: StudioUpdateInput) => {
     try {
@@ -66,63 +60,75 @@ export function StudioDetailsForm({ profile }: StudioDetailsFormProps) {
       await updatePhotographerMutation.mutateAsync({
         username: data.username,
         location: data.location,
-        bio: data.bio,
+        instagram: data.instagram,
         specialties: data.specialties,
         priceFrom: data.priceFrom,
       });
 
-      // 2. Update User Avatar (if changed)
-      if (data.avatar !== user?.avatar) {
-        await updateUserMutation.mutateAsync({
-          avatar: data.avatar || undefined,
-        });
+      showSuccess("Studio updated", "Your studio settings have been saved.");
+      
+      // If in dialog, we might want to refresh or close, but let's keep it simple for now
+      if (isDialog) {
+        // In a real app, you'd close the dialog here
+        setTimeout(() => window.location.reload(), 1500);
       }
-
-      showSuccess("Studio updated", "Your profile and studio settings have been saved.");
     } catch (err: any) {
       showError("Update failed", err.message || "Could not save studio settings.");
     }
   };
 
-  const isPending = updatePhotographerMutation.isPending || updateUserMutation.isPending;
+  const isPending = updatePhotographerMutation.isPending;
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
-      <div className="space-y-12">
-        <div className="space-y-2">
-          <h2 className="text-xl font-light uppercase tracking-widest text-black">Studio Information</h2>
-          <p className="text-xs text-gray-400 tracking-wider">Update your public presence and professional details.</p>
-        </div>
+    <div className={cn(
+      "mx-auto w-full",
+      !isDialog && "max-w-4xl py-12 px-6"
+    )}>
+      <div className={cn("space-y-8", isDialog && "space-y-6")}>
+        {!isDialog && (
+          <div className="space-y-2 pb-12 border-b">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-medium">Professional Identity</p>
+            <h2 className="text-4xl font-serif italic text-black">Studio Settings</h2>
+          </div>
+        )}
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-          <div className="space-y-10">
-            {/* Identity Section */}
-            <div className="p-8 bg-gray-50/50 border border-gray-100 space-y-8">
-              <Form.ImageUpload
+        <form onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-8", isDialog && "space-y-6")}>
+          <div className={cn(
+            "grid grid-cols-1 gap-16",
+            !isDialog && "lg:grid-cols-12"
+          )}>
+            {/* Media & Identity Section */}
+            <div className={cn(
+              "space-y-8",
+              !isDialog && "lg:col-span-5"
+            )}>
+              <Form.Input
                 control={form.control}
-                name="avatar"
-                label="Studio Profile Picture"
-                description="This image represents you in the discovery gallery."
+                name="username"
+                label="Studio Handle"
+                placeholder="your_handle"
                 disabled={isPending}
-                onUpload={handleImageUpload}
               />
 
               <Form.Input
                 control={form.control}
-                name="username"
-                label="Public Username"
-                description="This affects your public URL handle: /photographers/[username]"
+                name="instagram"
+                label="Instagram Username"
+                placeholder="username"
                 disabled={isPending}
               />
             </div>
 
-            {/* Professional Section */}
-            <div className="space-y-8">
+            {/* Business Details Section */}
+            <div className={cn(
+              "space-y-12",
+              !isDialog && "lg:col-span-7"
+            )}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <Form.Select
                   control={form.control}
                   name="location"
-                  label="Primary Location"
+                  label="Location"
                   options={CITY_OPTIONS}
                   disabled={isPending}
                 />
@@ -130,38 +136,29 @@ export function StudioDetailsForm({ profile }: StudioDetailsFormProps) {
                 <Form.Input
                   control={form.control}
                   name="priceFrom"
-                  label="Starting Price (₹) / Day"
+                  label="Starting Price (₹)"
                   type="number"
                   disabled={isPending}
                 />
               </div>
 
-              <Form.Textarea
-                control={form.control}
-                name="bio"
-                label="Biography"
-                placeholder="Tell potential clients about your style and experience..."
-                className="min-h-[160px] resize-none"
-                disabled={isPending}
-              />
-
               <Form.MultiSelect
                 control={form.control}
                 name="specialties"
-                label="Specialties (Select up to 3)"
+                label="Specialties"
                 options={SPECIALTY_OPTIONS}
                 disabled={isPending}
               />
             </div>
           </div>
 
-          <div className="pt-10 border-t border-gray-100">
+          <div className="pt-12 border-t border-gray-100 flex justify-end">
             <Button 
               type="submit" 
               disabled={isPending}
-              className="w-full sm:w-auto px-16 h-14 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.25em] font-bold transition-all shadow-lg hover:shadow-black/5"
+              className="px-12 h-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.3em] font-bold transition-all shadow-xl active:scale-[0.98]"
             >
-              {isPending ? "Saving Changes..." : "Update Studio Settings"}
+              {isPending ? "Syncing..." : "Update Studio"}
             </Button>
           </div>
         </form>

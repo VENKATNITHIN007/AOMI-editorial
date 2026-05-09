@@ -38,13 +38,14 @@ async function resolvePhotographer(req: Request) {
 export const addPortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
     const photographer = await resolvePhotographer(req);
-    const { mediaUrl, mediaType, category } = req.body;
+    const { mediaUrl, mediaType, category, isFeatured } = req.body;
 
     const portfolioItem = await Portfolio.create({
       photographerId: photographer._id,
       mediaUrl,
       mediaType,
       category,
+      isFeatured: isFeatured || false,
     });
 
     return res
@@ -68,6 +69,7 @@ export const addMultiplePortfolioItems = asyncHandler(
       mediaUrl: item.mediaUrl,
       mediaType: item.mediaType,
       category: item.category,
+      isFeatured: item.isFeatured || false,
     }));
 
     const createdItems = await Portfolio.insertMany(portfolioItems);
@@ -132,11 +134,14 @@ export const updatePortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
     const photographer = await resolvePhotographer(req);
     const { itemId } = req.params;
-    const { category } = req.body;
+    const { category, isFeatured } = req.body;
 
     const portfolioItem = await Portfolio.findOneAndUpdate(
       { _id: itemId, photographerId: photographer._id },
-      { category },
+      { 
+        ...(category !== undefined && { category }), 
+        ...(isFeatured !== undefined && { isFeatured }) 
+      },
       { new: true },
     );
 
