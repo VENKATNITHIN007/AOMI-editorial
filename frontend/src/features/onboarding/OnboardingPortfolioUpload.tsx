@@ -24,55 +24,68 @@ export function OnboardingPortfolioUpload({ onComplete, isUploading }: Onboardin
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="space-y-2 mb-8">
-        <h3 className="text-xl font-light tracking-widest uppercase text-black">Initial Portfolio</h3>
-        <p className="text-xs tracking-wider text-gray-400">Upload up to 10 of your best images to start showcasing your work. You can add more later.</p>
+    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="space-y-4">
+        <h3 className="text-2xl font-serif text-black">3. Initial Portfolio</h3>
+        <p className="text-sm text-gray-500 max-w-md">Upload at least 1 image to start. Your best work will define your brand from day one.</p>
       </div>
 
-      <div className="border-2 border-dashed border-gray-200 p-8 flex flex-col items-center justify-center bg-gray-50/50 min-h-[200px]">
-        <UploadCloud className="size-8 text-gray-400 mb-4" />
-        <p className="text-sm font-medium text-black mb-1">Click to upload or drag and drop</p>
-        <p className="text-xs text-gray-500 mb-6">JPG, PNG up to 10MB each</p>
+      <div className="group relative border border-dashed border-gray-200 p-12 sm:p-20 flex flex-col items-center justify-center bg-gray-50/30 hover:bg-white hover:border-black transition-all duration-500 min-h-[300px]">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-black" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-black" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-black" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-black" />
+        </div>
+
+        <UploadCloud className="size-12 text-gray-300 mb-6 group-hover:text-black transition-colors" />
+        <p className="text-sm font-medium text-black mb-1 uppercase tracking-widest">Drop your vision here</p>
+        <p className="text-xs text-gray-400 mb-8 tracking-wider">Up to 10 high-resolution images (JPG, PNG)</p>
+        
         <label className="cursor-pointer">
-          <span className="h-10 px-6 inline-flex items-center justify-center bg-white border border-gray-200 text-[10px] font-bold uppercase tracking-widest text-black hover:bg-gray-50">
-            Select Files
+          <span className="h-12 px-10 inline-flex items-center justify-center bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-lg active:scale-95">
+            Select Gallery
           </span>
           <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileChange} />
         </label>
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-          {selectedFiles.map((file, idx) => (
-            <div key={idx} className="relative aspect-square bg-gray-100 group overflow-hidden border border-gray-200">
-              <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
-              <button 
-                onClick={() => removeFile(idx)}
-                className="absolute top-2 right-2 size-6 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-black hover:bg-red-50 hover:text-red-500"
-              >
-                <X className="size-3" />
-              </button>
-            </div>
-          ))}
+        <div className="space-y-8">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold">Preview Selection ({selectedFiles.length}/10)</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6">
+            {selectedFiles.map((file, idx) => (
+              <div key={idx} className="relative aspect-[4/5] bg-gray-50 group overflow-hidden border border-gray-100 shadow-sm transition-transform hover:-translate-y-1 duration-500">
+                <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <button 
+                    onClick={() => removeFile(idx)}
+                    className="size-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-red-500 hover:text-white transition-all shadow-lg active:scale-90"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row gap-4 justify-end">
+      <div className="pt-12 border-t border-gray-50 flex flex-col sm:flex-row gap-6 justify-end">
         <Button 
           onClick={() => onComplete([])} 
           disabled={isUploading} 
-          variant="outline" 
-          className="h-14 px-8 rounded-none text-[10px] uppercase tracking-[0.25em] font-bold border-gray-200"
+          variant="ghost" 
+          className="h-16 px-10 rounded-none text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 hover:text-black transition-colors"
         >
           Skip for now
         </Button>
         <Button 
           onClick={() => onComplete(selectedFiles)} 
           disabled={isUploading || selectedFiles.length === 0} 
-          className="h-14 px-12 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.25em] font-bold"
+          className="px-20 h-16 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.3em] font-bold shadow-2xl hover:shadow-black/20 transition-all active:scale-[0.98]"
         >
-          {isUploading ? "Uploading..." : "Complete Setup"}
+          {isUploading ? "Syncing..." : "Complete Setup"}
         </Button>
       </div>
     </div>

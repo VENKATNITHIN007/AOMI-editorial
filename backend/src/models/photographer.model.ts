@@ -41,7 +41,7 @@ const photographerSchema = new Schema<IPhotographer>(
     },
     bio: String,
     location: { type: String, index: true, lowercase: true },
-    specialties: [{ type: String, index: true , lowercase: true }],
+    specialties: [{ type: String, index: true, lowercase: true }],
     priceFrom: { type: Number, index: true },
     instagram: String,
     heroTagline: String,

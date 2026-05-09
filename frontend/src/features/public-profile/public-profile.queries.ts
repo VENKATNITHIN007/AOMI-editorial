@@ -11,6 +11,7 @@ export function usePhotographerProfileQuery(username: string) {
     queryKey: queryKeys.photographerProfile(username),
     queryFn: () => getPhotographerProfile(username),
     enabled: Boolean(username),
+    retry: 3,
   });
 }
 
@@ -20,5 +21,6 @@ export function usePhotographerPortfolioQuery(username: string) {
     queryKey: queryKeys.photographerPortfolio(username),
     queryFn: () => getPhotographerPortfolio(username),
     enabled: Boolean(username),
+    retry: 3,
   });
 }

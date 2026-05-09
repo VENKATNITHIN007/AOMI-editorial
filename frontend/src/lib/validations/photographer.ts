@@ -19,6 +19,14 @@ export const photographerOnboardingSchema = z.object({
       (val) => !val || (!Number.isNaN(Number(val)) && Number(val) > 0),
       { message: "Price must be a positive number" },
     ),
+  bio: z
+    .string()
+    .max(500, "Bio cannot exceed 500 characters")
+    .optional(),
+  instagram: z
+    .string()
+    .optional()
+    .transform(val => val?.replace(/^@/, "")), // Clean the @ if user enters it
 });
 
 export type PhotographerOnboardingInput = z.infer<typeof photographerOnboardingSchema>;

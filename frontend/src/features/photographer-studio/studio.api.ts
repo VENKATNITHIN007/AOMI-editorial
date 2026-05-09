@@ -5,7 +5,9 @@ import type { PhotographerProfile, PortfolioItem } from "@/lib/types/photographe
 
 export interface CreatePhotographerProfilePayload {
   username: string;
+  bio?: string;
   location?: string;
+  instagram?: string;
   specialties?: string[];
   priceFrom?: number;
 }
@@ -14,6 +16,10 @@ export interface UpdatePhotographerProfilePayload {
   username?: string;
   bio?: string;
   location?: string;
+  instagram?: string;
+  heroTagline?: string;
+  heroImageId?: string;
+  aboutImageId?: string;
   specialties?: string[];
   priceFrom?: number;
 }
@@ -52,6 +58,7 @@ export interface AddPortfolioItemPayload {
 
 export interface UpdatePortfolioItemPayload {
   category?: string;
+  isFeatured?: boolean;
 }
 
 export async function getMyPortfolio() {

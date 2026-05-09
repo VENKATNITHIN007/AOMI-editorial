@@ -30,6 +30,10 @@ export interface PhotographerProfile {
   username: string;
   bio?: string;
   location?: string;
+  instagram?: string;
+  heroTagline?: string;
+  heroImageId?: string;
+  aboutImageId?: string;
   specialties: string[];
   priceFrom?: number;
 }
@@ -39,5 +43,6 @@ export interface PortfolioItem {
   mediaUrl: string;
   mediaType: "image" | "video";
   category?: string;
+  isFeatured?: boolean;
 }
 
