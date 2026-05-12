@@ -36,101 +36,6 @@ async function resolvePhotographer(req: Request) {
 // ── Controllers ────────────────────────────────────────────────────────────
 
 /**
- * Add single portfolio item.
- */
-export const addPortfolioItem = asyncHandler(
-  async (req: Request, res: Response) => {
-    const photographer = await resolvePhotographer(req);
-    const { mediaUrl, mediaType, category, isFeatured } = req.body;
-
-    const portfolioItem = await Portfolio.create({
-      photographerId: photographer._id,
-      mediaUrl,
-      mediaType,
-      category,
-      isFeatured: isFeatured || false,
-    });
-
-    return res
-      .status(201)
-      .json(
-        new ApiResponse(portfolioItem, "Portfolio item added successfully"),
-      );
-  },
-);
-
-/**
- * Add multiple portfolio items (batch upload).
- */
-export const addMultiplePortfolioItems = asyncHandler(
-  async (req: Request, res: Response) => {
-    const photographer = await resolvePhotographer(req);
-    const { items } = req.body;
-
-    const portfolioItems = items.map((item: IPortfolio) => ({
-      photographerId: photographer._id,
-      mediaUrl: item.mediaUrl,
-      mediaType: item.mediaType,
-      category: item.category,
-      isFeatured: item.isFeatured || false,
-    }));
-
-    const createdItems = await Portfolio.insertMany(portfolioItems);
-
-    return res
-      .status(201)
-      .json(
-        new ApiResponse(
-          createdItems,
-          `${createdItems.length} portfolio items added successfully`,
-        ),
-      );
-  },
-);
-
-/**
- * Get own portfolio (authenticated photographer).
- */
-export const getMyPortfolio = asyncHandler(
-  async (req: Request, res: Response) => {
-    const photographer = await resolvePhotographer(req);
-
-    const portfolio = await Portfolio.find({
-      photographerId: photographer._id,
-    }).sort({ createdAt: -1 });
-
-    return res
-      .status(200)
-      .json(new ApiResponse(portfolio, "Portfolio fetched successfully"));
-  },
-);
-
-/**
- * Get portfolio by photographer username (public).
- */
-export const getPortfolioByUsername = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { username } = req.params;
-
-    const photographer = await Photographer.findOne({
-      username: username.toLowerCase(),
-    });
-
-    if (!photographer) {
-      throw new ApiError(404, ERRORS.PHOTOGRAPHER.NOT_FOUND);
-    }
-
-    const portfolio = await Portfolio.find({
-      photographerId: photographer._id,
-    }).sort({ createdAt: -1 });
-
-    return res
-      .status(200)
-      .json(new ApiResponse(portfolio, "Portfolio fetched successfully"));
-  },
-);
-
-/**
  * Update portfolio item (purpose only).
  */
 export const updatePortfolioItem = asyncHandler(
@@ -141,8 +46,8 @@ export const updatePortfolioItem = asyncHandler(
 
     const portfolioItem = await Portfolio.findOneAndUpdate(
       { _id: itemId, photographerId: photographer._id },
-      { 
-        ...(purpose !== undefined && { purpose }), 
+      {
+        ...(purpose !== undefined && { purpose }),
       },
       { new: true },
     );
@@ -168,7 +73,7 @@ export const updatePortfolioItem = asyncHandler(
 export const uploadAndCreatePortfolioImage = asyncHandler(
   async (req: Request, res: Response) => {
     const photographer = await resolvePhotographer(req);
-    
+
     if (!req.file) {
       throw new ApiError(400, ERRORS.UPLOAD.NO_FILE);
     }
@@ -218,9 +123,9 @@ export const uploadAndCreatePortfolioImage = asyncHandler(
 
         // Delete from DB
         await Portfolio.deleteMany({ _id: { $in: oldItemIds } });
-        
+
         // Delete from Cloudinary (background)
-        deleteMultipleFromCloudinary(oldUrls).catch(err => 
+        deleteMultipleFromCloudinary(oldUrls).catch(err =>
           console.error("[Portfolio] Cloudinary cleanup failed after purpose swap:", err)
         );
       }
@@ -235,37 +140,7 @@ export const uploadAndCreatePortfolioImage = asyncHandler(
 );
 
 /**
- * Delete single portfolio item.
- * Also removes the associated file from Cloudinary.
- */
-export const deletePortfolioItem = asyncHandler(
-  async (req: Request, res: Response) => {
-    const photographer = await resolvePhotographer(req);
-    const { itemId } = req.params;
-
-    const portfolioItem = await Portfolio.findOneAndDelete({
-      _id: itemId,
-      photographerId: photographer._id,
-    });
-
-    if (!portfolioItem) {
-      throw new ApiError(404, ERRORS.PORTFOLIO.ITEM_NOT_FOUND);
-    }
-
-    // Fire-and-forget Cloudinary cleanup (don't block the response)
-    deleteFromCloudinary(portfolioItem.mediaUrl).catch((err) =>
-      console.error("[Portfolio] Cloudinary cleanup failed:", err),
-    );
-
-    return res
-      .status(200)
-      .json(new ApiResponse({}, "Portfolio item deleted successfully"));
-  },
-);
-
-/**
- * Delete multiple portfolio items.
- * Also removes the associated files from Cloudinary.
+ * Delete portfolio items (Single or Batch).
  */
 export const deleteMultiplePortfolioItems = asyncHandler(
   async (req: Request, res: Response) => {

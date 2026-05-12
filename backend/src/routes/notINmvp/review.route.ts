@@ -4,9 +4,9 @@ import {
   getPhotographerReviews,
   getMyReviews,
 } from "../controllers/review.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
-import { validateRequest } from "../middlewares/validateRequest.middleware";
-import { CreateReviewSchema } from "../validations/review.validation";
+import { authMiddleware } from "../../middlewares/auth.middleware";
+import { validateRequest } from "../../middlewares/validateRequest.middleware";
+import { CreateReviewSchema } from "../../validations/notINmvp/review.validation";
 
 const reviewRouter = Router();
 

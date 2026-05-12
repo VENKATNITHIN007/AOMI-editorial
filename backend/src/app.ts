@@ -14,8 +14,8 @@ import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
 import photographerRouter from "./routes/photographer.route";
 import portfolioRouter from "./routes/portfolio.route";
-import reviewRouter from "./routes/review.route";
-import bookingRouter from "./routes/booking.route";
+import reviewRouter from "./routes/notINmvp/review.route";
+import bookingRouter from "./routes/notINmvp/booking.route";
 import helmet from "helmet";
 
 // Read allowed frontend origins from ORIGIN_HOSTS env variable.
