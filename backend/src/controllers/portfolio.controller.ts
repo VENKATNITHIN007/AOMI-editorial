@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import fs from "fs";
 import { asyncHandler } from "../utils/core/asyncHandler";
 import ApiResponse from "../utils/core/ApiResponse";
 import ApiError from "../utils/core/ApiError";
@@ -8,6 +9,8 @@ import { Portfolio, IPortfolio } from "../models/portfolio.model";
 import {
   deleteFromCloudinary,
   deleteMultipleFromCloudinary,
+  uploadToCloudinary,
+  CLOUDINARY_FOLDERS,
 } from "../services/cloudinary.service";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -128,19 +131,18 @@ export const getPortfolioByUsername = asyncHandler(
 );
 
 /**
- * Update portfolio item (category only).
+ * Update portfolio item (purpose only).
  */
 export const updatePortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
     const photographer = await resolvePhotographer(req);
     const { itemId } = req.params;
-    const { category, isFeatured } = req.body;
+    const { purpose } = req.body;
 
     const portfolioItem = await Portfolio.findOneAndUpdate(
       { _id: itemId, photographerId: photographer._id },
       { 
-        ...(category !== undefined && { category }), 
-        ...(isFeatured !== undefined && { isFeatured }) 
+        ...(purpose !== undefined && { purpose }), 
       },
       { new: true },
     );
@@ -155,6 +157,81 @@ export const updatePortfolioItem = asyncHandler(
         new ApiResponse(portfolioItem, "Portfolio item updated successfully"),
       );
   },
+);
+
+/**
+ * Upload and create portfolio image (One Trip).
+ * - Combined upload to Cloudinary + DB record creation.
+ * - Auto-deletes old hero/about/thumbnail if purpose is singular.
+ * - Enforces gallery limit (10).
+ */
+export const uploadAndCreatePortfolioImage = asyncHandler(
+  async (req: Request, res: Response) => {
+    const photographer = await resolvePhotographer(req);
+    
+    if (!req.file) {
+      throw new ApiError(400, ERRORS.UPLOAD.NO_FILE);
+    }
+
+    const { purpose = "gallery" } = req.body;
+
+    // 1. Gallery Limit Check (before upload to save bandwidth)
+    if (purpose === "gallery") {
+      const galleryCount = await Portfolio.countDocuments({
+        photographerId: photographer._id,
+        purpose: "gallery",
+      });
+      if (galleryCount >= 10) {
+        // Manually cleanup temp file since uploadToCloudinary won't be called
+        if (req.file.path && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+        throw new ApiError(400, "Gallery limit is 10 images");
+      }
+    }
+
+    // 2. Upload to Cloudinary
+    const result = await uploadToCloudinary(req.file.path, CLOUDINARY_FOLDERS.PORTFOLIO);
+    if (!result) {
+      throw new ApiError(500, ERRORS.UPLOAD.FAILED);
+    }
+
+    // 3. Create the DB record
+    const portfolioItem = await Portfolio.create({
+      photographerId: photographer._id,
+      mediaUrl: result.secure_url,
+      mediaType: "image",
+      purpose,
+    });
+
+    // 4. Cleanup old singular purpose images (hero/about/thumbnail)
+    if (["hero", "about", "thumbnail"].includes(purpose)) {
+      const oldItems = await Portfolio.find({
+        photographerId: photographer._id,
+        purpose,
+        _id: { $ne: portfolioItem._id } // exclude the new one
+      });
+
+      if (oldItems.length > 0) {
+        const oldItemIds = oldItems.map(i => i._id);
+        const oldUrls = oldItems.map(i => i.mediaUrl);
+
+        // Delete from DB
+        await Portfolio.deleteMany({ _id: { $in: oldItemIds } });
+        
+        // Delete from Cloudinary (background)
+        deleteMultipleFromCloudinary(oldUrls).catch(err => 
+          console.error("[Portfolio] Cloudinary cleanup failed after purpose swap:", err)
+        );
+      }
+    }
+
+    return res
+      .status(201)
+      .json(
+        new ApiResponse(portfolioItem, "Portfolio image uploaded and created successfully"),
+      );
+  }
 );
 
 /**

@@ -18,6 +18,10 @@ export const SetPortfolioItemPurposeSchema = z.object({
   purpose: z.enum(["gallery", "hero", "about", "thumbnail"]),
 });
 
+export const UploadPortfolioImageSchema = z.object({
+  purpose: z.enum(["gallery", "hero", "about", "thumbnail"]).default("gallery"),
+});
+
 export const AddMultiplePortfolioItemsSchema = z.object({
   items: z
     .array(AddPortfolioItemSchema)
