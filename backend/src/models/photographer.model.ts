@@ -10,8 +10,6 @@ export interface IPhotographer {
   priceFrom?: number;
   instagram?: string;
   heroTagline?: string;
-  heroImageId?: mongoose.Types.ObjectId;
-  aboutImageId?: mongoose.Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,8 +43,6 @@ const photographerSchema = new Schema<IPhotographer>(
     priceFrom: { type: Number, index: true },
     instagram: String,
     heroTagline: String,
-    heroImageId: { type: Schema.Types.ObjectId, ref: "Portfolio" },
-    aboutImageId: { type: Schema.Types.ObjectId, ref: "Portfolio" },
   },
   { timestamps: true },
 );

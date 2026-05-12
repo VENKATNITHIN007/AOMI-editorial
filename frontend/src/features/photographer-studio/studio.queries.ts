@@ -3,14 +3,9 @@ import {
   getMyPhotographerProfile,
   createPhotographerProfile,
   updatePhotographerProfile,
-  getMyPortfolio,
-  addPortfolioItem,
-  addMultiplePortfolioItems,
-  uploadFile,
-  updatePortfolioItem,
-  deletePortfolioItem,
-  type UpdatePortfolioItemPayload,
-  type UploadFolder,
+  uploadAndCreatePortfolioImage,
+  setPortfolioItemPurpose,
+  deletePortfolioItems,
 } from "./studio.api";
 import { queryKeys } from "@/lib/query/keys";
 
@@ -52,63 +47,38 @@ export function useUpdateProfileMutation() {
 
 // ── Portfolio Queries & Mutations ──────────────────────────────────────────
 
-/** Fetch the current photographer's own portfolio (dashboard). */
-export function useMyPortfolioQuery() {
-  return useQuery({
-    queryKey: queryKeys.myPortfolio(),
-    queryFn: getMyPortfolio,
-  });
-}
-
-/** Add a new item to the photographer's portfolio. */
-export function useAddPortfolioItemMutation() {
+/** Upload and create a portfolio image in "One Trip". */
+export function useUploadPortfolioImageMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: addPortfolioItem,
+    mutationFn: ({ file, purpose }: { file: File; purpose?: string }) =>
+      uploadAndCreatePortfolioImage(file, purpose),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
+      // Refresh the entire profile package because it includes the images
+      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
     },
   });
 }
 
-/** Add multiple items to the photographer's portfolio. */
-export function useAddMultiplePortfolioItemsMutation() {
+/** Set a portfolio item's purpose (Promote to Hero/About). */
+export function useSetPortfolioItemPurposeMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: addMultiplePortfolioItems,
+    mutationFn: ({ itemId, purpose }: { itemId: string; purpose: string }) =>
+      setPortfolioItemPurpose(itemId, purpose),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
+      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
     },
   });
 }
 
-/** Upload a file to Cloudinary via the backend. */
-export function useUploadFileMutation() {
-  return useMutation({
-    mutationFn: ({ file, folder = "portfolio" }: { file: File; folder?: UploadFolder }) =>
-      uploadFile(file, folder),
-  });
-}
-
-/** Update a portfolio item's category. */
-export function useUpdatePortfolioItemMutation() {
+/** Delete portfolio items (Single or Batch). */
+export function useDeletePortfolioItemsMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ itemId, payload }: { itemId: string; payload: UpdatePortfolioItemPayload }) =>
-      updatePortfolioItem(itemId, payload),
+    mutationFn: (itemIds: string[]) => deletePortfolioItems(itemIds),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
-    },
-  });
-}
-
-/** Delete a portfolio item. */
-export function useDeletePortfolioItemMutation() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (itemId: string) => deletePortfolioItem(itemId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPortfolio() });
+      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
     },
   });
 }

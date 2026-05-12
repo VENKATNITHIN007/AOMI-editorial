@@ -14,9 +14,6 @@ import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
 import photographerRouter from "./routes/photographer.route";
 import portfolioRouter from "./routes/portfolio.route";
-import reviewRouter from "./routes/review.route";
-import bookingRouter from "./routes/booking.route";
-import uploadRouter from "./routes/upload.route";
 import helmet from "helmet";
 
 // Read allowed frontend origins from ORIGIN_HOSTS env variable.
@@ -27,7 +24,7 @@ const allowedHost = process.env.ORIGIN_HOSTS
   : ["http://localhost:3000", "http://localhost:3002"];
 
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 const app = express();
 
@@ -72,9 +69,7 @@ app.use(createVersionRoute("auth"), authRouter);
 app.use(createVersionRoute("users"), userRouter);
 app.use(createVersionRoute("photographers"), photographerRouter);
 app.use(createVersionRoute("portfolio"), portfolioRouter);
-app.use(createVersionRoute("reviews"), reviewRouter);
-app.use(createVersionRoute("bookings"), bookingRouter);
-app.use(createVersionRoute("upload"), uploadRouter);
+
 
 /**
  * 404 errors

@@ -8,13 +8,13 @@ import {
   cancelBooking,
   getBookingById,
 } from "../controllers/booking.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
-import { validateRequest } from "../middlewares/validateRequest.middleware";
+import { authMiddleware } from "../../middlewares/auth.middleware";
+import { validateRequest } from "../../middlewares/validateRequest.middleware";
 import {
   CreateBookingSchema,
   UpdateBookingStatusSchema,
   UpdateBookingSchema,
-} from "../validations/booking.validation";
+} from "../../validations/notINmvp/booking.validation";
 
 const bookingRouter = Router();
 

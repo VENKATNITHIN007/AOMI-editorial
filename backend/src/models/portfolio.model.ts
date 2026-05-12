@@ -5,8 +5,7 @@ export interface IPortfolio {
   photographerId: mongoose.Types.ObjectId;
   mediaUrl: string;
   mediaType: "image" | "video";
-  category?: string;
-  isFeatured?: boolean;
+  purpose: "gallery" | "hero" | "about" | "thumbnail";
   createdAt?: Date;
 }
 
@@ -25,14 +24,18 @@ const portfolioSchema = new Schema<IPortfolio>(
       required: true,
       index: true,
     },
-    category: { type: String, index: true },
-    isFeatured: { type: Boolean, default: false },
+    purpose: {
+      type: String,
+      enum: ["gallery", "hero", "about", "thumbnail"],
+      default: "gallery",
+      index: true,
+    },
   },
   { timestamps: true },
 );
 
-// Index for fetching portfolio items by photographer with category filter
-portfolioSchema.index({ photographerId: 1, category: 1 });
+// Index for resolving section images fast and fetching gallery
+portfolioSchema.index({ photographerId: 1, purpose: 1 });
 portfolioSchema.index({ photographerId: 1, createdAt: -1 });
 
 export const Portfolio = mongoose.model<IPortfolio>(

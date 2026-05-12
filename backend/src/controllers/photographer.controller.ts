@@ -5,6 +5,7 @@ import ApiResponse from "../utils/core/ApiResponse";
 import User from "../models/user.model";
 import ApiError from "../utils/core/ApiError";
 import { Photographer, IPhotographer } from "../models/photographer.model";
+import Portfolio from "../models/portfolio.model";
 import { ERRORS } from "../constants/error";
 
 /** * Create Photographer Profile
@@ -26,8 +27,6 @@ export const createPhotographerProfile = asyncHandler(
       priceFrom,
       instagram,
       heroTagline,
-      heroImageId,
-      aboutImageId
     } = req.body;
     const user = await User.findById(req.user._id);
 
@@ -61,8 +60,6 @@ export const createPhotographerProfile = asyncHandler(
       priceFrom,
       instagram,
       heroTagline,
-      heroImageId: heroImageId ? new mongoose.Types.ObjectId(heroImageId) : undefined,
-      aboutImageId: aboutImageId ? new mongoose.Types.ObjectId(aboutImageId) : undefined,
     };
 
     const photographer = await Photographer.create(photographerData);
@@ -95,14 +92,32 @@ export const getPhotographerProfileByUserId = asyncHandler(
     }
     const userId = req.user._id;
     const photographer = await Photographer.findOne({ userId });
+
     if (!photographer) {
       throw new ApiError(404, ERRORS.PHOTOGRAPHER.PROFILE_NOT_FOUND);
     }
+
+    // Join portfolio items and group by purpose
+    const portfolioItems = await Portfolio.find({
+      photographerId: photographer._id
+    }).sort({ createdAt: -1 });
+
+    const hero = portfolioItems.find(p => p.purpose === "hero") || null;
+    const aboutImage = portfolioItems.find(p => p.purpose === "about") || null;
+    const thumbnail = portfolioItems.find(p => p.purpose === "thumbnail") || null;
+    const gallery = portfolioItems.filter(p => p.purpose === "gallery");
+
     return res
       .status(200)
       .json(
         new ApiResponse(
-          photographer,
+          {
+            profile: photographer,
+            hero,
+            aboutImage,
+            thumbnail,
+            gallery
+          },
           "Photographer profile fetched successfully",
         ),
       );
@@ -123,11 +138,28 @@ export const getPhotographerProfileByUsername = asyncHandler(
     if (!photographer) {
       throw new ApiError(404, ERRORS.PHOTOGRAPHER.PROFILE_NOT_FOUND);
     }
+
+    // Join portfolio items and group by purpose
+    const portfolioItems = await Portfolio.find({ 
+      photographerId: photographer._id 
+    }).sort({ createdAt: -1 });
+
+    const hero = portfolioItems.find(p => p.purpose === "hero") || null;
+    const aboutImage = portfolioItems.find(p => p.purpose === "about") || null;
+    const thumbnail = portfolioItems.find(p => p.purpose === "thumbnail") || null;
+    const gallery = portfolioItems.filter(p => p.purpose === "gallery");
+
     return res
       .status(200)
       .json(
         new ApiResponse(
-          photographer,
+          {
+            profile: photographer,
+            hero,
+            aboutImage,
+            thumbnail,
+            gallery
+          },
           "Photographer profile fetched successfully",
         ),
       );
@@ -153,8 +185,6 @@ export const updatePhotographerProfile = asyncHandler(
       priceFrom,
       instagram,
       heroTagline,
-      heroImageId,
-      aboutImageId
     } = req.body;
 
     const photographer = await Photographer.findOne({ userId });
@@ -179,14 +209,6 @@ export const updatePhotographerProfile = asyncHandler(
     photographer.priceFrom = priceFrom !== undefined ? priceFrom : photographer.priceFrom;
     photographer.instagram = instagram !== undefined ? instagram : photographer.instagram;
     photographer.heroTagline = heroTagline !== undefined ? heroTagline : photographer.heroTagline;
-    
-    if (heroImageId) {
-      photographer.heroImageId = new mongoose.Types.ObjectId(heroImageId);
-    }
-    
-    if (aboutImageId) {
-      photographer.aboutImageId = new mongoose.Types.ObjectId(aboutImageId);
-    }
 
     await photographer.save();
     return res
@@ -212,7 +234,6 @@ export const browsePhotographers = asyncHandler(
       specialty,
       minPrice,
       maxPrice,
-      minRating,
       search,
       page,
       limit,
@@ -275,21 +296,30 @@ export const browsePhotographers = asyncHandler(
       Photographer.countDocuments(filter),
     ]);
 
-    // If minRating filter is provided, we need to filter by average rating
-    // This is a more complex operation - for now we return all and filter can be added with aggregation
-    let filteredPhotographers = photographers;
+    // Attach thumbnail URLs to each photographer
+    const photographerIds = photographers.map(p => p._id);
+    const thumbnails = await Portfolio.find({
+      photographerId: { $in: photographerIds },
+      purpose: "thumbnail"
+    }).lean();
 
-    if (minRating) {
-      // TODO: Add rating aggregation from reviews collection
-      // For now, this is a placeholder - in production, consider denormalizing avg rating
-    }
+    // Create a map for quick lookup
+    const thumbnailMap = thumbnails.reduce((acc, thumb) => {
+      acc[thumb.photographerId.toString()] = thumb.mediaUrl;
+      return acc;
+    }, {} as Record<string, string>);
+
+    const photographersWithThumbnails = photographers.map(p => ({
+      ...p,
+      thumbnailUrl: thumbnailMap[p._id.toString()] || null
+    }));
 
     const totalPages = Math.ceil(totalCount / limitNum);
 
     return res.status(200).json(
       new ApiResponse(
         {
-          photographers: filteredPhotographers,
+          photographers: photographersWithThumbnails,
           pagination: {
             currentPage: pageNum,
             totalPages,
