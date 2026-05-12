@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import type { PhotographerProfile, PortfolioItem } from "@/lib/types/photographer";
+import type { PhotographerProfile, PortfolioItem, PhotographerFullData } from "@/lib/types/photographer";
 
 // ── Profile APIs ────────────────────────────────────────────────────────
 
@@ -18,8 +18,6 @@ export interface UpdatePhotographerProfilePayload {
   location?: string;
   instagram?: string;
   heroTagline?: string;
-  heroImageId?: string;
-  aboutImageId?: string;
   specialties?: string[];
   priceFrom?: number;
 }
@@ -37,7 +35,7 @@ export async function getMyPhotographerProfile() {
   if (response.data?.success === false) {
     throw new Error(response.data?.message || "Failed to load photographer profile");
   }
-  return response.data.data as PhotographerProfile;
+  return response.data.data as PhotographerFullData;
 }
 
 export async function updatePhotographerProfile(payload: UpdatePhotographerProfilePayload) {
@@ -50,83 +48,37 @@ export async function updatePhotographerProfile(payload: UpdatePhotographerProfi
 
 // ── Portfolio APIs ──────────────────────────────────────────────────────
 
-export interface AddPortfolioItemPayload {
-  mediaUrl: string;
-  mediaType: string;
-  category?: string;
-}
-
-export interface UpdatePortfolioItemPayload {
-  category?: string;
-  isFeatured?: boolean;
-}
-
-export async function getMyPortfolio() {
-  const response = await apiClient.get("/portfolio");
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to load portfolio");
-  }
-  return (response.data.data || []) as PortfolioItem[];
-}
-
-export async function addPortfolioItem(payload: AddPortfolioItemPayload) {
-  const response = await apiClient.post("/portfolio/add", payload);
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to add portfolio item");
-  }
-  return response.data.data;
-}
-
-export interface AddMultiplePortfolioItemsPayload {
-  items: Array<{
-    mediaUrl: string;
-    mediaType: "image" | "video";
-    category?: string;
-  }>;
-}
-
-export async function addMultiplePortfolioItems(payload: AddMultiplePortfolioItemsPayload) {
-  const response = await apiClient.post("/portfolio/add-multiple", payload);
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to add multiple portfolio items");
-  }
-  return response.data.data;
-}
-
-export type UploadFolder = "avatar" | "portfolio";
-
-export async function uploadFile(
-  file: File,
-  folder: UploadFolder = "portfolio",
-): Promise<{ url: string }> {
+export async function uploadAndCreatePortfolioImage(file: File, purpose: string = "gallery") {
   const formData = new FormData();
   formData.append("file", file);
-  
-  const response = await apiClient.post(`/upload?folder=${folder}`, formData, {
+  formData.append("purpose", purpose);
+
+  const response = await apiClient.post("/portfolio/upload", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-  
+
   if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to upload file");
+    throw new Error(response.data?.message || "Failed to upload image");
   }
-  
-  return response.data.data;
+  return response.data.data as PortfolioItem;
 }
 
-export async function updatePortfolioItem(itemId: string, payload: UpdatePortfolioItemPayload) {
-  const response = await apiClient.patch(`/portfolio/${itemId}`, payload);
+export async function setPortfolioItemPurpose(itemId: string, purpose: string) {
+  const response = await apiClient.patch(`/portfolio/${itemId}/purpose`, { purpose });
   if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to update portfolio item");
+    throw new Error(response.data?.message || "Failed to set portfolio item purpose");
   }
-  return response.data.data;
+  return response.data.data as PortfolioItem;
 }
 
-export async function deletePortfolioItem(itemId: string) {
-  const response = await apiClient.delete(`/portfolio/${itemId}`);
+export async function deletePortfolioItems(itemIds: string[]) {
+  const response = await apiClient.delete("/portfolio", {
+    data: { itemIds },
+  });
   if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to delete portfolio item");
+    throw new Error(response.data?.message || "Failed to delete portfolio items");
   }
   return response.data.data;
 }

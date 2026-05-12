@@ -13,6 +13,7 @@ export interface PhotographerListItem {
   location?: string;
   specialties?: string[];
   priceFrom?: number;
+  thumbnailUrl?: string | null;
 }
 
 export interface Pagination {
@@ -32,17 +33,24 @@ export interface PhotographerProfile {
   location?: string;
   instagram?: string;
   heroTagline?: string;
-  heroImageId?: string;
-  aboutImageId?: string;
   specialties: string[];
   priceFrom?: number;
 }
 
 export interface PortfolioItem {
   _id: string;
+  photographerId: string;
   mediaUrl: string;
   mediaType: "image" | "video";
-  category?: string;
-  isFeatured?: boolean;
+  purpose: "gallery" | "hero" | "about" | "thumbnail";
+  createdAt?: string;
+}
+
+export interface PhotographerFullData {
+  profile: PhotographerProfile;
+  hero: PortfolioItem | null;
+  aboutImage: PortfolioItem | null;
+  thumbnail: PortfolioItem | null;
+  gallery: PortfolioItem[];
 }
 

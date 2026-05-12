@@ -9,7 +9,7 @@ import {
     sendVerificationEmail,
     verifyEmailToken,
 } from "./auth.api";
-import { updateProfile, type UpdateProfilePayload } from "../account/users.api";
+import { updateProfile, uploadAvatar, type UpdateProfilePayload } from "../account/users.api";
 import type { BackendUser, LoginCredentials, RegisterData } from "@/lib/types/auth";
 import { queryKeys } from "@/lib/query/keys";
 import { normalizeUser } from "./normalize-user";
@@ -104,6 +104,17 @@ export function useUpdateProfileMutation() {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: (payload: UpdateProfilePayload) => updateProfile(payload),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: queryKeys.session() });
+        },
+    });
+}
+
+/** Upload user avatar (One Trip). */
+export function useUploadAvatarMutation() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: (file: File) => uploadAvatar(file),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: queryKeys.session() });
         },
