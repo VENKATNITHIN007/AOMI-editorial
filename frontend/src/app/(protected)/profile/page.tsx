@@ -2,13 +2,13 @@
 
 import { Page } from "@/components/Page";
 import { RoleGate } from "@/components/guards/RoleGate";
-import { ProfilePage } from "@/features/account/ProfilePage";
+import { ProfilePage } from "@/features/profile/ProfilePage";
 
 export default function UserProfilePage() {
   return (
     <RoleGate allowedRoles={["user", "photographer"]}>
       <Page>
-        <Page.Body className="max-w-4xl flex-col gap-8 pt-10">
+        <Page.Body>
           <ProfilePage />
         </Page.Body>
       </Page>
