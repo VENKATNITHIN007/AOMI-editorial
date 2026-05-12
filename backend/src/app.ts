@@ -27,7 +27,7 @@ const allowedHost = process.env.ORIGIN_HOSTS
   : ["http://localhost:3000", "http://localhost:3002"];
 
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 const app = express();
 

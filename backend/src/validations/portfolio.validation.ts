@@ -11,8 +11,11 @@ export const AddPortfolioItemSchema = z.object({
     required_error: "Media type is required",
     invalid_type_error: "Media type must be 'image' or 'video'",
   }),
-  category: z.string().optional(),
-  isFeatured: z.boolean().optional(),
+  purpose: z.enum(["gallery", "hero", "about", "thumbnail"]).default("gallery"),
+});
+
+export const SetPortfolioItemPurposeSchema = z.object({
+  purpose: z.enum(["gallery", "hero", "about", "thumbnail"]),
 });
 
 export const AddMultiplePortfolioItemsSchema = z.object({
@@ -24,8 +27,7 @@ export const AddMultiplePortfolioItemsSchema = z.object({
 
 export const UpdatePortfolioItemSchema = z
   .object({
-    category: z.string().optional(),
-    isFeatured: z.boolean().optional(),
+    purpose: z.enum(["gallery", "hero", "about", "thumbnail"]).optional(),
   })
   .strict();
 
