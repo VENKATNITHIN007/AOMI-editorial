@@ -6,14 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
-import { useAuth, useUpdateProfileMutation } from "@/features/auth";
-import { useUploadFileMutation } from "@/features/photographer-studio/studio.queries";
+import { useAuth, useUpdateProfileMutation, useUploadAvatarMutation } from "@/features/auth";
 import { useToast } from "@/hooks/use-toast";
 
 const profileSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
   phoneNumber: z.string().optional(),
-  avatar: z.string().url("Invalid URL").optional().or(z.literal("")),
+  avatar: z.string().optional(), // Used for local preview/UI state
 });
 
 type ProfileInput = z.infer<typeof profileSchema>;
@@ -25,7 +24,7 @@ interface ProfileFormProps {
 export function ProfileForm({ onSuccess }: ProfileFormProps) {
   const { user } = useAuth();
   const updateProfileMutation = useUpdateProfileMutation();
-  const uploadFileMutation = useUploadFileMutation();
+  const uploadAvatarMutation = useUploadAvatarMutation();
   const { success, error: showError } = useToast();
 
   const form = useForm<ProfileInput>({
@@ -44,20 +43,19 @@ export function ProfileForm({ onSuccess }: ProfileFormProps) {
   }, [user, form]);
 
   /**
-   * Upload avatar to Cloudinary via the backend.
-   * Returns the Cloudinary secure_url to store in the form field.
+   * Upload avatar using the new atomic "One Trip" API.
+   * This updates both Cloudinary and the User record in one request.
    */
   const handleAvatarUpload = useCallback(async (file: File): Promise<string> => {
-    const result = await uploadFileMutation.mutateAsync({ file, folder: "avatar" });
-    return result.url;
-  }, [uploadFileMutation]);
+    const result = await uploadAvatarMutation.mutateAsync(file);
+    return result.avatar; // Backend returns { avatar: "new_url" }
+  }, [uploadAvatarMutation]);
 
   const onSubmit = async (data: ProfileInput) => {
     try {
       await updateProfileMutation.mutateAsync({
         fullName: data.fullName,
         phoneNumber: data.phoneNumber || undefined,
-        avatar: data.avatar || undefined,
       });
       success("Profile updated successfully");
       if (onSuccess) onSuccess();

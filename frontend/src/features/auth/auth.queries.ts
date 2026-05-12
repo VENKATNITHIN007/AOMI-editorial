@@ -9,7 +9,7 @@ import {
     sendVerificationEmail,
     verifyEmailToken,
 } from "./auth.api";
-import { updateProfile, uploadAvatar, type UpdateProfilePayload } from "../account/users.api";
+import { updateProfile, uploadAvatar, type UpdateProfilePayload } from "../profile/users.api";
 import type { BackendUser, LoginCredentials, RegisterData } from "@/lib/types/auth";
 import { queryKeys } from "@/lib/query/keys";
 import { normalizeUser } from "./normalize-user";

@@ -1,25 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  getMyPhotographerProfile,
   createPhotographerProfile,
   updatePhotographerProfile,
   uploadAndCreatePortfolioImage,
   setPortfolioItemPurpose,
   deletePortfolioItems,
 } from "./studio.api";
+import { getMyPhotographerProfile } from "../profile/users.api";
 import { queryKeys } from "@/lib/query/keys";
 
 // ── Profile Queries & Mutations ────────────────────────────────────────────
 
-/** Fetch the current photographer's own profile (dashboard). */
-export function useMyProfileQuery(options?: { enabled?: boolean }) {
-  return useQuery({
-    queryKey: queryKeys.myPhotographerProfile(),
-    queryFn: getMyPhotographerProfile,
-    enabled: options?.enabled,
-    retry: false, // Don't retry if profile is missing
-  });
-}
 
 /** Onboarding – create a new photographer profile. */
 export function useCreateProfileMutation() {
