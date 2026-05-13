@@ -20,8 +20,8 @@ import { initPinger } from "./utils/helper/pinger.util";
 // Read allowed frontend origins from ORIGIN_HOSTS env variable.
 // If it exists, convert the comma-separated string into an array and remove spaces.
 // If it does not exist, fall back to default localhost origins.
-const allowedHost = process.env.ORIGIN_HOSTS
-  ? process.env.ORIGIN_HOSTS.split(",").map((h) => h.trim())
+const allowedHost: string[] = process.env.ORIGIN_HOSTS
+  ? process.env.ORIGIN_HOSTS.split(",").map((h: string) => h.trim())
   : ["http://localhost:3000", "http://localhost:3002"];
 
 
@@ -60,7 +60,7 @@ app.use(csrfProtection);
 /**
  * Health check endpoint for pinger and monitoring
  */
-app.get(createVersionRoute("health"), (req, res) => {
+app.get(createVersionRoute("health"), (req: express.Request, res: express.Response) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
