@@ -33,6 +33,11 @@ function isAuthPath(pathname: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // Explicit fast-bypass for the root landing page to prevent Vercel Edge 404s
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+  
   // Get access token from cookies
   const accessToken = request.cookies.get("accessToken")?.value;
   
