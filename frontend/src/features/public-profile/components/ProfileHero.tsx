@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { getOptimizedImageUrl } from "@/lib/cloudinary-utils";
 
 interface ProfileHeroProps {
@@ -17,10 +18,12 @@ export function ProfileHero({ name, heroImage, tagline }: ProfileHeroProps) {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         {heroImage ? (
-          <img 
+          <Image 
             src={optimizedHero} 
             alt={name} 
-            className="w-full h-full object-cover" 
+            fill
+            priority
+            className="object-cover" 
           />
         ) : (
           <div className="w-full h-full bg-neutral-900" />

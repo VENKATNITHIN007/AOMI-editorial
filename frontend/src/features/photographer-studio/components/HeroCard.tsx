@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { Type, Image as ImageIcon, Upload, Check } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { Button } from "@/components/ui/button";
@@ -44,8 +45,9 @@ export function HeroCard({ profile, gallery, currentHero }: HeroCardProps) {
     try {
       await updateProfileMutation.mutateAsync({ heroTagline: tagline });
       showSuccess("Tagline Updated", "Your hero tagline has been saved.");
-    } catch (err: any) {
-      showError("Sync Failed", err.message || "Could not update tagline.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not update tagline.";
+      showError("Sync Failed", message);
     }
   };
 
@@ -56,8 +58,9 @@ export function HeroCard({ profile, gallery, currentHero }: HeroCardProps) {
     try {
       await uploadMutation.mutateAsync({ file, purpose: "hero" });
       showSuccess("Hero Exhibitioned", "New hero image has been uploaded and set.");
-    } catch (err: any) {
-      showError("Upload Failed", err.message || "Could not upload hero image.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not upload hero image.";
+      showError("Upload Failed", message);
     }
   };
 
@@ -66,8 +69,9 @@ export function HeroCard({ profile, gallery, currentHero }: HeroCardProps) {
       await setPurposeMutation.mutateAsync({ itemId, purpose: "hero" });
       showSuccess("Hero Updated", "Gallery item promoted to hero exhibition.");
       setIsPickerOpen(false);
-    } catch (err: any) {
-      showError("Promotion Failed", err.message || "Could not set hero image.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not set hero image.";
+      showError("Promotion Failed", message);
     }
   }
 
@@ -134,7 +138,7 @@ export function HeroCard({ profile, gallery, currentHero }: HeroCardProps) {
 
              <div className="aspect-[16/9] bg-gray-50 border border-black/5 group/hero relative overflow-hidden">
                 {currentHero ? (
-                  <img src={currentHero.mediaUrl} className="w-full h-full object-cover" />
+                  <Image src={currentHero.mediaUrl} alt="Hero preview" fill className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-2 opacity-20">
                      <ImageIcon className="size-8" />
@@ -191,7 +195,13 @@ export function HeroCard({ profile, gallery, currentHero }: HeroCardProps) {
                     currentHero?._id === item._id ? "border-black scale-[0.98]" : "border-black/5 hover:border-black/30"
                   )}
                 >
-                  <img src={item.mediaUrl} className="w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110" />
+                  <Image 
+                    src={item.mediaUrl} 
+                    alt="Gallery item" 
+                    fill 
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover transition-transform duration-1000 group-hover/item:scale-110" 
+                  />
                   {currentHero?._id === item._id && (
                     <div className="absolute top-2 right-2 bg-black text-white p-1.5 shadow-lg">
                       <Check className="size-3" />

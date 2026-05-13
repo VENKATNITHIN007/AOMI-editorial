@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { UploadCloud, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -56,7 +57,13 @@ export function OnboardingPortfolioUpload({ onComplete, isUploading }: Onboardin
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6">
             {selectedFiles.map((file, idx) => (
               <div key={idx} className="relative aspect-[4/5] bg-gray-50 group overflow-hidden border border-gray-100 shadow-sm transition-transform hover:-translate-y-1 duration-500">
-                <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                <Image 
+                  src={URL.createObjectURL(file)} 
+                  alt="preview" 
+                  fill 
+                  unoptimized
+                  className="object-cover" 
+                />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button 
                     onClick={() => removeFile(idx)}

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getOptimizedImageUrl as getCloudinaryUrl } from "@/lib/cloudinary-utils";
@@ -32,10 +33,11 @@ export function ProfileAbout({
           <div className="flex justify-center lg:justify-start">
             <div className="relative aspect-[4/5] w-full max-w-[320px] bg-neutral-900 group overflow-hidden">
               {optimizedAbout ? (
-                <img 
+                <Image 
                   src={optimizedAbout} 
                   alt={`About ${name}`} 
-                  className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" 
+                  fill
+                  className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" 
                 />
               ) : (
                 <div className="w-full h-full bg-neutral-800" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Mail, User as UserIcon, Phone, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +31,7 @@ export function ProfileInfoCard() {
             <div className="size-28 sm:size-32 rounded-full border border-black/5 p-1 bg-white shrink-0 transition-all duration-700 group-hover/card:border-black/10 group-hover/card:scale-105">
               <div className="w-full h-full rounded-full bg-gray-50 flex items-center justify-center overflow-hidden">
                 {user?.avatar ? (
-                  <img src={user.avatar} alt={user.name || "User avatar"} className="w-full h-full object-cover" />
+                  <Image src={user.avatar} alt={user.name || "User avatar"} fill className="object-cover" />
                 ) : (
                   <UserIcon className="size-14 text-gray-200" strokeWidth={1} />
                 )}

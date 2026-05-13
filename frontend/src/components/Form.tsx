@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import {
   Field,
   FieldDescription,
@@ -377,7 +378,12 @@ function ImageUpload<T extends FieldValues>({
             <div className="relative size-24 border border-black overflow-hidden bg-gray-50 flex items-center justify-center group">
               {field.value ? (
                 <>
-                  <img src={field.value} alt="Preview" className="size-full object-cover" />
+                  <Image 
+                    src={field.value} 
+                    alt="Preview" 
+                    fill 
+                    className="object-cover" 
+                  />
                   {!disabled && (
                     <button
                       type="button"

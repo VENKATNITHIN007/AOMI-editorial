@@ -32,17 +32,17 @@ export default function PhotographerDashboard() {
           ) : error || !profile ? (
             <DataState.Error 
               message={
-                (error as any)?.message?.includes("404") || (error as any)?.message?.includes("not found")
+                error?.message?.includes("404")
                   ? "It looks like your studio profile hasn't been created yet."
                   : "We couldn't retrieve your studio profile."
               }
               actionLabel={
-                (error as any)?.message?.includes("404") || (error as any)?.message?.includes("not found")
+                error?.message?.includes("404")
                   ? "Start Studio Setup"
                   : "Reload Dashboard"
               }
               onRetry={() => {
-                if ((error as any)?.message?.includes("404") || (error as any)?.message?.includes("not found")) {
+                if (error?.message?.includes("404")) {
                   window.location.href = "/photographer/onboard";
                 } else {
                   window.location.reload();

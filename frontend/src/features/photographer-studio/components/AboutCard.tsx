@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { AlignLeft, User as UserIcon, Upload, Check } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { Button } from "@/components/ui/button";
@@ -43,8 +44,9 @@ export function AboutCard({ profile, gallery, currentAbout }: AboutCardProps) {
     try {
       await updateProfileMutation.mutateAsync({ bio });
       showSuccess("Narrative Updated", "Your bio has been saved.");
-    } catch (err: any) {
-      showError("Sync Failed", err.message || "Could not update bio.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not update bio.";
+      showError("Sync Failed", message);
     }
   };
 
@@ -55,8 +57,9 @@ export function AboutCard({ profile, gallery, currentAbout }: AboutCardProps) {
     try {
       await uploadMutation.mutateAsync({ file, purpose: "about" });
       showSuccess("Portrait Updated", "New narrative portrait has been uploaded and set.");
-    } catch (err: any) {
-      showError("Upload Failed", err.message || "Could not upload portrait.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not upload portrait.";
+      showError("Upload Failed", message);
     }
   };
 
@@ -65,8 +68,9 @@ export function AboutCard({ profile, gallery, currentAbout }: AboutCardProps) {
       await setPurposeMutation.mutateAsync({ itemId, purpose: "about" });
       showSuccess("Portrait Promoted", "Gallery item promoted to narrative portrait.");
       setIsPickerOpen(false);
-    } catch (err: any) {
-      showError("Promotion Failed", err.message || "Could not set about image.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not set about image.";
+      showError("Promotion Failed", message);
     }
   }
 
@@ -135,7 +139,7 @@ export function AboutCard({ profile, gallery, currentAbout }: AboutCardProps) {
 
              <div className="aspect-[3/4] bg-gray-50 border border-black/5 group/portrait relative overflow-hidden">
                 {currentAbout ? (
-                  <img src={currentAbout.mediaUrl} className="w-full h-full object-cover" />
+                  <Image src={currentAbout.mediaUrl} alt="Portrait preview" fill className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-2 opacity-20">
                      <UserIcon className="size-10" />
@@ -192,7 +196,13 @@ export function AboutCard({ profile, gallery, currentAbout }: AboutCardProps) {
                     currentAbout?._id === item._id ? "border-black scale-[0.98]" : "border-black/5 hover:border-black/30"
                   )}
                 >
-                  <img src={item.mediaUrl} className="w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110" />
+                  <Image 
+                    src={item.mediaUrl} 
+                    alt="Gallery item" 
+                    fill 
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover transition-transform duration-1000 group-hover/item:scale-110" 
+                  />
                   {currentAbout?._id === item._id && (
                     <div className="absolute top-2 right-2 bg-black text-white p-1.5 shadow-lg">
                       <Check className="size-3" />

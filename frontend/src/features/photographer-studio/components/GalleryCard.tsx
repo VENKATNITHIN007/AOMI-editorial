@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Image from "next/image";
 import { Upload, Trash2, X, Image as ImageIcon, Plus } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { Button } from "@/components/ui/button";
@@ -47,8 +48,9 @@ export function GalleryCard({ items }: GalleryCardProps) {
       await Promise.all(promises);
       showSuccess("Exhibition Updated", `${selectedFiles.length} works have been added to your gallery.`);
       setSelectedFiles([]);
-    } catch (err: any) {
-      showError("Upload Failed", err.message || "Could not sync your new works.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not sync your new works.";
+      showError("Upload Failed", message);
     }
   };
 
@@ -56,8 +58,9 @@ export function GalleryCard({ items }: GalleryCardProps) {
     try {
       await deleteMutation.mutateAsync([id]);
       showSuccess("Item Removed", "The selected work has been removed from your gallery.");
-    } catch (err: any) {
-      showError("Deletion Failed", err.message || "Could not remove the item.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not remove the item.";
+      showError("Deletion Failed", message);
     }
   };
 
@@ -98,7 +101,7 @@ export function GalleryCard({ items }: GalleryCardProps) {
                <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
                  {selectedFiles.map((file, idx) => (
                    <div key={idx} className="relative aspect-square bg-gray-50 border border-black/5 group overflow-hidden">
-                      <img src={URL.createObjectURL(file)} className="w-full h-full object-cover" />
+                      <Image src={URL.createObjectURL(file)} alt="Pending preview" fill unoptimized className="object-cover" />
                       <button 
                         onClick={() => removePendingFile(idx)}
                         className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -148,8 +151,11 @@ export function GalleryCard({ items }: GalleryCardProps) {
                    key={item._id} 
                    className="relative aspect-[4/5] bg-gray-50 border border-black/5 group/img overflow-hidden transition-all duration-700 hover:border-black/20 hover:shadow-xl"
                  >
-                    <img 
+                    <Image 
                       src={item.mediaUrl} 
+                      alt="Gallery collection item"
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
                       className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover/img:scale-110" 
                     />
                     

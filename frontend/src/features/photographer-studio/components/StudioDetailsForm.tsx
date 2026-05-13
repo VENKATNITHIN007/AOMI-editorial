@@ -42,7 +42,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
   const updateMutation = useUpdateStudioProfileMutation();
 
   const form = useForm<StudioUpdateInput>({
-    resolver: zodResolver(studioUpdateSchema) as any,
+    resolver: zodResolver(studioUpdateSchema),
     defaultValues: {
       username: profile.username,
       location: profile.location || "",
@@ -62,8 +62,9 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
 
       showSuccess("Studio Synced", "Your business details have been exhibitioned.");
       onSuccess?.();
-    } catch (err: any) {
-      showError("Sync Failed", err.message || "Could not save studio settings.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not save studio settings.";
+      showError("Sync Failed", message);
     }
   };
 

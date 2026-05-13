@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, CheckCircle2, Image as ImageIcon } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Page } from "@/components/Page";
@@ -30,10 +31,12 @@ export function PhotographerCard({ photographer }: PhotographerCardProps) {
         {/* Compact Portrait Thumbnail (4:5) */}
         <div className="relative aspect-[4/5] overflow-hidden bg-neutral-50">
           {thumbnail ? (
-            <img 
+            <Image 
               src={thumbnail} 
               alt={name} 
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-neutral-200">
