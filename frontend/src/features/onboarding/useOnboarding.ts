@@ -61,7 +61,7 @@ export function useOnboarding() {
       
       await finalizeOnboarding("Studio created with initial portfolio!");
       
-    } catch (_err: unknown) {
+    } catch {
       showError("Setup completed with some upload issues. You can fix them in your dashboard.");
       await finalizeOnboarding();
     } finally {
