@@ -3,7 +3,7 @@
  * Leverages Cloudinary's on-the-fly image processing for optimal performance and cropping.
  */
 
-type ImagePurpose = "thumbnail" | "hero" | "portrait" | "gallery" | "avatar";
+type ImagePurpose = "thumbnail" | "hero" | "portrait" | "gallery" | "avatar" | "lightbox";
 
 interface CloudinaryOptions {
   width?: number;
@@ -18,8 +18,9 @@ const DEFAULTS: Record<ImagePurpose, CloudinaryOptions> = {
   thumbnail: { width: 800, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   hero: { width: 1920, height: 1080, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   portrait: { width: 800, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
-  gallery: { width: 1200, height: 1500, crop: "fit", quality: "auto", format: "webp" },
+  gallery: { width: 1200, height: 1200, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   avatar: { width: 200, height: 200, crop: "fill", gravity: "face", quality: "auto", format: "webp" },
+  lightbox: { width: 2000, height: 2000, crop: "limit", quality: "auto", format: "webp" },
 };
 
 /**
