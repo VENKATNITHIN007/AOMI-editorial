@@ -37,8 +37,9 @@ export function useOnboarding() {
         instagram: data.instagram || undefined,
       });
       handleNext();
-    } catch (err: any) {
-      showError(err.message || "Failed to create profile");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to create profile";
+      showError(message);
     }
   };
 
@@ -60,7 +61,7 @@ export function useOnboarding() {
       
       await finalizeOnboarding("Studio created with initial portfolio!");
       
-    } catch (err: any) {
+    } catch (_err: unknown) {
       showError("Setup completed with some upload issues. You can fix them in your dashboard.");
       await finalizeOnboarding();
     } finally {

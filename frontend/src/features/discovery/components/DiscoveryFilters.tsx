@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Filter, MapPin, Camera, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Page } from "@/components/Page";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -152,7 +152,6 @@ export function DiscoveryFilters() {
 }
 
 export function DiscoveryMobileFilters() {
-  const { hasActiveFilters, reset } = usePhotographerFilters();
   return (
     <div className="fixed bottom-6 right-6 z-50 lg:hidden">
       <Sheet>

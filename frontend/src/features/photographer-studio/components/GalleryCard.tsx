@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { Upload, Trash2, X, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, Trash2, X, Image as ImageIcon } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -10,7 +10,6 @@ import {
   useUploadPortfolioImageMutation, 
   useDeletePortfolioItemsMutation 
 } from "../studio.queries";
-import { cn } from "@/lib/utils";
 import type { PortfolioItem } from "@/lib/types/photographer";
 
 interface GalleryCardProps {

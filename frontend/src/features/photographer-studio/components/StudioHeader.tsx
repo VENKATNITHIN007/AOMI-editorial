@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, Eye, User as UserIcon } from "lucide-react";
+import { ExternalLink, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface StudioHeaderProps {
   username: string;
