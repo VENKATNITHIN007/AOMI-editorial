@@ -15,7 +15,7 @@ export function Hero() {
   return (
     <Section
       variant="default"
-      className="relative h-[90vh] flex items-center overflow-hidden bg-black text-white p-0"
+      className="relative h-screen flex items-center overflow-hidden bg-black text-white p-0"
     >
       <div className="absolute inset-0 z-0 opacity-60">
         <Image
@@ -26,35 +26,36 @@ export function Hero() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8">
-        <div className="max-w-4xl space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.85] mix-blend-difference">
+        <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="space-y-4">
+            <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white/40 block mb-6">Established 2026</span>
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.8] mix-blend-difference">
               The Art of <br />
               <span className="italic font-light opacity-80">Discovery.</span>
             </h1>
           </div>
 
-          <p className="max-w-xl text-base sm:text-lg md:text-xl font-light text-gray-300 leading-relaxed uppercase tracking-widest mix-blend-difference">
-            Connect with the world&apos;s most elite photographers. A curated platform for visual excellence.
+          <p className="max-w-xl text-xs sm:text-base md:text-xl font-light text-gray-300 leading-relaxed uppercase tracking-[0.25em] mix-blend-difference opacity-80">
+            Connect with the world&apos;s most elite photographers.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 pt-6 items-start sm:items-center">
-            <Link href={NAV_PATHS.DISCOVERY}>
-              <Button size="lg" className="h-14 sm:h-16 px-10 sm:px-12 text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-black bg-white text-black hover:bg-gray-200 rounded-none shadow-2xl transition-all hover:scale-105">
-                Explore Gallery
+          <div className="flex flex-col sm:flex-row gap-8 pt-6 items-center md:items-start w-full sm:w-auto">
+            <Link href={NAV_PATHS.DISCOVERY} className="w-full sm:w-auto">
+              <Button size="lg" className="h-16 px-12 text-[11px] uppercase tracking-[0.4em] font-black bg-white text-black hover:bg-neutral-100 rounded-none shadow-2xl transition-all hover:scale-[1.02] w-full sm:w-auto">
+                Explore Photographers
               </Button>
             </Link>
 
             <Link
               href={ctaPath}
-              className="flex items-center gap-3 group text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-bold text-white hover:text-gray-300 transition-colors"
+              className="flex items-center gap-3 group text-[11px] uppercase tracking-[0.2em] md:tracking-[0.4em] font-bold text-white hover:text-gray-300 transition-colors py-4 px-2"
             >
-              {ctaLabel}
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-2" />
+              <span className="whitespace-nowrap">{ctaLabel}</span>
+              <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-2" />
             </Link>
           </div>
         </div>

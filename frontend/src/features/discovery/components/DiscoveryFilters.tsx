@@ -111,12 +111,25 @@ function FilterForm() {
       </Page.Stack>
 
       {/* Primary Apply Action */}
-      <Button 
-        onClick={applyFilters}
-        className="w-full h-11 rounded-none bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-neutral-800 transition-transform active:scale-[0.98]"
-      >
-        Apply Filters
-      </Button>
+      <div className="flex flex-col gap-3">
+        <Button 
+          onClick={applyFilters}
+          className="w-full h-11 rounded-none bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-neutral-800 transition-transform active:scale-[0.98]"
+        >
+          Apply Filters
+        </Button>
+        {drafts.location !== "all" || drafts.specialties.length > 0 || drafts.minPrice !== "" || drafts.maxPrice !== "" ? (
+          <button 
+            onClick={() => {
+              // Store reset
+              usePhotographerFilters.getState().reset();
+            }}
+            className="w-full py-2 text-[8px] font-black text-black/40 uppercase tracking-[0.2em] hover:text-black transition-colors"
+          >
+            Reset All Filters
+          </button>
+        ) : null}
+      </div>
     </Page.Stack>
   );
 }
@@ -152,7 +165,6 @@ export function DiscoveryMobileFilters() {
         <SheetContent side="left" className="w-[280px] p-0">
           <div className="p-6 border-b border-black/5 flex items-center justify-between">
             <span className="text-sm font-black uppercase tracking-widest">Refine</span>
-            {hasActiveFilters && <button onClick={reset} className="text-[9px] font-black text-blue-600 uppercase">Reset</button>}
           </div>
           <div className="p-6 overflow-y-auto max-h-[calc(100vh-100px)]">
             <FilterForm />

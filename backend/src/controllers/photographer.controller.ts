@@ -261,7 +261,9 @@ export const browsePhotographers = asyncHandler(
     }
 
     if (specialty) {
-      filter.specialties = { $in: [specialty] };
+      // Support comma-separated specialties or single value
+      const specialtiesArray = specialty.split(",").map(s => s.trim());
+      filter.specialties = { $in: specialtiesArray };
     }
 
     if (minPrice || maxPrice) {

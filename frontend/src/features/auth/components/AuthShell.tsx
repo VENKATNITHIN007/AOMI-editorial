@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import { NAV_PATHS } from "@/lib/constants/nav";
 import { Page } from "@/components/Page";
 import { cn } from "@/lib/utils";
@@ -35,9 +36,7 @@ export function AuthShell({
           className="group flex items-center gap-3 transition-all hover:opacity-70"
         >
           <ArrowLeft className="size-4 text-gray-400 transition-transform group-hover:-translate-x-1" />
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
-            Photophile
-          </span>
+          <Logo className="text-[12px] sm:text-[14px]" />
         </Link>
       </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { NavLinks } from "./NavLinks";
 import { HeaderActions } from "./HeaderActions";
 import { MobileNav } from "./MobileNav";
@@ -17,9 +18,7 @@ export function MainHeader() {
         {/* Column 1: Logo (Left) */}
         <div className="flex-1 flex items-center">
           <Link href={NAV_PATHS.HOME} className="group transition-all hover:opacity-70">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
-              Photophile
-            </span>
+            <Logo className="text-[14px] sm:text-[16px]" />
           </Link>
         </div>
 

@@ -18,7 +18,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Photophile | India's Leading Photography Marketplace",
+  title: "AOMI | India's Leading Photography Marketplace",
   description: "The all-in-one studio management platform for professional photographers.",
 };
 

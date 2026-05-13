@@ -8,6 +8,7 @@ import { useAuth } from "@/features/auth";
 import { Button } from "@/components/ui/button";
 import { usePrimaryCta } from "@/hooks/usePrimaryCta";
 import { MAIN_NAV_ITEMS, NAV_PATHS } from "@/lib/constants/nav";
+import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -46,8 +47,8 @@ export function MobileNav() {
       >
         {/* Top Bar — Branding + Close */}
         <SheetHeader className="flex-row items-center justify-between px-6 py-5 border-b border-gray-100">
-          <SheetTitle className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
-            Photophile
+          <SheetTitle>
+            <Logo className="text-[12px]" />
           </SheetTitle>
           <SheetClose asChild>
             <Button variant="ghost" size="icon" className="size-9" aria-label="Close menu">

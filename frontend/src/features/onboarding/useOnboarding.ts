@@ -7,8 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryKeys } from "@/lib/query/keys";
 import { 
   useCreateProfileMutation, 
-  useAddMultiplePortfolioItemsMutation, 
-  useUploadFileMutation 
+  useUploadPortfolioImageMutation 
 } from "@/features/photographer-studio/studio.queries";
 import type { PhotographerOnboardingInput } from "@/lib/validations/photographer";
 
@@ -23,8 +22,7 @@ export function useOnboarding() {
   const { success, error: showError } = useToast();
 
   const createProfileMutation = useCreateProfileMutation();
-  const addPortfolioMutation = useAddMultiplePortfolioItemsMutation();
-  const uploadMutation = useUploadFileMutation();
+  const uploadMutation = useUploadPortfolioImageMutation();
 
   const handleNext = () => setStep((prev) => (prev + 1) as OnboardingStep);
 
@@ -53,17 +51,13 @@ export function useOnboarding() {
 
       setIsUploading(true);
       
+      // Upload each file using the unified mutation (which uploads to Cloudinary + creates record)
       const uploadPromises = selectedFiles.map(file => 
-        uploadMutation.mutateAsync({ file, folder: "portfolio" })
+        uploadMutation.mutateAsync({ file, purpose: "gallery" })
       );
-      const uploadedResults = await Promise.all(uploadPromises);
       
-      const items = uploadedResults.map(res => ({
-        mediaUrl: res.url,
-        mediaType: "image" as const,
-      }));
+      await Promise.all(uploadPromises);
       
-      await addPortfolioMutation.mutateAsync({ items });
       await finalizeOnboarding("Studio created with initial portfolio!");
       
     } catch (err: any) {

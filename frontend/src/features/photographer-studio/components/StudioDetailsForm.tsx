@@ -19,7 +19,6 @@ const studioUpdateSchema = z.object({
     .max(30, "Username cannot exceed 30 characters")
     .regex(/^[a-z0-9_]+$/, "Username can only contain lowercase letters, numbers, and underscores"),
   location: z.string().min(1, "Please select a location"),
-  instagram: z.string().optional(),
   specialties: z
     .array(z.string())
     .min(1, "Please select at least one specialty")
@@ -47,7 +46,6 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
     defaultValues: {
       username: profile.username,
       location: profile.location || "",
-      instagram: profile.instagram || "",
       specialties: profile.specialties || [],
       priceFrom: profile.priceFrom || 0,
     },
@@ -58,7 +56,6 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
       await updateMutation.mutateAsync({
         username: data.username,
         location: data.location,
-        instagram: data.instagram,
         specialties: data.specialties,
         priceFrom: data.priceFrom,
       });
@@ -82,14 +79,6 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
               name="username"
               label="Studio Handle / Username"
               placeholder="e.g. jdoe_photography"
-              disabled={isPending}
-            />
-
-            <Form.Input
-              control={form.control}
-              name="instagram"
-              label="Instagram Anchor"
-              placeholder="e.g. handle"
               disabled={isPending}
             />
           </div>

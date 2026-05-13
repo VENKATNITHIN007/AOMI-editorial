@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Tag, Banknote, Instagram } from "lucide-react";
+import { MapPin, Tag, Banknote, User } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { StudioDetailsForm } from "./StudioDetailsForm";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ export function IdentityCard({ profile }: IdentityCardProps) {
     { 
       label: "Handle", 
       value: `@${profile.username}`, 
-      icon: Instagram 
+      icon: User 
     },
     { 
       label: "Starting From", 

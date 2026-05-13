@@ -3,12 +3,12 @@
 import React from "react";
 import { Page } from "@/components/Page";
 import { DataState } from "@/components/DataState";
-import { usePhotographerPortfolioQuery, usePhotographerProfileQuery } from "./public-profile.queries";
+import { usePhotographerProfileQuery } from "./public-profile.queries";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileHero } from "./components/ProfileHero";
 import { ProfileGallery } from "./components/ProfileGallery";
 import { ProfileAbout } from "./components/ProfileAbout";
-import { getOptimizedImageUrl } from "@/lib/cloudinary-utils";
+import { ProfileFooter } from "./components/ProfileFooter";
 
 interface PublicProfilePageProps {
   username: string;
@@ -19,14 +19,16 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
     data: fullData, 
     isLoading, 
     error, 
-    refetch 
   } = usePhotographerProfileQuery(username);
 
   // Loading State
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <DataState.Loading className="text-white/40" />
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <span className="text-[10px] uppercase tracking-[0.5em] text-white/40">Loading Portfolio</span>
+        </div>
       </div>
     );
   }
@@ -71,22 +73,10 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
         aboutImage={aboutImage}
         priceFrom={profile.priceFrom?.toString()}
         specialties={profile.specialties}
-        instagram={profile.instagram}
         email={profile.userId?.email}
       />
 
-      <footer className="py-20 bg-black border-t border-white/5">
-        <Page.Body>
-          <Page.Row className="justify-between items-center opacity-30">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-black">
-              © {new Date().getFullYear()} Photophile Editorial
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold">
-              All Rights Reserved
-            </span>
-          </Page.Row>
-        </Page.Body>
-      </footer>
+      <ProfileFooter />
     </Page>
   );
 }
