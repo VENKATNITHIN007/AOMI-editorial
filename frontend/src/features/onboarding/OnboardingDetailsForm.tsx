@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
@@ -8,16 +8,16 @@ import { CITY_OPTIONS, SPECIALTY_OPTIONS } from "@/lib/constants/photographer";
 import * as z from "zod";
 import { photographerOnboardingSchema } from "@/lib/validations/photographer";
 
-import { SubmitHandler } from "react-hook-form";
+type OnboardingInput = z.infer<typeof photographerOnboardingSchema>;
 
 interface OnboardingDetailsFormProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: OnboardingInput) => void;
   isPending: boolean;
 }
 
 export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetailsFormProps) {
-  const form = useForm<z.input<typeof photographerOnboardingSchema>>({
-    resolver: zodResolver(photographerOnboardingSchema) as any,
+  const form = useForm<OnboardingInput>({
+    resolver: zodResolver(photographerOnboardingSchema) as Resolver<OnboardingInput>,
     defaultValues: {
       username: "",
       location: "",

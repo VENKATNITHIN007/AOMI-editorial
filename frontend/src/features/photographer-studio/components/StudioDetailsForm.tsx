@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form } from "@/components/Form";
@@ -42,7 +42,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
   const updateMutation = useUpdateStudioProfileMutation();
 
   const form = useForm<StudioUpdateInput>({
-    resolver: zodResolver(studioUpdateSchema),
+    resolver: zodResolver(studioUpdateSchema) as Resolver<StudioUpdateInput>,
     defaultValues: {
       username: profile.username,
       location: profile.location || "",
