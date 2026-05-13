@@ -28,6 +28,7 @@ export const appConfig = {
     APP_BASE_URL: process.env.APP_BASE_URL || "http://localhost:3000",
     EMAIL_VERIFICATION_EXPIRY: process.env.EMAIL_VERIFICATION_EXPIRY || "24h",
     PASSWORD_RESET_EXPIRY: process.env.PASSWORD_RESET_EXPIRY || "1h",
+    APP_URL: process.env.APP_URL || "", // Backend URL for pinger
 };
 
 export default appConfig;

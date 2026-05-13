@@ -15,6 +15,7 @@ import userRouter from "./routes/user.route";
 import photographerRouter from "./routes/photographer.route";
 import portfolioRouter from "./routes/portfolio.route";
 import helmet from "helmet";
+import { initPinger } from "./utils/helper/pinger.util";
 
 // Read allowed frontend origins from ORIGIN_HOSTS env variable.
 // If it exists, convert the comma-separated string into an array and remove spaces.
@@ -57,6 +58,13 @@ app.use(
 app.use(csrfProtection);
 
 /**
+ * Health check endpoint for pinger and monitoring
+ */
+app.get(createVersionRoute("health"), (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+/**
  * Rate limiting for API routes
  */
 app.use("/api", apiRateLimiter);
@@ -87,6 +95,8 @@ connectToDB()
       console.info(
         `Dukan backend is running on http://localhost:${port} in ${app.settings.env} mode`,
       );
+      // Initialize pinger to keep server awake in production
+      initPinger();
     });
   })
   .catch((err) => console.error(err));
