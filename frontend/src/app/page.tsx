@@ -1,5 +1,3 @@
-"use client";
-
 import { Hero } from "@/features/landing/Hero";
 import { CategoryGrid } from "@/features/landing/CategoryGrid";
 import { StudioCTA } from "@/features/landing/StudioCTA";
