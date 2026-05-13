@@ -1,48 +1,40 @@
 "use client";
 
-import { useState } from "react";
 import { Page } from "@/components/Page";
 import { DataState } from "@/components/DataState";
 import { RoleGate } from "@/components/guards/RoleGate";
 import { useMyProfileQuery } from "@/features/photographer-studio/studio.queries";
-import { StudioHeader } from "@/features/photographer-studio/components/StudioHeader";
-import { PortfolioManager } from "@/features/photographer-studio/components/PortfolioManager";
-import { StudioDetailsView } from "@/features/photographer-studio/components/StudioDetailsView";
-import { EditorialEditor } from "@/features/photographer-studio/components/EditorialEditor";
+import { StudioDashboard } from "@/features/photographer-studio/StudioDashboard";
 
 /**
  * Photographer Studio Dashboard.
- * Orchestrates portfolio management and studio settings.
+ * Thin page layer for role guarding and data orchestration.
  */
 export default function PhotographerDashboard() {
   const { data: profile, isLoading, error } = useMyProfileQuery();
-  const [activeTab, setActiveTab] = useState<"portfolio" | "settings" | "preview">("portfolio");
-
-  if (activeTab === "preview" && profile) {
-    return (
-      <RoleGate allowedRoles={["photographer"]}>
-        <div className="fixed inset-0 z-[100] bg-black overflow-y-auto">
-          <EditorialEditor 
-            profile={profile} 
-            onClose={() => setActiveTab("portfolio")} 
-          />
-        </div>
-      </RoleGate>
-    );
-  }
 
   return (
     <RoleGate allowedRoles={["photographer"]}>
       <Page>
-        <Page.Body className="max-w-6xl pt-0 pb-24">
+        {/* Editorial Heading */}
+        <div className="max-w-4xl mx-auto w-full pt-12 px-4 sm:px-6">
+          <h1 className="text-3xl font-black uppercase tracking-tighter text-black">
+            Studio Management
+          </h1>
+          <p className="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+            Curate your professional presence and portfolio exhibition.
+          </p>
+        </div>
+
+        <Page.Body className="max-w-4xl pt-10 pb-24 mx-auto">
           {isLoading ? (
             <DataState.Loading />
           ) : error || !profile ? (
             <DataState.Error 
               message={
                 (error as any)?.message?.includes("404") || (error as any)?.message?.includes("not found")
-                  ? "It looks like your studio profile hasn't been created yet. You need to complete your setup to access the dashboard."
-                  : "We couldn't retrieve your studio profile. Please ensure your account is correctly set up."
+                  ? "It looks like your studio profile hasn't been created yet."
+                  : "We couldn't retrieve your studio profile."
               }
               actionLabel={
                 (error as any)?.message?.includes("404") || (error as any)?.message?.includes("not found")
@@ -58,18 +50,7 @@ export default function PhotographerDashboard() {
               }}
             />
           ) : (
-            <div className="animate-in fade-in duration-700">
-              <StudioHeader 
-                username={profile.username} 
-                activeTab={activeTab} 
-                onTabChange={setActiveTab} 
-              />
-
-              <div className="min-h-[500px]">
-                {activeTab === "portfolio" && <PortfolioManager />}
-                {activeTab === "settings" && <StudioDetailsView profile={profile} />}
-              </div>
-            </div>
+            <StudioDashboard profile={profile} />
           )}
         </Page.Body>
       </Page>

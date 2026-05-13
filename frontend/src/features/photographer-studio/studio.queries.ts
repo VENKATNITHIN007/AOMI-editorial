@@ -5,11 +5,21 @@ import {
   uploadAndCreatePortfolioImage,
   setPortfolioItemPurpose,
   deletePortfolioItems,
+  getMyPhotographerProfile,
 } from "./studio.api";
-import { getMyPhotographerProfile } from "../profile/users.api";
 import { queryKeys } from "@/lib/query/keys";
 
 // ── Profile Queries & Mutations ────────────────────────────────────────────
+
+/** Fetch the current photographer's own profile (dashboard). */
+export function useMyProfileQuery(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.myPhotographerProfile(),
+    queryFn: getMyPhotographerProfile,
+    enabled: options?.enabled,
+    retry: false, // Don't retry if profile is missing
+  });
+}
 
 
 /** Onboarding – create a new photographer profile. */
@@ -26,7 +36,7 @@ export function useCreateProfileMutation() {
 }
 
 /** Update the current photographer's profile (bio, location, price). */
-export function useUpdateProfileMutation() {
+export function useUpdateStudioProfileMutation() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: updatePhotographerProfile,
