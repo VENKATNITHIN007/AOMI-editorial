@@ -1,5 +1,6 @@
 import { MainHeader } from "@/components/layout/Header/MainHeader";
 import { Logo } from "@/components/ui/Logo";
+import Link from "next/link";
 
 export default function PublicLayout({
   children,
@@ -25,8 +26,8 @@ export default function PublicLayout({
                </div>
 
                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-12 md:gap-16 text-[10px] font-bold tracking-[0.4em] uppercase text-white/40">
-                  <a href="/photographers" className="hover:text-white transition-colors">Photographers</a>
-                  <a href="/onboarding" className="hover:text-white transition-colors">Start Studio</a>
+                  <Link href="/photographers" className="hover:text-white transition-colors">Photographers</Link>
+                  <Link href="/onboarding" className="hover:text-white transition-colors">Start Studio</Link>
                   <a href="mailto:hello@aomi.com" className="hover:text-white transition-colors">Contact</a>
                </div>
             </div>

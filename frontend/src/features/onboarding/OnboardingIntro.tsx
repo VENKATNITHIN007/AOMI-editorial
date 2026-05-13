@@ -15,7 +15,7 @@ export function OnboardingIntro({ onNext }: OnboardingIntroProps) {
           Own Your <span className="font-bold italic">Creative</span>
         </h2>
         <p className="text-sm text-gray-400 font-light tracking-wider leading-relaxed max-w-lg mx-auto">
-          Join Photophile's exclusive network of professional photographers. 
+          Join ΛOMI Editorial&apos;s exclusive network of professional photographers. 
           Get a beautiful public portfolio, connect directly with clients, and manage your bookings—all with 0% commission.
         </p>
       </div>
