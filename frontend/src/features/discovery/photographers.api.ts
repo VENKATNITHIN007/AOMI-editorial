@@ -9,6 +9,8 @@ export interface BrowsePhotographersParams {
   maxPrice?: string;
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 export interface BrowsePhotographersResponse {
