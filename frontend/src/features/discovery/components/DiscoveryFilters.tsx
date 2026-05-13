@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Filter, RotateCcw, MapPin, Camera, Banknote, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useState } from "react";
+import { Filter, MapPin, Camera, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Page } from "@/components/Page";
@@ -13,38 +13,18 @@ import { COMMON_LOCATIONS, COMMON_SPECIALTIES } from "@/lib/constants/photograph
 import { cn } from "@/lib/utils";
 
 function FilterForm() {
-  const store = usePhotographerFilters();
-  
-  const [localLoc, setLocalLoc] = useState(store.location);
-  const [localSpecs, setLocalSpecs] = useState<string[]>(store.specialties);
-  const [localMin, setLocalMin] = useState(store.minPrice);
-  const [localMax, setLocalMax] = useState(store.maxPrice);
+  const { 
+    drafts,
+    setDraftLocation,
+    toggleDraftSpecialty,
+    setDraftMinPrice,
+    setDraftMaxPrice,
+    applyFilters
+  } = usePhotographerFilters();
 
   const [showAllSpecialties, setShowAllSpecialties] = useState(false);
   const displayedSpecialties = showAllSpecialties ? COMMON_SPECIALTIES : COMMON_SPECIALTIES.slice(0, 6);
 
-  useEffect(() => {
-    setLocalLoc(store.location);
-    setLocalSpecs(store.specialties);
-    setLocalMin(store.minPrice);
-    setLocalMax(store.maxPrice);
-  }, [store.location, store.specialties, store.minPrice, store.maxPrice]);
-
-  const toggleLocalSpec = (spec: string) => {
-    setLocalSpecs(prev => 
-      prev.includes(spec) ? prev.filter(s => s !== spec) : [...prev, spec]
-    );
-  };
-
-  const handleApply = () => {
-    store.setLocation(localLoc);
-    store.setSpecialties(localSpecs);
-    store.setMinPrice(localMin);
-    store.setMaxPrice(localMax);
-    store.setPage(1);
-  };
-
-  // Price Segments
   const PRICE_RANGES = [
     { label: "Any", min: "", max: "" },
     { label: "< ₹2k", min: "0", max: "2000" },
@@ -54,7 +34,7 @@ function FilterForm() {
   ];
 
   const isRangeActive = (min: string, max: string) => 
-    localMin === min && localMax === max;
+    drafts.minPrice === min && drafts.maxPrice === max;
 
   return (
     <Page.Stack className="gap-8">
@@ -64,7 +44,7 @@ function FilterForm() {
           <MapPin className="size-3" />
           <Label className="text-[9px] font-black uppercase tracking-widest cursor-default">Location</Label>
         </Page.Row>
-        <Select value={localLoc} onValueChange={setLocalLoc}>
+        <Select value={drafts.location} onValueChange={setDraftLocation}>
           <SelectTrigger className="rounded-none border-black/5 bg-neutral-50 h-10 text-[10px] font-bold uppercase tracking-widest focus:ring-0">
             <SelectValue placeholder="Location" />
           </SelectTrigger>
@@ -88,8 +68,8 @@ function FilterForm() {
             <Page.Row key={spec} className="gap-2.5 items-center">
               <Checkbox 
                 id={`spec-${spec}`} 
-                checked={localSpecs.includes(spec)}
-                onCheckedChange={() => toggleLocalSpec(spec)}
+                checked={drafts.specialties.includes(spec)}
+                onCheckedChange={() => toggleDraftSpecialty(spec)}
                 className="size-3.5 rounded-none border-black/10 data-[state=checked]:bg-black data-[state=checked]:border-black"
               />
               <label htmlFor={`spec-${spec}`} className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest cursor-pointer hover:text-black">
@@ -114,8 +94,8 @@ function FilterForm() {
             <button
               key={range.label}
               onClick={() => {
-                setLocalMin(range.min);
-                setLocalMax(range.max);
+                setDraftMinPrice(range.min);
+                setDraftMaxPrice(range.max);
               }}
               className={cn(
                 "h-9 border text-[9px] font-black uppercase tracking-widest transition-all",
@@ -132,7 +112,7 @@ function FilterForm() {
 
       {/* Primary Apply Action */}
       <Button 
-        onClick={handleApply}
+        onClick={applyFilters}
         className="w-full h-11 rounded-none bg-black text-white text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-neutral-800 transition-transform active:scale-[0.98]"
       >
         Apply Filters
