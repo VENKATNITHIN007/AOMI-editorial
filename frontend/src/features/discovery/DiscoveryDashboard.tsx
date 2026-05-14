@@ -11,8 +11,8 @@ import { ActiveFiltersSummary } from "./components/ActiveFiltersSummary";
 
 export function DiscoveryDashboard() {
   return (
-    <Page.Body className="max-w-[1600px] mx-auto pt-4 pb-32">
-      <Page.Row className="gap-8 flex-col lg:flex-row items-start">
+    <Page.Body className="max-w-[1600px] mx-auto px-6 sm:px-12 pt-4 pb-32">
+      <Page.Row className="w-full gap-8 flex-col lg:flex-row items-start">
         
         {/* Left Sidebar: Filters (Desktop) */}
         <DiscoveryFilters />

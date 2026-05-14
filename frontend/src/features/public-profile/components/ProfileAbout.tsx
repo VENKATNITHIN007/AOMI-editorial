@@ -31,7 +31,7 @@ export function ProfileAbout({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
           <div className="flex justify-center lg:justify-start">
-            <div className="relative aspect-[4/5] w-full max-w-[320px] bg-neutral-900 group overflow-hidden">
+            <div className="relative aspect-[4/5] w-full max-w-[260px] sm:max-w-[320px] bg-neutral-900 group overflow-hidden">
               {optimizedAbout ? (
                 <Image 
                   src={optimizedAbout} 

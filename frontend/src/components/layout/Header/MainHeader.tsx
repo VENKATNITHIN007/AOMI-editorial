@@ -13,7 +13,7 @@ import { NAV_PATHS } from "@/lib/constants/nav";
 export function MainHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-7xl items-center px-6 sm:px-8">
+      <div className="mx-auto flex h-20 max-w-[1600px] items-center px-6 sm:px-12">
         
         {/* Column 1: Logo (Left) */}
         <div className="flex-1 flex items-center">
