@@ -14,6 +14,10 @@ interface PublicProfilePageProps {
   username: string;
 }
 
+/**
+ * PublicProfilePage - Main entry for the high-end editorial photographer portfolio.
+ * Orchestrates the hero, gallery, about, and footer sections with intelligent fallbacks.
+ */
 export function PublicProfilePage({ username }: PublicProfilePageProps) {
   const { 
     data: fullData, 
@@ -50,8 +54,12 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
   const { profile, hero, aboutImage: aboutItem, gallery } = fullData;
   const name = profile.userId?.fullName || profile.username;
   
-  const heroImage = hero?.mediaUrl || gallery[0]?.mediaUrl;
-  const aboutImage = aboutItem?.mediaUrl || gallery[1]?.mediaUrl || gallery[0]?.mediaUrl;
+  // High-end default placeholders
+  const DEFAULT_HERO = "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2071&auto=format&fit=crop";
+  const DEFAULT_ABOUT = "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?q=80&w=2070&auto=format&fit=crop";
+
+  const heroImage = hero?.mediaUrl || DEFAULT_HERO;
+  const aboutImage = aboutItem?.mediaUrl || DEFAULT_ABOUT;
 
   return (
     <Page className="min-h-screen bg-black text-[#f5f5f5] selection:bg-white selection:text-black">
@@ -60,20 +68,24 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
       <ProfileHero 
         name={name} 
         heroImage={heroImage} 
-        tagline={profile.heroTagline}
+        tagline={profile.heroTagline ?? undefined}
+        avatar={profile.userId?.avatar ?? undefined}
+        email={profile.userId?.email ?? undefined}
+        instagram={profile.instagram}
       />
 
-      {gallery.length > 0 && (
-        <ProfileGallery portfolio={gallery} />
-      )}
+      {/* Gallery with light background for visual distinction */}
+      <ProfileGallery portfolio={gallery} />
 
       <ProfileAbout 
         name={name}
-        bio={profile.bio}
+        bio={profile.bio ?? undefined}
         aboutImage={aboutImage}
-        priceFrom={profile.priceFrom?.toString()}
+        email={profile.userId?.email ?? undefined}
+        instagram={profile.instagram}
         specialties={profile.specialties}
-        email={profile.userId?.email}
+        location={profile.location ?? undefined}
+        priceFrom={profile.priceFrom?.toString()}
       />
 
       <ProfileFooter />
