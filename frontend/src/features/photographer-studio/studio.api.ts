@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import type { PhotographerProfile, PortfolioItem, PhotographerFullData } from "@/lib/types/photographer";
 
-// ── Profile APIs ────────────────────────────────────────────────────────
+// ── Types ────────────────────────────────────────────────────────────────────
 
 export interface CreatePhotographerProfilePayload {
   username: string;
@@ -22,63 +22,50 @@ export interface UpdatePhotographerProfilePayload {
   priceFrom?: number;
 }
 
+export interface UploadPortfolioImagePayload {
+  file: File;
+  purpose?: string;
+  /** Grid slot index (0-4) for gallery images. Auto-assigned if omitted. */
+  position?: number;
+}
+
+// ── Profile ──────────────────────────────────────────────────────────────────
+
 export async function createPhotographerProfile(payload: CreatePhotographerProfilePayload) {
-  const response = await apiClient.post("/photographers/create", payload);
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to create photographer profile");
-  }
-  return response.data.data as PhotographerProfile;
+  const { data } = await apiClient.post("/photographers/create", payload);
+  if (!data.success) throw new Error(data.message || "Failed to create profile");
+  return data.data as PhotographerProfile;
 }
 
 export async function getMyPhotographerProfile() {
-  const response = await apiClient.get("/photographers/profile");
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to load photographer profile");
-  }
-  return response.data.data as PhotographerFullData;
+  const { data } = await apiClient.get("/photographers/profile");
+  if (!data.success) throw new Error(data.message || "Failed to load profile");
+  return data.data as PhotographerFullData;
 }
 
 export async function updatePhotographerProfile(payload: UpdatePhotographerProfilePayload) {
-  const response = await apiClient.patch("/photographers/update", payload);
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to update photographer profile");
-  }
-  return response.data.data as PhotographerProfile;
+  const { data } = await apiClient.patch("/photographers/update", payload);
+  if (!data.success) throw new Error(data.message || "Failed to update profile");
+  return data.data as PhotographerProfile;
 }
 
-// ── Portfolio APIs ──────────────────────────────────────────────────────
+// ── Portfolio ─────────────────────────────────────────────────────────────────
 
-export async function uploadAndCreatePortfolioImage(file: File, purpose: string = "gallery") {
+export async function uploadPortfolioImage({ file, purpose = "gallery", position }: UploadPortfolioImagePayload) {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("purpose", purpose);
+  if (position !== undefined) formData.append("position", String(position));
 
-  const response = await apiClient.post("/portfolio/upload", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+  const { data } = await apiClient.post("/portfolio/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to upload image");
-  }
-  return response.data.data as PortfolioItem;
-}
-
-export async function setPortfolioItemPurpose(itemId: string, purpose: string) {
-  const response = await apiClient.patch(`/portfolio/${itemId}/purpose`, { purpose });
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to set portfolio item purpose");
-  }
-  return response.data.data as PortfolioItem;
+  if (!data.success) throw new Error(data.message || "Failed to upload image");
+  return data.data as PortfolioItem;
 }
 
 export async function deletePortfolioItems(itemIds: string[]) {
-  const response = await apiClient.delete("/portfolio", {
-    data: { itemIds },
-  });
-  if (response.data?.success === false) {
-    throw new Error(response.data?.message || "Failed to delete portfolio items");
-  }
-  return response.data.data;
+  const { data } = await apiClient.delete("/portfolio", { data: { itemIds } });
+  if (!data.success) throw new Error(data.message || "Failed to delete items");
+  return data.data;
 }

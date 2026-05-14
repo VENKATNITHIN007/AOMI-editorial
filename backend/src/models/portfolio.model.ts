@@ -6,6 +6,7 @@ export interface IPortfolio {
   mediaUrl: string;
   mediaType: "image" | "video";
   purpose: "gallery" | "hero" | "about" | "thumbnail";
+  position?: number;
   createdAt?: Date;
 }
 
@@ -28,6 +29,11 @@ const portfolioSchema = new Schema<IPortfolio>(
       type: String,
       enum: ["gallery", "hero", "about", "thumbnail"],
       default: "gallery",
+      index: true,
+    },
+    position: {
+      type: Number,
+      default: 0,
       index: true,
     },
   },
