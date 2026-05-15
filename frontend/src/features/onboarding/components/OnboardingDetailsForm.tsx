@@ -44,17 +44,17 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
             placeholder="e.g. alex_morgan"
             description="Your unique URL handle"
             disabled={isPending}
-            className="bg-transparent border-b border-gray-200 rounded-none px-0 focus:border-black transition-colors"
+            className="bg-transparent border-b border-gray-200 rounded-none focus:border-black transition-colors"
           />
 
           <Form.Input
             control={form.control}
             name="instagram"
             label="Instagram"
-            placeholder="username"
+            placeholder="username or link"
             description="Your social portfolio link"
             disabled={isPending}
-            className="bg-transparent border-b border-gray-200 rounded-none px-0 focus:border-black transition-colors"
+            className="bg-transparent border-b border-gray-200 rounded-none focus:border-black transition-colors"
           />
         </div>
 
@@ -85,11 +85,11 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
           <Form.Input
             control={form.control}
             name="priceFrom"
-            label="Starting Price (₹) / Day"
+            label="Price Per Hour (₹)"
             type="number"
             placeholder="e.g. 25000"
             disabled={isPending}
-            className="bg-transparent border-b border-gray-200 rounded-none px-0 focus:border-black transition-colors"
+            className="bg-transparent border-b border-gray-200 rounded-none focus:border-black transition-colors"
           />
         </div>
 

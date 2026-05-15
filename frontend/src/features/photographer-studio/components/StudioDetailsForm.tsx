@@ -35,6 +35,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
       location: profile.location || "",
       specialties: profile.specialties || [],
       priceFrom: profile.priceFrom || 0,
+      instagram: profile.instagram || "",
     },
   });
 
@@ -63,6 +64,13 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
                 placeholder="e.g. jdoe_photography"
                 disabled={isPending}
               />
+              <Form.Input
+                control={form.control}
+                name="instagram"
+                label="Instagram"
+                placeholder="username or link"
+                disabled={isPending}
+              />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -77,7 +85,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
               <Form.Input
                 control={form.control}
                 name="priceFrom"
-                label="Starting Price (₹)"
+                label="Price Per Hour (₹)"
                 type="number"
                 disabled={isPending}
               />
