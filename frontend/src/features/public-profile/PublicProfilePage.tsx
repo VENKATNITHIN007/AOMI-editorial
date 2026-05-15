@@ -19,10 +19,10 @@ interface PublicProfilePageProps {
  * Orchestrates the hero, gallery, about, and footer sections with intelligent fallbacks.
  */
 export function PublicProfilePage({ username }: PublicProfilePageProps) {
-  const { 
-    data: fullData, 
-    isLoading, 
-    error, 
+  const {
+    data: fullData,
+    isLoading,
+    error,
   } = usePhotographerProfileQuery(username);
 
   // Loading State
@@ -42,7 +42,7 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
     return (
       <Page className="bg-black text-white">
         <Page.Body className="flex items-center justify-center min-h-[80vh]">
-          <DataState.Empty 
+          <DataState.Empty
             title="Photographer Not Found"
             description="The profile you are looking for does not exist or has been moved."
           />
@@ -53,7 +53,7 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
 
   const { profile, hero, aboutImage: aboutItem, gallery } = fullData;
   const name = profile.userId?.fullName || profile.username;
-  
+
   // High-end default placeholders
   const DEFAULT_HERO = "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2071&auto=format&fit=crop";
   const DEFAULT_ABOUT = "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?q=80&w=2070&auto=format&fit=crop";
@@ -64,10 +64,10 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
   return (
     <Page className="min-h-screen bg-black text-[#f5f5f5] selection:bg-white selection:text-black">
       <ProfileHeader name={name} />
-      
-      <ProfileHero 
-        name={name} 
-        heroImage={heroImage} 
+
+      <ProfileHero
+        name={name}
+        heroImage={heroImage}
         tagline={profile.heroTagline ?? undefined}
         avatar={profile.userId?.avatar ?? undefined}
         email={profile.userId?.email ?? undefined}
@@ -77,7 +77,7 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
       {/* Gallery with light background for visual distinction */}
       <ProfileGallery portfolio={gallery} />
 
-      <ProfileAbout 
+      <ProfileAbout
         name={name}
         bio={profile.bio ?? undefined}
         aboutImage={aboutImage}
@@ -87,7 +87,6 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
         location={profile.location ?? undefined}
         priceFrom={profile.priceFrom?.toString()}
       />
-
       <ProfileFooter />
     </Page>
   );

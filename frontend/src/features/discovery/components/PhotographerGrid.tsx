@@ -11,7 +11,7 @@ interface PhotographerGridProps {
  */
 export function PhotographerGrid({ photographers }: PhotographerGridProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 w-full">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
       {photographers.map((photographer) => (
         <PhotographerCard key={photographer._id} photographer={photographer} />
       ))}

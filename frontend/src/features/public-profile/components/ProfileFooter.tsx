@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { useAuth } from "@/features/auth/auth-context";
 
 /**
  * ProfileFooter — A "thin", minimalist footer.
@@ -11,6 +12,8 @@ import { Logo } from "@/components/ui/Logo";
  */
 export function ProfileFooter() {
   const currentYear = new Date().getFullYear();
+  const { user } = useAuth();
+  const isPhotographer = user?.role === "photographer";
 
   return (
     <footer className="py-12 bg-black border-t border-white/[0.03]">
@@ -35,10 +38,10 @@ export function ProfileFooter() {
               <ArrowUpRight className="size-3 opacity-0 group-hover:opacity-100 transition-all -translate-y-1" />
             </Link>
             <Link 
-              href="/onboarding" 
+              href={isPhotographer ? "/photographer/dashboard" : "/onboarding"} 
               className="group flex items-center gap-2 text-[9px] uppercase tracking-[0.4em] font-black text-white/30 hover:text-white transition-colors"
             >
-              Join Us
+              {isPhotographer ? "Dashboard" : "Join Us"}
               <ArrowUpRight className="size-3 opacity-0 group-hover:opacity-100 transition-all -translate-y-1" />
             </Link>
           </div>

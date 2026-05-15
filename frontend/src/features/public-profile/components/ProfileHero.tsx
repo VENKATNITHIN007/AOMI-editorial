@@ -33,7 +33,7 @@ export function ProfileHero({
   const optimizedAvatar = avatar ? getOptimizedImageUrl(avatar, "avatar") : undefined;
 
   return (
-    <section className="relative h-[85vh] md:h-screen w-full flex items-end overflow-hidden bg-black">
+    <section className="relative h-screen md:h-screen w-full flex items-end overflow-hidden bg-black">
       {/* Background */}
       <div className="absolute inset-0">
         {heroImage ? (
@@ -54,53 +54,57 @@ export function ProfileHero({
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-12 pb-16 sm:pb-20">
+      {/* Content Layer — Minimalist Caption Style */}
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-6 sm:px-12 pb-10 sm:pb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
         {/* Identity */}
-        <div className="mb-10">
-          <div className="relative inline-block mb-6">
-            <Avatar className="size-16 sm:size-20 border-2 border-white/15">
+        <div className="space-y-4">
+          <div className="relative inline-block">
+            <Avatar className="size-10 sm:size-12 border border-white/20 shadow-2xl">
               <AvatarImage src={optimizedAvatar} className="object-cover" />
-              <AvatarFallback className="bg-neutral-800 text-white text-lg font-serif">
+              <AvatarFallback className="bg-neutral-800 text-white text-[10px] font-serif">
                 {name[0]}
               </AvatarFallback>
             </Avatar>
-            <CheckCircle2 className="absolute -bottom-0.5 -right-0.5 size-5 sm:size-6 text-blue-500 fill-blue-500 stroke-black" />
+            <CheckCircle2 className="absolute -bottom-0.5 -right-0.5 size-4 text-blue-500 fill-blue-500 stroke-black" />
           </div>
 
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-light text-white tracking-tight leading-[0.95]">
-            {name}
-          </h1>
+          <div className="space-y-2">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-light text-white tracking-tighter leading-none">
+              {name}
+            </h1>
+            {tagline && (
+              <p className="text-[9px] sm:text-[10px] text-white/40 uppercase tracking-[0.6em] font-black max-w-sm leading-relaxed">
+                {tagline}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Action row */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 pt-8 border-t border-white/10">
-          {tagline && (
-            <p className="text-sm text-white/30 font-light max-w-xs leading-relaxed">
-              {tagline}
-            </p>
-          )}
-
-          <div className="flex items-center gap-6 sm:ml-auto">
+        {/* Action row — Compacted */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 mt-8 pt-6 border-t border-white/5">
+          <div className="flex items-center gap-6">
             {instagram && (
               <a
                 href={`https://instagram.com/${instagram.replace("@", "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-white/35 hover:text-white transition-colors"
+                className="flex items-center gap-2.5 text-white/20 hover:text-white transition-all duration-500"
               >
-                <Instagram className="size-[18px]" />
-                <span className="text-[11px] font-medium tracking-wide">
+                <Instagram className="size-3.5" />
+                <span className="text-[8px] font-black uppercase tracking-[0.4em]">
                   {instagram}
                 </span>
               </a>
             )}
+          </div>
+
+          <div className="sm:ml-auto">
             {email && (
               <Button
                 asChild
-                className="h-11 px-8 rounded-none bg-white text-black hover:bg-white/90 text-[11px] font-semibold tracking-wide transition-colors"
+                className="h-10 px-8 rounded-full bg-white text-black hover:bg-black hover:text-white border border-white transition-all duration-500 text-[8px] font-black uppercase tracking-[0.3em] shadow-xl"
               >
-                <a href={`mailto:${email}`}>Contact</a>
+                <a href={`mailto:${email}`}>Book Studio</a>
               </Button>
             )}
           </div>

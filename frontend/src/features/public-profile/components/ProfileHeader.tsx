@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface ProfileHeaderProps {
   name: string;
@@ -23,7 +24,9 @@ export function ProfileHeader({ name }: ProfileHeaderProps) {
       }).catch(console.error);
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard");
+      toast.success("Link copied to clipboard", {
+        description: "You can now share this profile with others.",
+      });
     }
   };
 
