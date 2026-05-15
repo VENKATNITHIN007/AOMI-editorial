@@ -63,17 +63,20 @@ function Input<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
-          <ShadcnInput
-            id={fieldId}
-            type={type}
-            placeholder={placeholder}
-            disabled={disabled}
-            aria-invalid={fieldState.invalid}
-            className={cn("h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors", className)}
-            {...field}
-            value={field.value || ""}
-          />
+          <FieldLabel htmlFor={fieldId} className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">{label}</FieldLabel>
+            <ShadcnInput
+              id={fieldId}
+              type={type}
+              placeholder={placeholder}
+              disabled={disabled}
+              aria-invalid={fieldState.invalid}
+              className={cn(
+                "h-14 rounded-none border border-black/10 bg-white px-4 text-sm font-medium tracking-tight transition-all placeholder:text-neutral-300 focus-visible:border-black focus-visible:ring-0",
+                className
+              )}
+              {...field}
+              value={field.value || ""}
+            />
           {description && <FieldDescription className="text-[9px] uppercase tracking-wider text-gray-400 mt-1.5">{description}</FieldDescription>}
           <FieldError errors={[fieldState.error]} />
         </Field>
@@ -101,7 +104,7 @@ function Password<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
+          <FieldLabel htmlFor={fieldId} className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">{label}</FieldLabel>
           <div className="relative">
             <ShadcnInput
               id={fieldId}
@@ -109,7 +112,7 @@ function Password<T extends FieldValues>({
               placeholder={placeholder}
               disabled={disabled}
               aria-invalid={fieldState.invalid}
-              className="h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors pr-12"
+              className="h-14 rounded-none border border-black/10 bg-white px-4 text-sm font-medium tracking-tight transition-all placeholder:text-neutral-300 focus-visible:border-black focus-visible:ring-0 pr-12"
               {...field}
               value={field.value || ""}
             />
@@ -161,13 +164,16 @@ function Textarea<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
+          <FieldLabel htmlFor={fieldId} className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">{label}</FieldLabel>
           <ShadcnTextarea
             id={fieldId}
             placeholder={placeholder}
             disabled={disabled}
             rows={rows}
-            className={cn("resize-none border-gray-200 bg-gray-50/50 focus:bg-white transition-colors", className)}
+            className={cn(
+              "rounded-none border border-black/10 bg-white p-4 text-sm font-medium tracking-tight transition-all placeholder:text-neutral-300 focus-visible:border-black focus-visible:ring-0",
+              className
+            )}
             aria-invalid={fieldState.invalid}
             {...field}
             value={field.value || ""}
@@ -214,14 +220,14 @@ function Select<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={fieldId} className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLabel>
+          <FieldLabel htmlFor={fieldId} className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">{label}</FieldLabel>
           <ShadcnSelect
             disabled={disabled}
             onValueChange={field.onChange}
             defaultValue={field.value}
             value={field.value ?? ""}
           >
-            <SelectTrigger id={fieldId} aria-invalid={fieldState.invalid} className="h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors">
+            <SelectTrigger id={fieldId} aria-invalid={fieldState.invalid} className="h-14 rounded-none border border-black/10 bg-white px-4 text-sm font-medium tracking-tight transition-all focus:border-black focus:ring-0">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
@@ -275,7 +281,7 @@ function MultiSelect<T extends FieldValues>({
 
         return (
           <FieldSet data-invalid={fieldState.invalid}>
-            <FieldLegend variant="label" className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">{label}</FieldLegend>
+            <FieldLegend variant="label" className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">{label}</FieldLegend>
             {description && <FieldDescription className="text-[9px] uppercase tracking-wider text-gray-400 mb-4">{description}</FieldDescription>}
             <FieldGroup data-slot="checkbox-group" className="grid grid-cols-2 gap-2">
               {options.map((item) => {
@@ -370,12 +376,12 @@ function ImageUpload<T extends FieldValues>({
       name={name}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5">
+          <FieldLabel className="text-[11px] uppercase tracking-[0.15em] text-neutral-500 font-bold mb-2">
             {label}
           </FieldLabel>
           
-          <div className="flex items-center gap-8">
-            <div className="relative size-24 border border-black overflow-hidden bg-gray-50 flex items-center justify-center group">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8">
+            <div className="relative size-24 sm:size-32 border border-black/10 overflow-hidden bg-neutral-50 flex items-center justify-center shrink-0 group transition-all hover:border-black/30">
               {field.value ? (
                 <>
                   <Image 
@@ -405,7 +411,7 @@ function ImageUpload<T extends FieldValues>({
               )}
             </div>
 
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-4 w-full">
               <div className="relative">
                 <input
                   type="file"
@@ -418,8 +424,8 @@ function ImageUpload<T extends FieldValues>({
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
                 <div className={cn(
-                  "flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.2em] font-bold px-6 h-12 border border-black transition-all",
-                  isUploading ? "opacity-50" : "hover:bg-black hover:text-white"
+                  "flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.2em] font-bold px-6 h-14 border border-black transition-all",
+                  isUploading ? "opacity-50 cursor-not-allowed" : "hover:bg-black hover:text-white cursor-pointer"
                 )}>
                   <Upload className="size-3" />
                   {field.value ? "Change Image" : "Upload Image"}

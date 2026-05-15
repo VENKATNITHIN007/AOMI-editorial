@@ -43,6 +43,7 @@ export interface PortfolioItem {
   mediaUrl: string;
   mediaType: "image" | "video";
   purpose: "gallery" | "hero" | "about" | "thumbnail";
+  position?: number;
   createdAt?: string;
 }
 

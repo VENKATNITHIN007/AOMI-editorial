@@ -3,6 +3,7 @@ import {
   updatePortfolioItem,
   deleteMultiplePortfolioItems,
   uploadAndCreatePortfolioImage,
+  bulkReorderPortfolio,
 } from "../controllers/portfolio.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { imageUpload } from "../middlewares/multer.middleware";
@@ -27,6 +28,10 @@ portfolioRouter
     "/:itemId/purpose",
     validateRequest(SetPortfolioItemPurposeSchema),
     updatePortfolioItem,
+  )
+  .post(
+    "/reorder",
+    bulkReorderPortfolio,
   )
   .delete(
     "/",

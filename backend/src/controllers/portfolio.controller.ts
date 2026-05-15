@@ -42,12 +42,13 @@ export const updatePortfolioItem = asyncHandler(
   async (req: Request, res: Response) => {
     const photographer = await resolvePhotographer(req);
     const { itemId } = req.params;
-    const { purpose } = req.body;
+    const { purpose, position } = req.body;
 
     const portfolioItem = await Portfolio.findOneAndUpdate(
       { _id: itemId, photographerId: photographer._id },
       {
         ...(purpose !== undefined && { purpose }),
+        ...(position !== undefined && { position }),
       },
       { new: true },
     );
@@ -78,7 +79,7 @@ export const uploadAndCreatePortfolioImage = asyncHandler(
       throw new ApiError(400, ERRORS.UPLOAD.NO_FILE);
     }
 
-    const { purpose = "gallery" } = req.body;
+    const { purpose = "gallery", position: rawPosition } = req.body;
 
     // 1. Gallery Limit Check (before upload to save bandwidth)
     if (purpose === "gallery") {
@@ -102,11 +103,29 @@ export const uploadAndCreatePortfolioImage = asyncHandler(
     }
 
     // 3. Create the DB record
+    let position = 0;
+    if (purpose === "gallery") {
+      if (rawPosition !== undefined) {
+        position = Number(rawPosition);
+        // Clean up any existing image in this position
+        const existingItem = await Portfolio.findOne({ photographerId: photographer._id, purpose: "gallery", position });
+        if (existingItem) {
+          await Portfolio.deleteOne({ _id: existingItem._id });
+          deleteMultipleFromCloudinary([existingItem.mediaUrl]).catch(err =>
+            console.error("[Portfolio] Cloudinary cleanup failed for overwritten slot:", err)
+          );
+        }
+      } else {
+        position = await Portfolio.countDocuments({ photographerId: photographer._id, purpose: "gallery" });
+      }
+    }
+
     const portfolioItem = await Portfolio.create({
       photographerId: photographer._id,
       mediaUrl: result.secure_url,
       mediaType: "image",
       purpose,
+      position
     });
 
     // 4. Cleanup old singular purpose images (hero/about/thumbnail)
@@ -137,6 +156,33 @@ export const uploadAndCreatePortfolioImage = asyncHandler(
         new ApiResponse(portfolioItem, "Portfolio image uploaded and created successfully"),
       );
   }
+);
+
+/**
+ * Bulk reorder portfolio items.
+ */
+export const bulkReorderPortfolio = asyncHandler(
+  async (req: Request, res: Response) => {
+    const photographer = await resolvePhotographer(req);
+    const { items } = req.body; // Array of { id: string, position: number }
+
+    if (!Array.isArray(items)) {
+      throw new ApiError(400, "Items must be an array");
+    }
+
+    const updatePromises = items.map((item) =>
+      Portfolio.updateOne(
+        { _id: item.id, photographerId: photographer._id },
+        { position: item.position },
+      ),
+    );
+
+    await Promise.all(updatePromises);
+
+    return res
+      .status(200)
+      .json(new ApiResponse({}, "Portfolio reordered successfully"));
+  },
 );
 
 /**

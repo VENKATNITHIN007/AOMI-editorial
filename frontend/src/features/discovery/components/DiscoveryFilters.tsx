@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Filter, MapPin, Camera, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Page } from "@/components/Page";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -162,6 +162,10 @@ export function DiscoveryMobileFilters() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[280px] p-0">
+          <SheetTitle className="sr-only">Filter Photographers</SheetTitle>
+          <SheetDescription className="sr-only">
+            Narrow down results by location, specialty, and price.
+          </SheetDescription>
           <div className="p-6 border-b border-black/5 flex items-center justify-between">
             <span className="text-sm font-black uppercase tracking-widest">Refine</span>
           </div>

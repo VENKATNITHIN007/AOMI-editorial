@@ -3,7 +3,7 @@
  * Leverages Cloudinary's on-the-fly image processing for optimal performance and cropping.
  */
 
-type ImagePurpose = "thumbnail" | "hero" | "portrait" | "gallery" | "avatar" | "lightbox";
+type ImagePurpose = "thumbnail" | "hero" | "portrait" | "gallery" | "avatar" | "lightbox" | "bento_square" | "bento_portrait" | "bento_landscape";
 
 interface CloudinaryOptions {
   width?: number;
@@ -17,10 +17,13 @@ interface CloudinaryOptions {
 const DEFAULTS: Record<ImagePurpose, CloudinaryOptions> = {
   thumbnail: { width: 800, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   hero: { width: 1920, height: 1080, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
-  portrait: { width: 800, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
+  portrait: { width: 1080, height: 1920, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   gallery: { width: 1200, height: 1200, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
   avatar: { width: 200, height: 200, crop: "fill", gravity: "face", quality: "auto", format: "webp" },
   lightbox: { width: 2000, height: 2000, crop: "limit", quality: "auto", format: "webp" },
+  bento_square: { width: 1000, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
+  bento_portrait: { width: 800, height: 1000, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
+  bento_landscape: { width: 1600, height: 900, crop: "fill", gravity: "auto", quality: "auto", format: "webp" },
 };
 
 /**

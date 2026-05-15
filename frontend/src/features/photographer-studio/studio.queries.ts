@@ -2,84 +2,72 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPhotographerProfile,
   updatePhotographerProfile,
-  uploadAndCreatePortfolioImage,
-  setPortfolioItemPurpose,
+  uploadPortfolioImage,
   deletePortfolioItems,
   getMyPhotographerProfile,
+  type UploadPortfolioImagePayload,
 } from "./studio.api";
 import { queryKeys } from "@/lib/query/keys";
 
-// ── Profile Queries & Mutations ────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Fetch the current photographer's own profile (dashboard). */
+/** Invalidate the full profile package (profile + images). */
+const useRefreshProfile = () => {
+  const qc = useQueryClient();
+  return () => qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
+};
+
+// ── Profile ───────────────────────────────────────────────────────────────────
+
+/** Fetch the authenticated photographer's own studio profile. */
 export function useMyProfileQuery(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: queryKeys.myPhotographerProfile(),
     queryFn: getMyPhotographerProfile,
     enabled: options?.enabled,
-    retry: false, // Don't retry if profile is missing
+    retry: false,
   });
 }
 
-
-/** Onboarding – create a new photographer profile. */
+/** Create a new photographer profile (onboarding). */
 export function useCreateProfileMutation() {
+  const refreshProfile = useRefreshProfile();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createPhotographerProfile,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
+      refreshProfile();
       // Role may change after becoming a photographer
       qc.invalidateQueries({ queryKey: queryKeys.session() });
     },
   });
 }
 
-/** Update the current photographer's profile (bio, location, price). */
+/** Update profile metadata (bio, location, price, tagline…). */
 export function useUpdateStudioProfileMutation() {
-  const qc = useQueryClient();
+  const refreshProfile = useRefreshProfile();
   return useMutation({
     mutationFn: updatePhotographerProfile,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
-    },
+    onSuccess: refreshProfile,
   });
 }
 
-// ── Portfolio Queries & Mutations ──────────────────────────────────────────
+// ── Portfolio ─────────────────────────────────────────────────────────────────
 
-/** Upload and create a portfolio image in "One Trip". */
+/** Upload a portfolio image (hero / about / thumbnail / gallery slot). */
 export function useUploadPortfolioImageMutation() {
-  const qc = useQueryClient();
+  const refreshProfile = useRefreshProfile();
   return useMutation({
-    mutationFn: ({ file, purpose }: { file: File; purpose?: string }) =>
-      uploadAndCreatePortfolioImage(file, purpose),
-    onSuccess: () => {
-      // Refresh the entire profile package because it includes the images
-      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
-    },
+    mutationFn: (payload: UploadPortfolioImagePayload) => uploadPortfolioImage(payload),
+    onSuccess: refreshProfile,
   });
 }
 
-/** Set a portfolio item's purpose (Promote to Hero/About). */
-export function useSetPortfolioItemPurposeMutation() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ itemId, purpose }: { itemId: string; purpose: string }) =>
-      setPortfolioItemPurpose(itemId, purpose),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
-    },
-  });
-}
-
-/** Delete portfolio items (Single or Batch). */
+/** Delete one or more portfolio items by ID. */
 export function useDeletePortfolioItemsMutation() {
-  const qc = useQueryClient();
+  const refreshProfile = useRefreshProfile();
   return useMutation({
     mutationFn: (itemIds: string[]) => deletePortfolioItems(itemIds),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: queryKeys.myPhotographerProfile() });
-    },
+    onSuccess: refreshProfile,
   });
 }

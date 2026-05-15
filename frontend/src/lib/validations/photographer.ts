@@ -30,3 +30,19 @@ export const photographerOnboardingSchema = z.object({
 });
 
 export type PhotographerOnboardingInput = z.infer<typeof photographerOnboardingSchema>;
+
+export const studioProfileUpdateSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username cannot exceed 30 characters")
+    .regex(/^[a-z0-9_]+$/, "Username can only contain lowercase letters, numbers, and underscores"),
+  location: z.string().min(1, "Please select a location"),
+  specialties: z
+    .array(z.string())
+    .min(1, "Please select at least one specialty")
+    .max(3, "You can select up to 3 specialties"),
+  priceFrom: z.coerce.number().min(0, "Price must be a positive number"),
+});
+
+export type StudioProfileUpdateInput = z.infer<typeof studioProfileUpdateSchema>;
