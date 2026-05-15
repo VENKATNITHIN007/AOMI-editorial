@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Mail, Instagram, MapPin, Camera } from "lucide-react";
+import { Instagram, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getOptimizedImageUrl as getCloudinaryUrl } from "@/lib/cloudinary-utils";
 

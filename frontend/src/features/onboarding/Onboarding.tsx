@@ -4,25 +4,24 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { ArrowLeft, Sparkles, Camera, Rocket, ArrowRight } from "lucide-react";
 import { NAV_PATHS } from "@/lib/constants/nav";
-import { OnboardingWizard } from "./OnboardingWizard";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { OnboardingDetailsForm } from "./components/OnboardingDetailsForm";
+import { useOnboarding } from "./useOnboarding";
 
 /**
- * Onboarding Page Component.
- * 
- * High-quality modular architecture:
- * 1. Business Logic -> useOnboarding hook (via OnboardingWizard)
- * 2. Visual Layout -> Onboarding (this file)
- * 3. Wizard Orchestration -> OnboardingWizard
+ * Simplified Onboarding Feature.
+ * Direct path to studio creation.
  */
 export function Onboarding() {
+  const { handleDetailsSubmit, isSavingDetails } = useOnboarding();
+
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-white px-6 py-20 sm:py-32 overflow-hidden">
-      {/* Decorative Background Element */}
+      {/* Decorative Background */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-gray-50 rounded-full blur-3xl opacity-50 -z-10" />
 
-      {/* Back to Home Branding */}
+      {/* Back to Home */}
       <header className="absolute top-6 left-6 sm:top-10 sm:left-10">
         <Link
           href={NAV_PATHS.HOME}
@@ -48,34 +47,34 @@ export function Onboarding() {
           </p>
         </div>
 
-        {/* Process Details (Initial Details) */}
+        {/* Simplified Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-gray-100 pt-16">
           <div className="space-y-4">
             <div className="size-12 bg-gray-50 flex items-center justify-center">
               <Sparkles className="size-5 text-black" />
             </div>
-            <h3 className="text-lg font-serif">1. Brand Identity</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Set your unique handle, professional specialties, and editorial biography.</p>
+            <h3 className="text-lg font-serif italic">Identity</h3>
+            <p className="text-sm text-gray-500 leading-relaxed font-light">Set your unique professional handle and editorial biography.</p>
           </div>
 
           <div className="space-y-4">
             <div className="size-12 bg-gray-50 flex items-center justify-center">
               <Camera className="size-5 text-black" />
             </div>
-            <h3 className="text-lg font-serif">2. Portfolio Curation</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Upload your best works. Our high-resolution gallery makes your art stand out.</p>
+            <h3 className="text-lg font-serif italic">Showcase</h3>
+            <p className="text-sm text-gray-500 leading-relaxed font-light">Your portfolio is served in high-resolution, magazine-quality layouts.</p>
           </div>
 
           <div className="space-y-4">
             <div className="size-12 bg-gray-50 flex items-center justify-center">
               <Rocket className="size-5 text-black" />
             </div>
-            <h3 className="text-lg font-serif">3. Studio Launch</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Go live with a premium micro-website designed to convert leads into bookings.</p>
+            <h3 className="text-lg font-serif italic">Launch</h3>
+            <p className="text-sm text-gray-500 leading-relaxed font-light">Go live instantly with a premium micro-website designed to convert.</p>
           </div>
         </div>
 
-        {/* Call to Action (Opens Form in Dialog) */}
+        {/* Direct CTA */}
         <div className="pt-8">
           <Dialog>
             <DialogTrigger asChild>
@@ -89,7 +88,12 @@ export function Onboarding() {
                 <DialogHeader className="mb-12">
                   <DialogTitle className="text-4xl font-serif italic">Studio Setup</DialogTitle>
                 </DialogHeader>
-                <OnboardingWizard />
+                
+                {/* DIRECT FORM - NO WIZARD */}
+                <OnboardingDetailsForm 
+                  onSubmit={handleDetailsSubmit} 
+                  isPending={isSavingDetails} 
+                />
               </div>
             </DialogContent>
           </Dialog>

@@ -15,6 +15,10 @@ interface OnboardingDetailsFormProps {
   isPending: boolean;
 }
 
+/**
+ * Simplified Onboarding Form.
+ * Focuses on core identity and location.
+ */
 export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetailsFormProps) {
   const form = useForm<OnboardingInput>({
     resolver: zodResolver(photographerOnboardingSchema) as Resolver<OnboardingInput>,
@@ -30,11 +34,7 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="space-y-4">
-        <h3 className="text-2xl font-serif text-black">1. Studio Identity</h3>
-        <p className="text-sm text-gray-500 max-w-md">Define how you want to be discovered. Your username creates your unique URL handle.</p>
-      </div>
-
+      {/* Studio Identity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <div className="space-y-12">
           <Form.Input
@@ -42,7 +42,7 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
             name="username"
             label="Public Handle"
             placeholder="e.g. alex_morgan"
-            description="Your URL: /photographers/[username]"
+            description="Your unique URL handle"
             disabled={isPending}
             className="bg-transparent border-b border-gray-200 rounded-none px-0 focus:border-black transition-colors"
           />
@@ -52,7 +52,7 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
             name="instagram"
             label="Instagram"
             placeholder="username"
-            description="Share your social portfolio"
+            description="Your social portfolio link"
             disabled={isPending}
             className="bg-transparent border-b border-gray-200 rounded-none px-0 focus:border-black transition-colors"
           />
@@ -62,20 +62,16 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
           <Form.Textarea
             control={form.control}
             name="bio"
-            label="Artistic Vision (Bio)"
-            placeholder="Describe your style, experience, and what makes your work unique..."
+            label="Artistic Bio"
+            placeholder="Describe your style and vision..."
             className="min-h-[160px] resize-none bg-gray-50/50 border-gray-100 focus:bg-white transition-all"
             disabled={isPending}
           />
         </div>
       </div>
 
+      {/* Professional Details */}
       <div className="pt-12 space-y-12 border-t border-gray-50">
-        <div className="space-y-4">
-          <h3 className="text-2xl font-serif text-black">2. Professional Details</h3>
-          <p className="text-sm text-gray-500">Essential information for discovery and booking inquiries.</p>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <Form.Select
             control={form.control}
@@ -102,7 +98,7 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
           name="specialties"
           label="Specialties"
           options={SPECIALTY_OPTIONS}
-          description="Select up to 3 core focus areas."
+          description="Select your core focus areas."
           disabled={isPending}
         />
       </div>
@@ -113,7 +109,7 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
           disabled={isPending} 
           className="px-20 h-16 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.3em] font-bold shadow-2xl hover:shadow-black/20 transition-all active:scale-[0.98]"
         >
-          {isPending ? "Setting up..." : "Continue to Portfolio"}
+          {isPending ? "Launching..." : "Launch My Studio"}
         </Button>
       </div>
     </form>

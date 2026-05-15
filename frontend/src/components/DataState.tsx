@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/Spinner";
 import { AlertCircle, RefreshCcw, Layout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
