@@ -1,44 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Page } from "@/components/Page";
 import { DataState } from "@/components/DataState";
-import { usePhotographerProfileQuery } from "./public-profile.queries";
+import { QueryErrorBoundary } from "@/components/QueryErrorBoundary";
+import { usePhotographerProfileSuspenseQuery } from "./public-profile.queries";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileHero } from "./components/ProfileHero";
 import { ProfileGallery } from "./components/ProfileGallery";
 import { ProfileAbout } from "./components/ProfileAbout";
 import { ProfileFooter } from "./components/ProfileFooter";
+import { ProfileSkeleton } from "./components/ProfileSkeleton";
 
 interface PublicProfilePageProps {
   username: string;
 }
 
 /**
- * PublicProfilePage - Main entry for the high-end editorial photographer portfolio.
- * Orchestrates the hero, gallery, about, and footer sections with intelligent fallbacks.
+ * ProfileContent - The part that actually fetches and displays the photographer data.
+ * Assumes data is available thanks to useSuspenseQuery.
  */
-export function PublicProfilePage({ username }: PublicProfilePageProps) {
-  const {
-    data: fullData,
-    isLoading,
-    error,
-  } = usePhotographerProfileQuery(username);
+function ProfileContent({ username }: { username: string }) {
+  const { data: fullData } = usePhotographerProfileSuspenseQuery(username);
 
-  // Loading State
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-          <span className="text-[10px] uppercase tracking-[0.5em] text-white/40">Loading Portfolio</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Error/Empty State
-  if (error || !fullData) {
+  // Error/Empty State handled locally if data is null (rare with Suspense but safe)
+  if (!fullData) {
     return (
       <Page className="bg-black text-white">
         <Page.Body className="flex items-center justify-center min-h-[80vh]">
@@ -89,5 +75,20 @@ export function PublicProfilePage({ username }: PublicProfilePageProps) {
       />
       <ProfileFooter />
     </Page>
+  );
+}
+
+/**
+ * PublicProfilePage - Entry for the editorial photographer portfolio.
+ * Refactored to use the modern "Precision" pattern:
+ * Boundary (ErrorBoundary) → Fallback (Suspense/Skeleton) → Content (SuspenseQuery).
+ */
+export function PublicProfilePage({ username }: PublicProfilePageProps) {
+  return (
+    <QueryErrorBoundary>
+      <Suspense fallback={<ProfileSkeleton />}>
+        <ProfileContent username={username} />
+      </Suspense>
+    </QueryErrorBoundary>
   );
 }

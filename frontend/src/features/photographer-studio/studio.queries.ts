@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPhotographerProfile,
   updatePhotographerProfile,
@@ -19,12 +19,13 @@ const useRefreshProfile = () => {
 
 // ── Profile ───────────────────────────────────────────────────────────────────
 
-/** Fetch the authenticated photographer's own studio profile. */
-export function useMyProfileQuery(options?: { enabled?: boolean }) {
-  return useQuery({
+/** 
+ * useMyProfileSuspenseQuery - Fetch the authenticated photographer's own studio profile by ID.
+ */
+export function useMyProfileSuspenseQuery() {
+  return useSuspenseQuery({
     queryKey: queryKeys.myPhotographerProfile(),
     queryFn: getMyPhotographerProfile,
-    enabled: options?.enabled,
     retry: false,
   });
 }
@@ -37,7 +38,6 @@ export function useCreateProfileMutation() {
     mutationFn: createPhotographerProfile,
     onSuccess: () => {
       refreshProfile();
-      // Role may change after becoming a photographer
       qc.invalidateQueries({ queryKey: queryKeys.session() });
     },
   });

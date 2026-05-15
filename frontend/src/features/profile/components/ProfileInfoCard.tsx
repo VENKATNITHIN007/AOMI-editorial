@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Page } from "@/components/Page";
 import { useAuth } from "@/features/auth";
-import { ProfileForm } from "../ProfileForm";
+import { ProfileForm } from "./ProfileForm";
 
 export function ProfileInfoCard() {
   const { user } = useAuth();

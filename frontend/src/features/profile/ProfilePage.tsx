@@ -3,7 +3,7 @@
 import { useAuth } from "@/features/auth";
 import { ProfileInfoCard } from "./components/ProfileInfoCard";
 import { EmailVerificationAlert } from "./components/EmailVerificationAlert";
-import { BecomePhotographerCTA } from "./BecomePhotographerCTA";
+import { BecomePhotographerCTA } from "./components/BecomePhotographerCTA";
 
 export function ProfilePage() {
   const { user } = useAuth();

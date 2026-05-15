@@ -1,26 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-  getPhotographerPortfolio,
   getPhotographerProfile,
 } from "./public-profile.api";
 import { queryKeys } from "@/lib/query/keys";
 
-/** Fetch a single photographer's public profile by username. */
-export function usePhotographerProfileQuery(username: string) {
-  return useQuery({
+/** 
+ * usePhotographerProfileSuspenseQuery - Fetch a single photographer's public profile by username.
+ * This includes the portfolio gallery in the payload.
+ */
+export function usePhotographerProfileSuspenseQuery(username: string) {
+  return useSuspenseQuery({
     queryKey: queryKeys.photographerProfile(username),
     queryFn: () => getPhotographerProfile(username),
-    enabled: Boolean(username),
-    retry: 3,
-  });
-}
-
-/** Fetch a photographer's public portfolio by username. */
-export function usePhotographerPortfolioQuery(username: string) {
-  return useQuery({
-    queryKey: queryKeys.photographerPortfolio(username),
-    queryFn: () => getPhotographerPortfolio(username),
-    enabled: Boolean(username),
     retry: 3,
   });
 }

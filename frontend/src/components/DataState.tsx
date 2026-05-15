@@ -5,19 +5,6 @@ import { AlertCircle, RefreshCcw, Layout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Loading State Component.
- * Minimalist spinner centered in a container.
- */
-function Loading({ className }: { className?: string }) {
-  return (
-    <div className={cn("flex min-h-[400px] flex-col items-center justify-center space-y-4", className)}>
-      <Spinner size="md" className="text-black" />
-      <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold animate-pulse">Loading Studio Data</p>
-    </div>
-  );
-}
-
-/**
  * Error State Component.
  * Clean, non-intrusive error display with a retry action.
  */
@@ -75,7 +62,6 @@ function Empty({ title, description, action, icon, className }: EmptyProps) {
 }
 
 export const DataState = {
-  Loading,
   Error: ErrorState,
   Empty,
 };
