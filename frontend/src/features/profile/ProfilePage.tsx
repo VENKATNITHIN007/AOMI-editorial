@@ -3,7 +3,7 @@
 import { useAuth } from "@/features/auth";
 import { ProfileInfoCard } from "./components/ProfileInfoCard";
 import { EmailVerificationAlert } from "./components/EmailVerificationAlert";
-import { BecomePhotographerCTA } from "./components/BecomePhotographerCTA";
+import { StudioCTA } from "@/components/StudioCTA";
 
 export function ProfilePage() {
   const { user } = useAuth();
@@ -26,7 +26,7 @@ export function ProfilePage() {
       {/* Studio CTA */}
       {user?.role === "user" && (
         <div className="pt-4">
-          <BecomePhotographerCTA />
+          <StudioCTA />
         </div>
       )}
     </div>

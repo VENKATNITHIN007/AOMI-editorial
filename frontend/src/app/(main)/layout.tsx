@@ -1,6 +1,7 @@
 import { MainHeader } from "@/components/layout/Header/MainHeader";
+import { Footer } from "@/components/layout/Footer";
 
-export default function ProtectedLayout({
+export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ export default function ProtectedLayout({
       <main className="flex-1">
         {children}
       </main>
+      <Footer variant="dark" />
     </div>
   );
 }

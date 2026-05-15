@@ -9,7 +9,7 @@ import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileHero } from "./components/ProfileHero";
 import { ProfileGallery } from "./components/ProfileGallery";
 import { ProfileAbout } from "./components/ProfileAbout";
-import { ProfileFooter } from "./components/ProfileFooter";
+import { Footer } from "@/components/layout/Footer";
 import { ProfileSkeleton } from "./components/ProfileSkeleton";
 
 interface PublicProfilePageProps {
@@ -73,7 +73,7 @@ function ProfileContent({ username }: { username: string }) {
         location={profile.location ?? undefined}
         priceFrom={profile.priceFrom?.toString()}
       />
-      <ProfileFooter />
+      <Footer variant="dark" />
     </Page>
   );
 }
