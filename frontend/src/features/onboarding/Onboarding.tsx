@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { ArrowLeft, Sparkles, Camera, Rocket, ArrowRight } from "lucide-react";
-import { NAV_PATHS } from "@/lib/constants/nav";
+import { Sparkles, Camera, Rocket, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { OnboardingDetailsForm } from "./components/OnboardingDetailsForm";
@@ -17,32 +16,21 @@ export function Onboarding() {
   const { handleDetailsSubmit, isSavingDetails } = useOnboarding();
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center bg-white px-6 py-20 sm:py-32 overflow-hidden">
+    <div className="relative flex min-h-screen flex-col items-center bg-white px-6 pt-6 sm:pt-10 pb-20 overflow-hidden">
       {/* Decorative Background */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-gray-50 rounded-full blur-3xl opacity-50 -z-10" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-gray-50 rounded-full blur-3xl opacity-50 -z-10" />
 
-      {/* Back to Home */}
-      <header className="absolute top-6 left-6 sm:top-10 sm:left-10">
-        <Link
-          href={NAV_PATHS.HOME}
-          className="group flex items-center gap-3 transition-all hover:opacity-70"
-        >
-          <ArrowLeft className="size-4 text-gray-400 transition-transform group-hover:-translate-x-1" />
-          <Logo className="text-[12px] sm:text-[14px]" />
-        </Link>
-      </header>
-
-      <div className="w-full max-w-5xl mx-auto space-y-24">
+      <div className="w-full max-w-5xl mx-auto space-y-16">
         {/* Page Header */}
         <div className="space-y-6 max-w-3xl">
           <p className="text-[10px] uppercase tracking-[0.5em] font-bold text-gray-400">
             Professional Program
           </p>
-          <h1 className="text-6xl sm:text-8xl font-serif italic text-black leading-[1.1]">
+          <h1 className="text-5xl sm:text-7xl font-serif italic text-black leading-[1.1]">
             Your Vision, <br />
-            <span className="font-bold not-italic">Professionalized.</span>
+            <span className="font-bold not-italic text-4xl sm:text-6xl">Professionalized.</span>
           </h1>
-          <p className="text-xl text-gray-500 font-light leading-relaxed max-w-xl">
+          <p className="text-lg text-gray-500 font-light leading-relaxed max-w-xl">
             Join an elite community of photographers. Set up your digital studio and reach clients who value art.
           </p>
         </div>
@@ -50,27 +38,27 @@ export function Onboarding() {
         {/* Simplified Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-gray-100 pt-16">
           <div className="space-y-4">
-            <div className="size-12 bg-gray-50 flex items-center justify-center">
-              <Sparkles className="size-5 text-black" />
-            </div>
-            <h3 className="text-lg font-serif italic">Identity</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Set your unique professional handle and editorial biography.</p>
+            <h3 className="text-lg font-serif italic flex items-center gap-3">
+              <Sparkles className="size-4 text-black" />
+              Identity
+            </h3>
+            <p className="text-sm text-gray-400 leading-relaxed font-light">Set your unique professional handle and editorial biography.</p>
           </div>
 
           <div className="space-y-4">
-            <div className="size-12 bg-gray-50 flex items-center justify-center">
-              <Camera className="size-5 text-black" />
-            </div>
-            <h3 className="text-lg font-serif italic">Showcase</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Your portfolio is served in high-resolution, magazine-quality layouts.</p>
+            <h3 className="text-lg font-serif italic flex items-center gap-3">
+              <Camera className="size-4 text-black" />
+              Showcase
+            </h3>
+            <p className="text-sm text-gray-400 leading-relaxed font-light">Your portfolio is served in high-resolution magazine layouts.</p>
           </div>
 
           <div className="space-y-4">
-            <div className="size-12 bg-gray-50 flex items-center justify-center">
-              <Rocket className="size-5 text-black" />
-            </div>
-            <h3 className="text-lg font-serif italic">Launch</h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-light">Go live instantly with a premium micro-website designed to convert.</p>
+            <h3 className="text-lg font-serif italic flex items-center gap-3">
+              <Rocket className="size-4 text-black" />
+              Launch
+            </h3>
+            <p className="text-sm text-gray-400 leading-relaxed font-light">Go live instantly with a premium micro-website built to convert.</p>
           </div>
         </div>
 
@@ -85,11 +73,10 @@ export function Onboarding() {
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-none border-none p-0">
               <div className="p-8 sm:p-16">
-                <DialogHeader className="mb-12">
-                  <DialogTitle className="text-4xl font-serif italic">Studio Setup</DialogTitle>
+                <DialogHeader className="mb-10">
+                  <DialogTitle className="text-3xl font-serif italic">Studio Setup</DialogTitle>
                 </DialogHeader>
                 
-                {/* DIRECT FORM - NO WIZARD */}
                 <OnboardingDetailsForm 
                   onSubmit={handleDetailsSubmit} 
                   isPending={isSavingDetails} 

@@ -25,7 +25,6 @@ export function Footer({ variant = "light", className }: FooterProps) {
       <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
         <Logo 
           className={cn("text-[10px] opacity-40", isDark && "text-white")} 
-          variant="minimal" 
         />
         
         <p className={cn(
