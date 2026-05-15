@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Page } from "@/components/Page";
-import { DiscoveryDashboard } from "@/features/discovery/DiscoveryDashboard";
+import { DiscoveryPage } from "@/features/discovery/DiscoveryPage";
 
 export const metadata: Metadata = {
   title: "Browse Photographers | Photophile",
@@ -9,12 +9,12 @@ export const metadata: Metadata = {
 
 /**
  * Photographers Discovery Page.
- * "Thin Page" implementation - delegates all logic to DiscoveryDashboard.
+ * "Thin Page" implementation - delegates all logic to DiscoveryPage.
  */
 export default function PhotographersRoutePage() {
   return (
     <Page className="bg-white">
-      <DiscoveryDashboard />
+      <DiscoveryPage />
     </Page>
   );
 }

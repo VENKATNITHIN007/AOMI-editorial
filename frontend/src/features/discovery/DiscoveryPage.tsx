@@ -9,7 +9,7 @@ import { DiscoveryResults } from "./components/DiscoveryResults";
 import { PhotographerGridSkeleton } from "./components/PhotographerCardSkeleton";
 import { ActiveFiltersSummary } from "./components/ActiveFiltersSummary";
 
-export function DiscoveryDashboard() {
+export function DiscoveryPage() {
   return (
     <Page.Body className="max-w-[1600px] mx-auto px-6 sm:px-12 pt-4 pb-32">
       <Page.Row className="w-full gap-8 flex-col lg:flex-row items-start">
