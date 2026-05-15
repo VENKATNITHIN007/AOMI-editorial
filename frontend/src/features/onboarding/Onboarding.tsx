@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { Logo } from "@/components/ui/Logo";
 import { Sparkles, Camera, Rocket, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { Sparkles } from "lucide-react";
 import { Page } from "@/components/Page";
 import { QueryErrorBoundary } from "@/components/QueryErrorBoundary";
 import { DiscoveryFilters, DiscoveryMobileFilters } from "./components/DiscoveryFilters";
