@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Mail, Instagram, MapPin, Camera } from "lucide-react";
+import { Instagram, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getOptimizedImageUrl as getCloudinaryUrl } from "@/lib/cloudinary-utils";
 
@@ -110,8 +110,8 @@ export function ProfileAbout({
                 
                 {priceFrom && (
                   <div className="space-y-3">
-                    <span className="text-[9px] uppercase tracking-[0.4em] font-black text-white/20 block">Rates</span>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/80">₹{priceFrom}+</p>
+                    <span className="text-[9px] uppercase tracking-[0.4em] font-black text-white/20 block">Hourly Rate</span>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/80">₹{priceFrom}</p>
                   </div>
                 )}
               </div>

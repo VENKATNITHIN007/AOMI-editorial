@@ -8,6 +8,7 @@ import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useUpdateStudioProfileMutation, useUploadPortfolioImageMutation } from "../studio.queries";
 import type { PhotographerProfile, PortfolioItem } from "@/lib/types/photographer";
 
@@ -35,7 +36,7 @@ export function HeroCard({ profile, currentHero, step, isComplete }: HeroCardPro
       await updateMutation.mutateAsync({ heroTagline: tagline });
       success("Tagline Saved", "Your cover photo tagline has been updated.");
     } catch (err) {
-      error("Save Failed", err instanceof Error ? err.message : "Could not save tagline.");
+      error("Save Failed", getErrorMessage(err, "Could not save tagline."));
     }
   };
 
@@ -44,7 +45,7 @@ export function HeroCard({ profile, currentHero, step, isComplete }: HeroCardPro
       await uploadMutation.mutateAsync({ file, purpose: "hero" });
       success("Cover Photo Updated", "Your cover photo has been set.");
     } catch (err) {
-      error("Upload Failed", err instanceof Error ? err.message : "Could not upload image.");
+      error("Upload Failed", getErrorMessage(err, "Could not upload image."));
     }
   };
 

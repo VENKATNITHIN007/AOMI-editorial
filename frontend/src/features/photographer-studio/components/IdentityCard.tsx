@@ -40,7 +40,7 @@ export function IdentityCard({ profile, step, isComplete }: IdentityCardProps) {
       icon: User 
     },
     { 
-      label: "Starting Price", 
+      label: "Hourly Rate", 
       value: profile.priceFrom ? `₹${profile.priceFrom.toLocaleString()}` : "NOT_SET", 
       icon: Banknote 
     },

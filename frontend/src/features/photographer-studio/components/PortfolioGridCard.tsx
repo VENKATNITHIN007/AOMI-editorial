@@ -6,6 +6,7 @@ import { Upload, Trash2, LayoutGrid } from "lucide-react";
 import { StudioCard } from "./StudioCard";
 import { Page } from "@/components/Page";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useUploadPortfolioImageMutation, useDeletePortfolioItemsMutation } from "../studio.queries";
 import { getOptimizedImageUrl } from "@/lib/cloudinary-utils";
 import { cn } from "@/lib/utils";
@@ -69,7 +70,7 @@ export function PortfolioGridCard({ items, step, isComplete }: PortfolioGridCard
       await uploadMutation.mutateAsync({ file, purpose: "gallery", position: activeSlot });
       success("Slot Updated", "Image uploaded to grid slot.");
     } catch (err) {
-      error("Upload Failed", err instanceof Error ? err.message : "Could not upload image.");
+      error("Upload Failed", getErrorMessage(err, "Could not upload image."));
     } finally {
       setActiveSlot(null);
       e.target.value = "";
@@ -82,7 +83,7 @@ export function PortfolioGridCard({ items, step, isComplete }: PortfolioGridCard
       await deleteMutation.mutateAsync([id]);
       success("Slot Cleared", "Image removed from grid slot.");
     } catch (err) {
-      error("Delete Failed", err instanceof Error ? err.message : "Could not remove image.");
+      error("Delete Failed", getErrorMessage(err, "Could not remove image."));
     }
   };
 

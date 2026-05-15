@@ -1,4 +1,3 @@
-import { Page } from "@/components/Page";
 
 /**
  * ProfileSkeleton - Cinematic shimmer for the high-end editorial profile.

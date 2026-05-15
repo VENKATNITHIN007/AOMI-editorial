@@ -8,6 +8,7 @@ import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useUpdateStudioProfileMutation, useUploadPortfolioImageMutation } from "../studio.queries";
 import type { PhotographerProfile, PortfolioItem } from "@/lib/types/photographer";
 
@@ -35,7 +36,7 @@ export function AboutCard({ profile, currentAbout, step, isComplete }: AboutCard
       await updateMutation.mutateAsync({ bio });
       success("Bio Saved", "Your biography has been updated.");
     } catch (err) {
-      error("Save Failed", err instanceof Error ? err.message : "Could not save bio.");
+      error("Save Failed", getErrorMessage(err, "Could not save bio."));
     }
   };
 
@@ -44,7 +45,7 @@ export function AboutCard({ profile, currentAbout, step, isComplete }: AboutCard
       await uploadMutation.mutateAsync({ file, purpose: "about" });
       success("About Image Updated", "Your about image has been set.");
     } catch (err) {
-      error("Upload Failed", err instanceof Error ? err.message : "Could not upload image.");
+      error("Upload Failed", getErrorMessage(err, "Could not upload image."));
     }
   };
 

@@ -8,6 +8,7 @@ import { Form } from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { useAuth, useUpdateProfileMutation, useUploadAvatarMutation } from "@/features/auth";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 
 const profileSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -59,8 +60,8 @@ export function ProfileForm({ onSuccess }: ProfileFormProps) {
       });
       success("Profile updated successfully");
       if (onSuccess) onSuccess();
-    } catch {
-      showError("Failed to update profile");
+    } catch (err: unknown) {
+      showError(getErrorMessage(err, "Failed to update profile"));
     }
   };
 

@@ -21,14 +21,12 @@ export function DiscoveryPage() {
         <div className="flex-1 w-full">
           <Page.Stack className="gap-6">
             
-            {/* Ultra-Condensed Header */}
-            <Page.Stack className="gap-1">
-              <h1 className="text-2xl font-black text-black uppercase tracking-tighter leading-none">
-                Photographers
+            {/* Two-Line Compact Header */}
+            <Page.Stack className="pb-4 border-b border-black/[0.03]">
+              <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-neutral-900 leading-[1.1]">
+                Find the perfect <br />
+                <span className="text-violet-600">photographer</span>
               </h1>
-              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
-                Connect with professionals instantly.
-              </p>
             </Page.Stack>
 
             {/* Search & Sort Area */}

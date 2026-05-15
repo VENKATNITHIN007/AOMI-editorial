@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRegisterMutation } from "@/features/auth";
 import { getAuthRedirect } from "@/lib/auth-navigation";
-import { AxiosError } from "axios";
+import { getErrorMessage } from "@/lib/error-utils";
 
 import { AuthShell } from "./AuthShell";
 import Link from "next/link";
@@ -46,12 +46,8 @@ export function RegisterForm() {
       router.push(target);
       
       success("Account created. Please verify your email.");
-    } catch (err) {
-      if (err instanceof AxiosError && err.response?.data?.message) {
-        showError(err.response.data.message);
-      } else {
-        showError("Registration failed. Please try again.");
-      }
+    } catch (err: unknown) {
+      showError(getErrorMessage(err, "Registration failed. Please try again."));
     }
   };
 

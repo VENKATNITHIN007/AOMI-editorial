@@ -7,6 +7,7 @@ import { Form } from "@/components/Form";
 import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useUpdateStudioProfileMutation } from "../studio.queries";
 import { CITY_OPTIONS, SPECIALTY_OPTIONS } from "@/lib/constants/photographer";
 import type { PhotographerProfile } from "@/lib/types/photographer";
@@ -34,6 +35,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
       location: profile.location || "",
       specialties: profile.specialties || [],
       priceFrom: profile.priceFrom || 0,
+      instagram: profile.instagram || "",
     },
   });
 
@@ -43,8 +45,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
       showSuccess("Details Saved", "Your profile details have been updated.");
       onSuccess?.();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Could not save studio settings.";
-      showError("Sync Failed", message);
+      showError("Sync Failed", getErrorMessage(err, "Could not save studio settings."));
     }
   };
 
@@ -63,6 +64,13 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
                 placeholder="e.g. jdoe_photography"
                 disabled={isPending}
               />
+              <Form.Input
+                control={form.control}
+                name="instagram"
+                label="Instagram"
+                placeholder="username or link"
+                disabled={isPending}
+              />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -77,7 +85,7 @@ export function StudioDetailsForm({ profile, onSuccess, className }: StudioDetai
               <Form.Input
                 control={form.control}
                 name="priceFrom"
-                label="Starting Price (₹)"
+                label="Price Per Hour (₹)"
                 type="number"
                 disabled={isPending}
               />
