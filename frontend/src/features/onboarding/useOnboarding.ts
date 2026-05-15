@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryKeys } from "@/lib/query/keys";
 import { useCreateProfileMutation } from "@/features/photographer-studio/studio.queries";
 import type { PhotographerOnboardingInput } from "@/lib/validations/photographer";
+import { getErrorMessage } from "@/lib/error-utils";
 
 /**
  * Simplified Onboarding Hook.
@@ -37,8 +38,7 @@ export function useOnboarding() {
       // Redirect to the dashboard
       router.replace("/photographer/dashboard");
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to launch studio";
-      showError(message);
+      showError(getErrorMessage(err, "Failed to launch studio"));
     }
   };
 

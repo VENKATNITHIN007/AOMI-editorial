@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { KeyRound, CheckCircle, AlertCircle } from "lucide-react";
 import { useResetPasswordMutation } from "@/features/auth";
+import { getErrorMessage } from "@/lib/error-utils";
 import { AuthShell } from "./AuthShell";
 
 /**
@@ -54,7 +55,7 @@ export function ResetPasswordForm() {
       success("Password reset successfully!");
       setTimeout(() => router.push("/login"), 2000);
     } catch (err: unknown) {
-      showError((err as Error).message || "Failed to reset password.");
+      showError(getErrorMessage(err, "Failed to reset password."));
     }
   };
 

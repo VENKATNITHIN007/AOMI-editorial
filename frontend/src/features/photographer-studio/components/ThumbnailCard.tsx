@@ -5,6 +5,7 @@ import { StudioCard } from "./StudioCard";
 import { ImageUploadSlot } from "./ImageUploadSlot";
 import { Page } from "@/components/Page";
 import { useToast } from "@/hooks/use-toast";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useUploadPortfolioImageMutation } from "../studio.queries";
 import type { PortfolioItem } from "@/lib/types/photographer";
 
@@ -33,7 +34,7 @@ export function ThumbnailCard({ currentThumbnail, step, isComplete }: ThumbnailC
       await uploadMutation.mutateAsync({ file, purpose: "thumbnail" });
       success("Card Photo Updated", "Your discovery card photo has been set.");
     } catch (err) {
-      error("Upload Failed", err instanceof Error ? err.message : "Could not upload image.");
+      error("Upload Failed", getErrorMessage(err, "Could not upload image."));
     }
   };
 

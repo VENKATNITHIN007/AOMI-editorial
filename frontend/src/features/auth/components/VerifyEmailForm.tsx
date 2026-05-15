@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useVerifyEmailMutation } from "@/features/auth";
+import { getErrorMessage } from "@/lib/error-utils";
 import { AuthShell } from "./AuthShell";
 import { Button } from "@/components/ui/button";
 
@@ -36,7 +37,7 @@ export function VerifyEmailForm() {
         setTimeout(() => router.push("/profile"), 2000);
       } catch (err: unknown) {
         setStatus("error");
-        setMessage((err as Error).message || "Failed to verify email.");
+        setMessage(getErrorMessage(err, "Failed to verify email."));
       }
     };
 

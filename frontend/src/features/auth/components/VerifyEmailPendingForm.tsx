@@ -8,6 +8,7 @@ import { useAuth, useCurrentUserQuery, useSendVerificationEmailMutation } from "
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AuthShell } from "./AuthShell";
+import { getErrorMessage } from "@/lib/error-utils";
 
 /**
  * Verification pending screen.
@@ -37,7 +38,7 @@ export function VerifyEmailPendingForm() {
       await resendMutation.mutateAsync(user.email);
       success("Verification email sent!");
     } catch (error: unknown) {
-      showError((error as Error).message || "Failed to resend.");
+      showError(getErrorMessage(error, "Failed to resend."));
     }
   };
 
@@ -52,7 +53,7 @@ export function VerifyEmailPendingForm() {
       }
       showError("Still unverified. Please click the link in your email.");
     } catch (error: unknown) {
-      showError((error as Error).message || "Failed to refresh.");
+      showError(getErrorMessage(error, "Failed to refresh."));
     } finally {
       setChecking(false);
     }

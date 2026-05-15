@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLoginMutation } from "@/features/auth";
 import { getAuthRedirect, getSafeRedirectPath } from "@/lib/auth-navigation";
+import { getErrorMessage } from "@/lib/error-utils";
 
 import { AuthShell } from "./AuthShell";
 
@@ -43,7 +44,7 @@ export function LoginForm() {
 
       router.push(target);
     } catch (err: unknown) {
-      showError((err as Error).message || "Invalid email or password.");
+      showError(getErrorMessage(err, "Invalid email or password."));
     }
   };
 
