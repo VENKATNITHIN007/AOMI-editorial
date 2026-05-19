@@ -7,12 +7,12 @@ import { StudioDetailsForm } from "./StudioDetailsForm";
 import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import type { PhotographerProfile } from "@/lib/types/photographer";
 
 interface IdentityCardProps {
@@ -81,22 +81,22 @@ export function IdentityCard({ profile, step, isComplete }: IdentityCardProps) {
                 Edit Details
               </Button>
 
-              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                <DialogContent className="sm:max-w-xl rounded-none border-black shadow-2xl bg-white p-10">
-                  <DialogHeader className="mb-10 border-b border-black/5 pb-8">
-                    <DialogTitle className="text-2xl font-black tracking-tighter uppercase italic leading-none">
+              <Sheet open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <SheetContent side="right" className="w-full sm:max-w-xl border-l border-black shadow-2xl bg-white p-6 sm:p-10 overflow-y-auto rounded-none">
+                  <SheetHeader className="mb-10 border-b border-black/5 pb-8 text-left">
+                    <SheetTitle className="text-2xl font-black tracking-tighter uppercase italic leading-none text-black">
                       Edit Details
-                    </DialogTitle>
-                    <DialogDescription className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
+                    </SheetTitle>
+                    <SheetDescription className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-2">
                       Update your public profile details
-                    </DialogDescription>
-                  </DialogHeader>
+                    </SheetDescription>
+                  </SheetHeader>
                   <StudioDetailsForm 
                     profile={profile} 
                     onSuccess={() => setIsEditDialogOpen(false)} 
                   />
-                </DialogContent>
-              </Dialog>
+                </SheetContent>
+              </Sheet>
             </div>
           </Page.Row>
 

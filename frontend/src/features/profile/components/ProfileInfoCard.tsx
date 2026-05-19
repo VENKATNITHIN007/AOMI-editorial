@@ -5,12 +5,12 @@ import Image from "next/image";
 import { Mail, User as UserIcon, Phone, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Page } from "@/components/Page";
 import { useAuth } from "@/features/auth";
 import { ProfileForm } from "./ProfileForm";
@@ -56,17 +56,17 @@ export function ProfileInfoCard() {
               Edit Profile
             </Button>
 
-            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-              <DialogContent className="sm:max-w-md rounded-none border-black shadow-2xl bg-white max-h-[90vh] overflow-y-auto">
-                <DialogHeader className="mb-6 border-b border-gray-50 pb-6">
-                  <DialogTitle className="text-xl font-bold tracking-tighter uppercase">Modify Identity</DialogTitle>
-                  <DialogDescription className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-1">
+            <Sheet open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+              <SheetContent side="right" className="w-full sm:max-w-md border-l border-black shadow-2xl bg-white p-6 sm:p-10 overflow-y-auto rounded-none">
+                <SheetHeader className="mb-6 border-b border-gray-50 pb-6 text-left">
+                  <SheetTitle className="text-xl font-bold tracking-tighter uppercase text-black">Modify Identity</SheetTitle>
+                  <SheetDescription className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-1">
                     Update your professional account core attributes
-                  </DialogDescription>
-                </DialogHeader>
+                  </SheetDescription>
+                </SheetHeader>
                 <ProfileForm onSuccess={() => setIsEditDialogOpen(false)} />
-              </DialogContent>
-            </Dialog>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
 

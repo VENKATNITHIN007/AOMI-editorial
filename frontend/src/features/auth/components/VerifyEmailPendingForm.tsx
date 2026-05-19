@@ -80,6 +80,15 @@ export function VerifyEmailPendingForm() {
         <p className="text-center text-sm text-gray-400 font-light tracking-wider">
           You must verify your email before accessing your studio.
         </p>
+
+        <div className="p-4 border border-dashed border-gray-200 bg-gray-50/30 text-center rounded-none space-y-1">
+          <p className="text-[9px] uppercase tracking-[0.15em] font-black text-black">
+            Didn't receive the email?
+          </p>
+          <p className="text-xs text-gray-400 font-light leading-relaxed">
+            Please check your <strong>Spam or Junk folder</strong>. Verification emails sent from sandbox servers are sometimes filtered there.
+          </p>
+        </div>
         
         <div className="space-y-3">
           <Button 
