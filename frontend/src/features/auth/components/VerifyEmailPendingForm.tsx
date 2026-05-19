@@ -83,7 +83,7 @@ export function VerifyEmailPendingForm() {
 
         <div className="p-4 border border-dashed border-gray-200 bg-gray-50/30 text-center rounded-none space-y-1">
           <p className="text-[9px] uppercase tracking-[0.15em] font-black text-black">
-            Didn't receive the email?
+            Didn&apos;t receive the email?
           </p>
           <p className="text-xs text-gray-400 font-light leading-relaxed">
             Please check your <strong>Spam or Junk folder</strong>. Verification emails sent from sandbox servers are sometimes filtered there.
