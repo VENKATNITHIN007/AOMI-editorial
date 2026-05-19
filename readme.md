@@ -1,7 +1,7 @@
-# Photophile
+# ΛOMI Editorial
 
 <p align="center">
-  <strong>A marketplace connecting photographers with clients</strong>
+  <strong>A full-stack marketplace connecting editorial photographers with clients</strong>
 </p>
 
 <p align="center">
@@ -9,11 +9,12 @@
   <img src="https://img.shields.io/badge/Express.js-4.x-404040?style=flat-square&logo=express" alt="Express.js">
   <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript" alt="TypeScript">
   <img src="https://img.shields.io/badge/MongoDB-7.x-47A248?style=flat-square&logo=mongodb" alt="MongoDB">
-  <img src="https://img.shields.io/badge/License-ISC-blue?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/pnpm-9.x-orange?style=flat-square&logo=pnpm" alt="pnpm">
+  <img src="https://img.shields.io/badge/Playwright-E2E-2EAD33?style=flat-square&logo=playwright" alt="Playwright">
 </p>
 
 <p align="center">
-  <em>Codename: Dukan</em>
+  <a href="https://aomi.space" target="_blank"><strong>🌐 Visit Deployed Studio: aomi.space &rarr;</strong></a>
 </p>
 
 ---
@@ -21,376 +22,209 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
+- [Screenshots](#screenshots)
+- [System Architecture](#system-architecture)
+- [Engineering Decisions](#engineering-decisions)
 - [Project Structure](#project-structure)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Commands](#commands)
 - [API Documentation](#api-documentation)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
+- [E2E Testing Suite](#e2e-testing-suite)
+- [Getting Started](#getting-started)
+- [Commands](#commands)
+- [Let's Connect](#lets-connect)
 
 ---
 
 ## Overview
 
-Photophile is a full-stack marketplace application that connects photographers with clients. Photographers can create professional profiles, showcase their portfolios, manage bookings, and build their reputation through client reviews. Clients can discover photographers, view their work, book services, and leave reviews.
+> [!TIP]
+> **🚀 Experience the Platform Live:**
+> Explore the live production build immediately at **[aomi.space](https://aomi.space)**. 
+> The database is fully populated with 20 sample Indian photographers, demonstrating search, location filters, custom bento portfolio grids, and dashboard views.
 
-### Key Highlights
+**ΛOMI Editorial** connects professional editorial photographers with potential clients. Photographers get a shareable, responsive public profile that acts as their personal website, and a studio dashboard to customize their portfolio layouts using a bento grid editor.
 
-- **Secure Authentication**: JWT with HTTP-only cookies and refresh token rotation
-- **Image Management**: Cloudinary integration for uploads and transformations
-- **Search & Discovery**: Filter photographers by location, specialty, and availability
-- **Booking System**: Complete workflow from inquiry to confirmation
-- **Review System**: Ratings and feedback to build trust
+### Key Features
 
----
-
-## Features
-
-### Implemented
-
-- [x] JWT Authentication with access and refresh tokens
-- [x] Photographer profiles with portfolio management
-- [x] Booking system with status tracking
-- [x] Reviews and ratings system
-- [x] Image uploads via Cloudinary
-- [x] Search and filtering capabilities
-- [x] Zod validation for all inputs
-- [x] Rate limiting for API protection
-- [x] Security headers middleware
-
-### Planned
-
-- [ ] Payment integration (Stripe)
-- [ ] Real-time notifications (WebSockets)
-- [ ] Email notifications
-- [ ] Advanced search with geolocation
-- [ ] Photographer availability calendar
+*   **Bento Portfolio Builder:** Drag-and-drop layout configuration for live portfolios.
+*   **Discovery Feed:** Multi-criteria location, specialty, and price filtering to connect clients with talent.
+*   **CDN-Optimized Media:** Cloudinary integration for compressed, responsive image delivery.
+*   **Decoupled State Management:** TanStack Query for server-state caching paired with Zustand for local UI states.
+*   **Visual Loading Skeletons:** React Suspense to handle asynchronous component loading states.
+*   **Dual-Token Authentication:** Stateless JWT session management with custom CSRF protection.
+*   **Feature-Sliced Structure:** Domain-driven frontend architecture to keep queries, views, and components modular.
+*   **E2E Testing Suite:** Frontend workflow coverage powered by Playwright.
 
 ---
 
-## Architecture
+## Screenshots
 
-Photophile follows a clean separation between frontend and backend:
+### Discover Feed & Bento Portfolios
 
+<div align="center" style="max-width: 800px; margin: 0 auto;">
+  <!-- Desktop Screenshots: Each on their own row to prevent squishing -->
+  <img src="frontend/public/images/image.png" alt="ΛOMI Editorial Discover Feed (Desktop)" width="90%" style="border-radius: 8px; border: 1px solid #eaeaea; margin-bottom: 16px;">
+  <br/>
+  <img src="frontend/public/images/image4.png" alt="ΛOMI Editorial Photographer Portfolios (Desktop)" width="90%" style="border-radius: 8px; border: 1px solid #eaeaea; margin-bottom: 24px;">
+  <br/>
+  <!-- Mobile Screenshots: Side-by-side in the same row -->
+  <img src="frontend/public/images/image2.png" alt="ΛOMI Editorial Studio Dashboard (Mobile)" width="45%" style="border-radius: 8px; border: 1px solid #eaeaea; margin: 1%;">
+  <img src="frontend/public/images/image3.png" alt="ΛOMI Editorial Mobile/Settings (Mobile)" width="45%" style="border-radius: 8px; border: 1px solid #eaeaea; margin: 1%;">
+</div>
+---
+
+## System Architecture
+
+The platform's high-level architecture separates the client-side code from the backend API endpoints:
+
+```txt
+Next.js Client (Port 3000)
+      │
+      ▼  [HTTP API Requests]
+Express Server (Port 3001)
+      │
+      ├─► [Database Storage]  ──► MongoDB (Mongoose ODM)
+      └─► [Media Processing]  ──► Cloudinary CDN
 ```
-┌─────────────────┐         ┌─────────────────┐
-│   Next.js 15    │         │  Express.js API │
-│   (Frontend)    │◄───────►│   (Backend)     │
-│   Port: 3000    │  HTTP   │   Port: 3001    │
-└─────────────────┘         └────────┬────────┘
-                                     │
-                              ┌──────┴──────┐
-                              │   MongoDB   │
-                              └─────────────┘
-```
 
-### Design Decisions
+A full system deep-dive detailing client caching, Next.js page guards, and how the middleware layers run is fully documented in **[docs/system_architecture.md](docs/system_architecture.md)**.
 
-- **Separate Codebases**: Frontend and backend can be deployed independently
-- **API Versioning**: All routes prefixed with `/api/v1/` for backward compatibility
-- **HTTP-Only Cookies**: JWT tokens stored in cookies to prevent XSS attacks
-- **Dual Token Strategy**: Short-lived access tokens (6h) with long-lived refresh tokens (10d)
+*   **Frontend Client:** Next.js 15 App Router running server-components-first layouts.
+*   **Express API Server:** Node.js backend executing security, rate-limiting, and validation middleware.
+*   **Database & CDN:** Document storage via MongoDB and media transformations via Cloudinary.
 
-See [docs/decisions.md](docs/decisions.md) for detailed architectural decisions.
+---
+
+## Engineering Decisions & Learning Journey
+*   **Learning Authentication & Security:** I followed modern backend security standards to protect users. I integrated **Helmet** for secure HTTP headers, implemented **CSRF protection**, and stored session JWTs inside secure **HttpOnly cookies**. 
+*   **State Management (Zustand & React Query):** I chose **Zustand** simply because it is extremely easy to use, lightweight, and didn't require complex Redux boilerplate for local UI settings. I paired it with **React Query** to automatically handle fast caching, automatic background data refetching, and pagination for photographer discovery feeds.
+*   **Separate Directories:** I kept the frontend and backend code in completely separate directories so I could build, deploy, and scale them independently on Vercel.
 
 ---
 
 ## Project Structure
 
 ```
-├── backend/                # Express.js API
+├── backend/                  # Express.js REST API
 │   └── src/
-│       ├── app.ts          # Entry point
-│       ├── config.ts       # Environment config
-│       ├── constants/      # App constants (modular)
-│       │   ├── error.ts    # Error messages
-│       │   ├── pagination.ts
-│       │   ├── upload.ts
-│       │   └── booking.ts
-│       ├── controllers/    # Route handlers
-│       ├── db/             # Database connection
-│       ├── middlewares/    # Express middleware
-│       ├── models/         # Mongoose schemas
-│       ├── routes/         # API routes
-│       ├── types/          # TypeScript types
-│       ├── utils/          # Utilities
-│       │   ├── helper/     # Helper functions (modular)
-│       │   │   ├── jwt.util.ts
-│       │   │   ├── password.util.ts
-│       │   │   ├── route.util.ts
-│       │   │   ├── string.util.ts
-│       │   │   └── pagination.ts
-│       │   ├── ApiError.ts
-│       │   ├── ApiResponse.ts
-│       │   ├── asyncHandler.ts
-│       │   └── cloudinary.ts
-│       └── validations/    # Zod schemas
-
-└── frontend/               # Next.js 15 App
+│       ├── app.ts            # Entry point (Express, route mounts, security headers, rate limits)
+│       ├── config.ts         # Environment variable schemas & configuration loader
+│       ├── db/               # MongoDB / Mongoose connection setup & mock data seeder
+│       ├── constants/        # System-wide type-safe constants (booking, uploads, errors)
+│       ├── controllers/      # Route handlers (delegates business tasks to services)
+│       ├── services/         # Business Logic Layer (Auth, User, Cloudinary, Resend Email)
+│       ├── models/           # Mongoose schemas and model definitions
+│       ├── routes/           # REST API routes
+│       ├── middlewares/      # Express middlewares (auth, errorHandler, rate-limiter, csrf)
+│       ├── validations/      # Zod validation schemas for payload validation
+│       └── utils/            # Grouped core utilities
+│
+└── frontend/                 # Next.js 15 Client App
+    ├── e2e/                  # Playwright E2E browser tests
     └── src/
-        ├── app/            # App Router pages
-        ├── components/     # React components
-        │   ├── forms/      # Form components
-        │   ├── gallery/    # Gallery components
-        │   ├── layout/     # Layout components
-        │   ├── photographer/ # Photographer components
-        │   ├── search/     # Search components
-        │   ├── filters/    # Filter components
-        │   └── ui/         # shadcn/ui components
-        ├── contexts/       # React contexts (auth)
-        ├── hooks/          # Custom React hooks
-        ├── lib/            # Utilities
-        │   └── validations/ # Frontend Zod schemas
-        ├── styles/         # CSS styles
-        └── middleware.ts   # Next.js middleware
+        ├── app/              # App Router directory (page routes, server components, main layouts)
+        ├── components/       # Globally shared UI components
+        ├── features/         # Feature-sliced modular layout (capsules business domains)
+        │   ├── auth/         # Context providers, query hooks, login/register views
+        │   ├── discovery/    # Search filters, specialties selection, responsive discovery grid
+        │   ├── landing/      # Clean, magazine-grade hero and CTA sections
+        │   ├── onboarding/   # Multi-step studio onboarding layout for photographers
+        │   ├── photographer-studio/ # Interactive dashboard & Bento portfolio builder
+        │   ├── profile/      # User settings, name, avatar, and security fields
+        │   └── public-profile/ # Shareable photographer profile layouts (Mini-Websites)
+        ├── hooks/            # Shared custom React hooks
+        └── lib/              # Shared client integrations (Axios client, React Query provider)
 ```
 
 ---
 
 ## Tech Stack
 
-### Backend
+| Frontend (Client) | Backend (API) |
+| :--- | :--- |
+| **Next.js 15** (App Router, Server Components) | **Node.js & Express.js** (RESTful API Router) |
+| **React 19** & TypeScript | **TypeScript** for end-to-end type safety |
+| **Tailwind CSS v4** & shadcn/ui | **MongoDB** & Mongoose ODM |
+| **TanStack Query v5** (Server-state caching) | **Stateless Auth** via HTTP-Only Cookies (JWT) |
+| **Zustand v5** (Lightweight global UI states) | **Zod** schema validations |
+| **React Hook Form** with Zod integrations | **Cloudinary** (Image CDN uploads) |
+| **Playwright** (E2E browser tests) | **Resend** (transactional emails) |
 
-| Technology | Purpose |
-|------------|---------|
-| Node.js | Runtime environment |
-| Express.js | Web framework |
-| TypeScript | Type safety |
-| MongoDB | Document database |
-| Mongoose | ODM for MongoDB |
-| JWT | Authentication |
-| Zod | Runtime validation |
-| Multer | File upload handling |
-| Cloudinary | Image storage and CDN |
-| bcrypt | Password hashing |
+---
 
-### Frontend
+## API Documentation
 
-| Technology | Purpose |
-|------------|---------|
-| Next.js 15 | React framework (App Router) |
-| TypeScript | Type safety |
-| Tailwind CSS v4 | Utility-first styling |
-| shadcn/ui | UI component library |
-| Axios | HTTP client |
-| React Context | State management |
+The complete backend REST API is versioned under `/api/v1/` and thoroughly documented in **[docs/api.md](docs/api.md)**. It outlines endpoints, Zod validation schemas, and expected request/response formats for:
+*   **Authentication:** CSRF issuance, stateless session rotation, transactional email verifications.
+*   **User Accounts:** User configurations, profile avatar uploads.
+*   **Photographer Profiles:** Dashboard stats, pricing/specialty/location metadata updates.
+*   **Portfolio Gallery:** Secure Cloudinary upload/deletions, Bento layout reordering grids.
+
+---
+
+## E2E Testing Suite
+
+Automated user flows are validated via Playwright:
+*   **Location:** `frontend/e2e/`
+*   **Coverage:** User Authentication flows, registration validations, onboarding sheets, and bento-grid updates.
+*   **Execution Commands:**
+    *   `pnpm run test` — Runs E2E tests in a headless automated browser.
+    *   `pnpm run test:ui` — Opens the Playwright interactive UI runner to view visual step-by-step executions.
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
+*   Node.js 18+ & MongoDB
+*   Cloudinary & Resend API keys
 
-- Node.js 18+ installed
-- MongoDB (local instance or Atlas cluster)
-- Cloudinary account (for image uploads)
+### Setup & Run
 
-### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd Photophile
+   ```
 
-1. **Clone the repository**
+2. **Configure & Start Backend:**
+   ```bash
+   cd backend
+   cp .env.example .env # Configure MongoDB, Cloudinary, and Resend credentials
+   pnpm install
+   pnpm run dev
+   ```
 
-```bash
-git clone <repository-url>
-cd Photophile
-```
+3. **Configure & Start Frontend:**
+   ```bash
+   cd ../frontend
+   cp .env.local.example .env.local # Update NEXT_PUBLIC_API_URL if needed
+   pnpm install
+   pnpm run dev
+   ```
 
-2. **Setup Backend**
-
-```bash
-cd backend
-cp .env.example .env
-# Edit .env with your credentials
-npm install
-npm run dev
-```
-
-3. **Setup Frontend**
-
-```bash
-cd frontend
-cp .env.example .env.local
-# Edit .env.local with your API URL
-npm install
-npm run dev
-```
-
-The frontend runs at `http://localhost:3000` and the API at `http://localhost:3001`.
-
----
-
-## Environment Variables
-
-### Backend (.env)
-
-```env
-PORT=3001
-ORIGIN_HOSTS=http://localhost:3000
-APP_DEBUG=false
-
-# JWT Secrets (generate secure random strings)
-ACCESS_TOKEN_SECRET=your-access-token-secret
-ACCESS_TOKEN_EXPIRY=6h
-REFRESH_TOKEN_SECRET=your-refresh-token-secret
-REFRESH_TOKEN_EXPIRY=10d
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-
-# Database
-MONGO_URL=mongodb://localhost:27017
-DB_NAME=photophile
-```
-
-### Frontend (.env.local)
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
-ACCESS_TOKEN_SECRET=your-access-token-secret
-```
+The frontend client will run at `http://localhost:3000` and the API at `http://localhost:3001`.
 
 ---
 
 ## Commands
 
-### Backend
+All actions are executed using `pnpm` from their respective directories:
 
-```bash
-cd backend/
-
-npm install           # Install dependencies
-npm run dev           # Start development server (nodemon + ts-node on port 3001)
-npm run build         # Compile TypeScript to dist/
-npm start             # Run compiled app (node dist/index.js)
-```
-
-### Frontend
-
-```bash
-cd frontend/
-
-npm install           # Install dependencies
-npm run dev           # Start Next.js dev server with Turbopack (port 3000)
-npm run build         # Build for production
-npm start             # Start production server
-```
+| Target | Task | Command |
+| :--- | :--- | :--- |
+| **Backend** | Start Dev Server | `pnpm run dev` |
+| **Backend** | Seed 20 Photographers | `pnpm run seed` |
+| **Backend** | Clear Database | `pnpm run clean` |
+| **Backend** | Build Server | `pnpm run build` |
+| **Frontend** | Start Client Dev | `pnpm run dev` |
+| **Frontend** | Build Production | `pnpm run build` |
+| **Frontend** | Run Playwright Tests | `pnpm run test` |
 
 ---
 
-## API Documentation
+## Let's Connect
 
-Base URL: `http://localhost:3001/api/v1`
+Thank you for exploring **ΛOMI Editorial**! Feel free to reach out to connect or discuss modern full-stack development.
 
-### Authentication
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/users/register` | Create new account |
-| POST | `/users/login` | Authenticate user |
-| POST | `/users/logout` | Logout user |
-| POST | `/users/refresh-token` | Refresh access token |
-| GET | `/users/me` | Get current user |
-
-### Photographers
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/photographers` | List all photographers |
-| GET | `/photographers/:id` | Get photographer profile |
-| POST | `/photographers` | Create photographer profile |
-| PATCH | `/photographers/:id` | Update profile |
-
-### Portfolio
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/portfolio/:photographerId` | Get portfolio items |
-| POST | `/portfolio` | Upload new image |
-| DELETE | `/portfolio/:id` | Delete image |
-
-### Bookings
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/bookings` | List user bookings |
-| POST | `/bookings` | Create booking |
-| PATCH | `/bookings/:id` | Update booking status |
-
-### Reviews
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/reviews/:photographerId` | Get reviews |
-| POST | `/reviews` | Create review |
-
----
-
-## Screenshots
-
-*Screenshots will be added here once the frontend is complete.*
-
----
-
-## Contributing
-
-Contributions are welcome. Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Style
-
-- Use TypeScript for all new code
-- Follow existing patterns in the codebase
-- Run type checking before committing
-- Write meaningful commit messages
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-**CORS errors in browser**
-- Verify `ORIGIN_HOSTS` in backend `.env` includes your frontend URL
-- Ensure `credentials: true` is set in both frontend and backend
-
-**JWT verification fails**
-- Check that `ACCESS_TOKEN_SECRET` matches in both `.env` files
-- Verify cookies are being sent (check browser DevTools)
-
-**MongoDB connection fails**
-- Confirm MongoDB is running locally or Atlas connection string is correct
-- Check network access settings in Atlas
-
-**Image uploads fail**
-- Verify Cloudinary credentials in backend `.env`
-- Check file size limits (Multer default is usually sufficient)
-
-### Getting Help
-
-- Check [docs/decisions.md](docs/decisions.md) for architectural context
-- Review [docs/patterns.md](docs/patterns.md) for coding patterns
-- Open an issue with detailed reproduction steps
-
----
-
-## License
-
-ISC
-
----
-
-<p align="center">
-  Built for photographers and their clients
-</p>
+*   **Portfolio**: [venkatnithin.space](https://venkatnithin.space)

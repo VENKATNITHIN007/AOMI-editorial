@@ -33,10 +33,10 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
   });
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 sm:space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
       {/* Studio Identity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-        <div className="space-y-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
+        <div className="space-y-6 sm:space-y-12">
           <Form.Input
             control={form.control}
             name="username"
@@ -58,21 +58,21 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
           />
         </div>
 
-        <div className="space-y-12">
+        <div className="space-y-6 sm:space-y-12">
           <Form.Textarea
             control={form.control}
             name="bio"
             label="Artistic Bio"
             placeholder="Describe your style and vision..."
-            className="min-h-[160px] resize-none bg-gray-50/50 border-gray-100 focus:bg-white transition-all"
+            className="min-h-[140px] sm:min-h-[160px] resize-none bg-gray-50/50 border-gray-100 focus:bg-white transition-all"
             disabled={isPending}
           />
         </div>
       </div>
 
       {/* Professional Details */}
-      <div className="pt-12 space-y-12 border-t border-gray-50">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="pt-8 sm:pt-12 space-y-6 sm:space-y-12 border-t border-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-12">
           <Form.Select
             control={form.control}
             name="location"
@@ -103,11 +103,11 @@ export function OnboardingDetailsForm({ onSubmit, isPending }: OnboardingDetails
         />
       </div>
 
-      <div className="pt-12 flex justify-end">
+      <div className="pt-8 sm:pt-12 flex justify-end">
         <Button 
           type="submit" 
           disabled={isPending} 
-          className="px-20 h-16 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.3em] font-bold shadow-2xl hover:shadow-black/20 transition-all active:scale-[0.98]"
+          className="w-full sm:w-auto px-20 h-16 bg-black hover:bg-gray-900 text-white rounded-none text-[10px] uppercase tracking-[0.3em] font-bold shadow-2xl hover:shadow-black/20 transition-all active:scale-[0.98]"
         >
           {isPending ? "Launching..." : "Launch My Studio"}
         </Button>

@@ -22,11 +22,14 @@ export function DiscoveryPage() {
           <Page.Stack className="gap-6">
             
             {/* Two-Line Compact Header */}
-            <Page.Stack className="pb-4 border-b border-black/[0.03]">
+            <Page.Stack className="pb-4 border-b border-black/[0.03] gap-1.5">
               <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-neutral-900 leading-[1.1]">
                 Find the perfect <br />
                 <span className="text-violet-600">photographer</span>
               </h1>
+              <p className="text-xs sm:text-sm text-neutral-400 font-light mt-0.5">
+                This is a live demo populated with curated sample portfolios to showcase platform features.
+              </p>
             </Page.Stack>
 
             {/* Search & Sort Area */}

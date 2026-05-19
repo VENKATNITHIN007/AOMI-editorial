@@ -4,7 +4,19 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1";
+const getBaseUrl = (): string => {
+  // If running on the server (SSR)
+  if (typeof window === "undefined") {
+    return process.env.NODE_ENV === "production"
+      ? "https://aomi-editorial.onrender.com/api/v1"
+      : "http://localhost:3001/api/v1";
+  }
+  
+  // If running on the client (browser)
+  return process.env.NEXT_PUBLIC_API_URL || "/api/v1";
+};
+
+const API_URL = getBaseUrl();
 
 const SKIP_REFRESH_ENDPOINTS = [
   "/auth/login",

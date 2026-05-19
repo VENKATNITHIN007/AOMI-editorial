@@ -69,9 +69,9 @@ export function Onboarding() {
                 <ArrowRight className="size-4 ml-4 transition-transform group-hover:translate-x-2" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-none border-none p-0">
-              <div className="p-8 sm:p-16">
-                <DialogHeader className="mb-10">
+            <DialogContent className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-full max-w-none h-full max-h-none border-none p-0 overflow-y-auto bg-white sm:fixed sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-w-4xl sm:max-h-[90vh] sm:rounded-none sm:border sm:border-gray-100">
+              <div className="p-6 sm:p-16">
+                <DialogHeader className="mb-8 sm:mb-10">
                   <DialogTitle className="text-3xl font-serif italic">Studio Setup</DialogTitle>
                 </DialogHeader>
                 
